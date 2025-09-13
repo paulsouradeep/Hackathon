@@ -19,7 +19,7 @@ except ImportError:
     # Fallback for systems where email modules might not be available
     MimeText = None
     MimeMultipart = None
-from models.ai_models import talent_matcher
+from models.improved_ai_models import improved_talent_matcher as talent_matcher
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -456,8 +456,8 @@ async def upload_resume(
         # Generate candidate ID
         candidate_id = str(uuid.uuid4())
         
-        # Parse resume using AI
-        parsed_data = talent_matcher.parse_resume_simple(resume_text)
+        # Parse resume using enhanced AI
+        parsed_data = talent_matcher.parse_resume_enhanced(resume_text)
         
         # Store candidate in database
         conn = sqlite3.connect('talent_platform.db')
