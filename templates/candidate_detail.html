@@ -232,14 +232,6 @@
                         <label for="reasonCode" class="block text-sm font-medium text-gray-700 mb-2">Reason</label>
                         <select id="reasonCode" required class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-telus-blue focus:border-telus-blue">
                             <option value="">Select a reason</option>
-                            <option value="skills_match">Skills are a perfect match</option>
-                            <option value="experience_good">Experience level is appropriate</option>
-                            <option value="cultural_fit">Good cultural fit</option>
-                            <option value="skills_mismatch">Skills don't match requirements</option>
-                            <option value="experience_low">Insufficient experience</option>
-                            <option value="overqualified">Candidate is overqualified</option>
-                            <option value="location_issue">Location constraints</option>
-                            <option value="other">Other</option>
                         </select>
                     </div>
                     
@@ -431,7 +423,60 @@
             document.getElementById('feedbackJobId').value = jobId;
             document.getElementById('feedbackAction').value = action;
             
+            // Populate reason options based on action
+            populateReasonOptions(action);
+            
             document.getElementById('feedbackModal').classList.remove('hidden');
+        }
+
+        function populateReasonOptions(action) {
+            const reasonSelect = document.getElementById('reasonCode');
+            reasonSelect.innerHTML = '<option value="">Select a reason</option>';
+            
+            let options = [];
+            
+            if (action === 'accept') {
+                // Positive reasons for accepting a candidate
+                options = [
+                    { value: 'skills_match', text: 'Skills are a perfect match' },
+                    { value: 'experience_good', text: 'Experience level is appropriate' },
+                    { value: 'cultural_fit', text: 'Good cultural fit' },
+                    { value: 'strong_background', text: 'Strong technical background' },
+                    { value: 'relevant_projects', text: 'Relevant project experience' },
+                    { value: 'growth_potential', text: 'High growth potential' },
+                    { value: 'communication_skills', text: 'Excellent communication skills' },
+                    { value: 'team_player', text: 'Strong team collaboration skills' }
+                ];
+            } else if (action === 'reject') {
+                // Negative reasons for rejecting a candidate
+                options = [
+                    { value: 'skills_mismatch', text: 'Skills don\'t match requirements' },
+                    { value: 'experience_low', text: 'Insufficient experience' },
+                    { value: 'overqualified', text: 'Candidate is overqualified' },
+                    { value: 'location_issue', text: 'Location constraints' },
+                    { value: 'salary_expectations', text: 'Salary expectations too high' },
+                    { value: 'missing_certifications', text: 'Missing required certifications' },
+                    { value: 'communication_concerns', text: 'Communication skills concerns' },
+                    { value: 'cultural_mismatch', text: 'Not a good cultural fit' },
+                    { value: 'availability_issues', text: 'Availability doesn\'t match requirements' }
+                ];
+            } else {
+                // Default options for other actions (like review)
+                options = [
+                    { value: 'needs_review', text: 'Requires further review' },
+                    { value: 'additional_screening', text: 'Needs additional screening' },
+                    { value: 'unclear_requirements', text: 'Requirements need clarification' },
+                    { value: 'other', text: 'Other' }
+                ];
+            }
+            
+            // Add options to select
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option.value;
+                optionElement.textContent = option.text;
+                reasonSelect.appendChild(optionElement);
+            });
         }
 
         function closeFeedbackModal() {
