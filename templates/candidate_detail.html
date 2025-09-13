@@ -261,6 +261,48 @@
         </div>
     </div>
 
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900" id="confirmationTitle">Confirm Action</h3>
+                    <button onclick="closeConfirmationModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="flex items-center mb-4">
+                        <div id="confirmationIcon" class="w-12 h-12 rounded-full flex items-center justify-center mr-4">
+                            <i class="text-xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-gray-900 font-medium" id="confirmationMessage"></p>
+                            <p class="text-gray-600 text-sm" id="confirmationSubMessage"></p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h4 class="font-medium text-gray-900 mb-2">What happens next:</h4>
+                        <ul class="text-sm text-gray-600 space-y-1" id="confirmationSteps">
+                            <!-- Steps will be populated dynamically -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button onclick="closeConfirmationModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <button onclick="confirmAction()" id="confirmButton" class="px-4 py-2 text-white rounded-md transition-colors duration-200">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Feedback Modal -->
     <div id="feedbackModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -372,10 +414,70 @@
             
             matches.forEach((match, index) => {
                 const matchCard = document.createElement('div');
-                matchCard.className = 'bg-white rounded-lg shadow-md border border-gray-200 p-6 mb-4 card-hover';
+                
+                // Determine card styling based on status
+                let cardClass = 'bg-white rounded-lg shadow-md border border-gray-200 p-6 mb-4 card-hover';
+                if (match.status === 'accepted') {
+                    cardClass = 'bg-green-50 rounded-lg shadow-md border border-green-200 p-6 mb-4';
+                } else if (match.status === 'rejected') {
+                    cardClass = 'bg-red-50 rounded-lg shadow-md border border-red-200 p-6 mb-4 opacity-75';
+                }
+                
+                matchCard.className = cardClass;
                 
                 const confidenceColor = match.confidence_band === 'AUTO' ? 'bg-green-100 text-green-800' : 
                                        match.confidence_band === 'REVIEW' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800';
+                
+                // Status badge
+                let statusBadge = '';
+                if (match.status === 'accepted') {
+                    statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 ml-2"><i class="fas fa-check mr-1"></i>Accepted</span>';
+                } else if (match.status === 'rejected') {
+                    statusBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 ml-2"><i class="fas fa-times mr-1"></i>Rejected</span>';
+                }
+                
+                // Email status
+                let emailStatus = '';
+                if (match.email_sent && (match.status === 'accepted' || match.status === 'rejected')) {
+                    emailStatus = '<div class="mt-2"><span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"><i class="fas fa-envelope mr-1"></i>Email Sent</span></div>';
+                }
+                
+                // Action buttons based on status
+                let actionButtons = '';
+                if (match.status === 'pending') {
+                    actionButtons = `
+                        <div class="space-y-2">
+                            <button onclick="showConfirmationModal('${match.job_id}', 'accept', '${match.job_details.title}')" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm flex items-center justify-center space-x-1 transition-colors duration-200">
+                                <i class="fas fa-check"></i>
+                                <span>Accept</span>
+                            </button>
+                            <button onclick="showConfirmationModal('${match.job_id}', 'reject', '${match.job_details.title}')" class="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm flex items-center justify-center space-x-1 transition-colors duration-200">
+                                <i class="fas fa-times"></i>
+                                <span>Reject</span>
+                            </button>
+                        </div>
+                    `;
+                } else if (match.status === 'accepted') {
+                    actionButtons = `
+                        <div class="space-y-2">
+                            <div class="text-center text-green-700 font-medium">
+                                <i class="fas fa-check-circle mr-1"></i>
+                                Candidate Accepted
+                            </div>
+                            ${match.email_sent ? '<div class="text-center text-blue-600 text-sm"><i class="fas fa-envelope mr-1"></i>Notification Sent</div>' : ''}
+                        </div>
+                    `;
+                } else if (match.status === 'rejected') {
+                    actionButtons = `
+                        <div class="space-y-2">
+                            <div class="text-center text-red-700 font-medium">
+                                <i class="fas fa-times-circle mr-1"></i>
+                                Candidate Rejected
+                            </div>
+                            ${match.email_sent ? '<div class="text-center text-blue-600 text-sm"><i class="fas fa-envelope mr-1"></i>Notification Sent</div>' : ''}
+                        </div>
+                    `;
+                }
                 
                 matchCard.innerHTML = `
                     <div class="flex justify-between items-start">
@@ -384,24 +486,17 @@
                                 ${index === 0 ? '<i class="fas fa-star text-yellow-500 mr-2"></i>' : ''}
                                 ${match.job_details.title}
                                 ${index === 0 ? '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 ml-2">Top Match</span>' : ''}
+                                ${statusBadge}
                             </h6>
                             <p class="text-gray-600 mb-2">${match.job_details.department} • ${match.job_details.location}</p>
                             <p class="text-gray-700 mb-2">${match.explanation}</p>
                             <p class="text-sm text-gray-500">${match.job_details.summary.substring(0, 150)}...</p>
+                            ${emailStatus}
                         </div>
                         <div class="text-right ml-6">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${confidenceColor} mb-2">${match.confidence_band}</span>
                             <div class="text-2xl font-bold text-gray-900 mb-4">${(match.similarity_score * 100).toFixed(1)}%</div>
-                            <div class="space-y-2">
-                                <button onclick="provideFeedback('${match.job_id}', 'accept')" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-md text-sm flex items-center justify-center space-x-1 transition-colors duration-200">
-                                    <i class="fas fa-check"></i>
-                                    <span>Accept</span>
-                                </button>
-                                <button onclick="provideFeedback('${match.job_id}', 'reject')" class="w-full bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-md text-sm flex items-center justify-center space-x-1 transition-colors duration-200">
-                                    <i class="fas fa-times"></i>
-                                    <span>Reject</span>
-                                </button>
-                            </div>
+                            ${actionButtons}
                         </div>
                     </div>
                 `;
@@ -509,8 +604,28 @@
                 trainingContainer.innerHTML = '<span class="text-gray-500">No training recommendations available</span>';
             }
             
-            // Readiness score
-            const readinessScore = Math.round(skillGaps.readiness_score * 100);
+            // Readiness score - calculate if not provided or is 0
+            let readinessScore = 0;
+            
+            if (skillGaps.readiness_score && skillGaps.readiness_score > 0) {
+                readinessScore = Math.round(skillGaps.readiness_score * 100);
+            } else {
+                // Calculate readiness score based on available data
+                const totalSkills = (skillGaps.missing_required_skills?.length || 0) + (skillGaps.matching_skills?.length || 0);
+                const matchingSkills = skillGaps.matching_skills?.length || 0;
+                
+                if (totalSkills > 0) {
+                    readinessScore = Math.round((matchingSkills / totalSkills) * 100);
+                } else {
+                    // If no skill data available, calculate based on similarity score from matches
+                    if (candidateData && candidateData.matches && candidateData.matches.length > 0) {
+                        readinessScore = Math.round(candidateData.matches[0].similarity_score * 100);
+                    } else {
+                        readinessScore = 50; // Default fallback
+                    }
+                }
+            }
+            
             const progressBar = document.getElementById('readinessProgress');
             progressBar.style.width = readinessScore + '%';
             
@@ -518,11 +633,14 @@
             const scoreColor = readinessScore >= 80 ? 'bg-green-500' : readinessScore >= 60 ? 'bg-yellow-500' : 'bg-red-500';
             progressBar.className = `h-3 rounded-full transition-all duration-300 ${scoreColor}`;
             
-            // Add score text
-            const scoreText = document.createElement('div');
-            scoreText.className = 'text-right text-sm font-medium text-gray-700 mt-1';
+            // Update or create score text
+            let scoreText = progressBar.parentNode.querySelector('.readiness-score-text');
+            if (!scoreText) {
+                scoreText = document.createElement('div');
+                scoreText.className = 'text-right text-sm font-medium text-gray-700 mt-1 readiness-score-text';
+                progressBar.parentNode.appendChild(scoreText);
+            }
             scoreText.textContent = `${readinessScore}%`;
-            progressBar.parentNode.appendChild(scoreText);
         }
 
         function provideFeedback(jobId, action) {
@@ -591,68 +709,6 @@
             document.getElementById('feedbackForm').reset();
         }
 
-        async function submitFeedback() {
-            const candidateId = document.getElementById('feedbackCandidateId').value;
-            const jobId = document.getElementById('feedbackJobId').value;
-            const action = document.getElementById('feedbackAction').value;
-            const reasonCode = document.getElementById('reasonCode').value;
-            const comment = document.getElementById('comment').value;
-            
-            if (!reasonCode) {
-                alert('Please select a reason');
-                return;
-            }
-            
-            try {
-                const response = await fetch('/api/feedback', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        candidate_id: candidateId,
-                        job_id: jobId,
-                        action: action,
-                        reason_code: reasonCode,
-                        comment: comment
-                    })
-                });
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    closeFeedbackModal();
-                    
-                    // Show success message
-                    const alertDiv = document.createElement('div');
-                    alertDiv.className = 'fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50';
-                    alertDiv.innerHTML = `
-                        <div class="flex items-center">
-                            <i class="fas fa-check-circle mr-2"></i>
-                            <span>Feedback submitted successfully!</span>
-                            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-green-700 hover:text-green-900">
-                                <i class="fas fa-times"></i>
-                            </button>
-                        </div>
-                    `;
-                    document.body.appendChild(alertDiv);
-                    
-                    // Auto-remove after 5 seconds
-                    setTimeout(() => {
-                        if (alertDiv.parentNode) {
-                            alertDiv.remove();
-                        }
-                    }, 5000);
-                    
-                } else {
-                    throw new Error(result.message || 'Failed to submit feedback');
-                }
-                
-            } catch (error) {
-                console.error('Error submitting feedback:', error);
-                alert('Error submitting feedback: ' + error.message);
-            }
-        }
 
         function quickAction(action) {
             if (!candidateData || !candidateData.matches || candidateData.matches.length === 0) {
@@ -739,6 +795,223 @@ Telus Talent Acquisition Team`;
                 'job_006': 'Product Manager'
             };
             return jobTitles[jobId] || jobId;
+        }
+
+        // Confirmation modal functions
+        let pendingAction = null;
+
+        function showConfirmationModal(jobId, action, jobTitle) {
+            pendingAction = { jobId, action, jobTitle };
+            
+            const modal = document.getElementById('confirmationModal');
+            const title = document.getElementById('confirmationTitle');
+            const icon = document.getElementById('confirmationIcon');
+            const message = document.getElementById('confirmationMessage');
+            const subMessage = document.getElementById('confirmationSubMessage');
+            const steps = document.getElementById('confirmationSteps');
+            const confirmButton = document.getElementById('confirmButton');
+            
+            if (action === 'accept') {
+                title.textContent = 'Accept Candidate';
+                icon.className = 'w-12 h-12 rounded-full flex items-center justify-center mr-4 bg-green-100';
+                icon.innerHTML = '<i class="fas fa-check text-green-600 text-xl"></i>';
+                message.textContent = `Accept candidate for ${jobTitle}?`;
+                subMessage.textContent = 'This action will notify the candidate and update their status.';
+                
+                steps.innerHTML = `
+                    <li><i class="fas fa-check text-green-500 mr-2"></i>Candidate status will be updated to "Accepted"</li>
+                    <li><i class="fas fa-envelope text-blue-500 mr-2"></i>Acceptance email will be sent automatically</li>
+                    <li><i class="fas fa-user-check text-purple-500 mr-2"></i>Candidate will be notified of next steps</li>
+                    <li><i class="fas fa-calendar text-orange-500 mr-2"></i>HR team will be notified to schedule interview</li>
+                `;
+                
+                confirmButton.className = 'px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors duration-200';
+                confirmButton.innerHTML = '<i class="fas fa-check mr-2"></i>Accept Candidate';
+                
+            } else if (action === 'reject') {
+                title.textContent = 'Reject Candidate';
+                icon.className = 'w-12 h-12 rounded-full flex items-center justify-center mr-4 bg-red-100';
+                icon.innerHTML = '<i class="fas fa-times text-red-600 text-xl"></i>';
+                message.textContent = `Reject candidate for ${jobTitle}?`;
+                subMessage.textContent = 'This action will notify the candidate and remove them from consideration.';
+                
+                steps.innerHTML = `
+                    <li><i class="fas fa-times text-red-500 mr-2"></i>Candidate status will be updated to "Rejected"</li>
+                    <li><i class="fas fa-envelope text-blue-500 mr-2"></i>Rejection email will be sent automatically</li>
+                    <li><i class="fas fa-archive text-gray-500 mr-2"></i>Match will be archived but kept for records</li>
+                    <li><i class="fas fa-search text-green-500 mr-2"></i>Candidate remains in database for future opportunities</li>
+                `;
+                
+                confirmButton.className = 'px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition-colors duration-200';
+                confirmButton.innerHTML = '<i class="fas fa-times mr-2"></i>Reject Candidate';
+            }
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeConfirmationModal() {
+            document.getElementById('confirmationModal').classList.add('hidden');
+            pendingAction = null;
+        }
+
+        async function confirmAction() {
+            if (!pendingAction) return;
+            
+            const { jobId, action, jobTitle } = pendingAction;
+            
+            // Show loading state
+            const confirmButton = document.getElementById('confirmButton');
+            const originalContent = confirmButton.innerHTML;
+            confirmButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+            confirmButton.disabled = true;
+            
+            try {
+                // First show feedback modal to get reason
+                closeConfirmationModal();
+                
+                // Set up feedback modal with the action
+                document.getElementById('feedbackCandidateId').value = candidateId;
+                document.getElementById('feedbackJobId').value = jobId;
+                document.getElementById('feedbackAction').value = action;
+                
+                // Populate reason options
+                populateReasonOptions(action);
+                
+                // Show feedback modal
+                document.getElementById('feedbackModal').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Error in confirmAction:', error);
+                confirmButton.innerHTML = originalContent;
+                confirmButton.disabled = false;
+                alert('An error occurred. Please try again.');
+            }
+        }
+
+        // Updated submitFeedback function to handle accept/reject actions
+        async function submitFeedback() {
+            const candidateIdValue = document.getElementById('feedbackCandidateId').value;
+            const jobId = document.getElementById('feedbackJobId').value;
+            const action = document.getElementById('feedbackAction').value;
+            const reasonCode = document.getElementById('reasonCode').value;
+            const comment = document.getElementById('comment').value;
+            
+            if (!reasonCode) {
+                alert('Please select a reason');
+                return;
+            }
+            
+            try {
+                let endpoint = '/api/feedback';
+                
+                // Use specific endpoints for accept/reject actions
+                if (action === 'accept') {
+                    endpoint = '/api/match/accept';
+                } else if (action === 'reject') {
+                    endpoint = '/api/match/reject';
+                }
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        candidate_id: candidateIdValue,
+                        job_id: jobId,
+                        action: action,
+                        reason_code: reasonCode,
+                        comment: comment
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    closeFeedbackModal();
+                    
+                    // Show success message with more details for accept/reject
+                    let message = 'Feedback submitted successfully!';
+                    if (action === 'accept') {
+                        message = 'Candidate accepted successfully! Confirmation email sent.';
+                    } else if (action === 'reject') {
+                        message = 'Match rejected and removed successfully! Notification email sent.';
+                    }
+                    
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50';
+                    alertDiv.innerHTML = `
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            <span>${message}</span>
+                            <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-green-700 hover:text-green-900">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    `;
+                    document.body.appendChild(alertDiv);
+                    
+                    // Auto-remove after 5 seconds
+                    setTimeout(() => {
+                        if (alertDiv.parentNode) {
+                            alertDiv.remove();
+                        }
+                    }, 5000);
+                    
+                    // For reject action, immediately remove the match from UI and reload data
+                    if (action === 'reject') {
+                        // Remove the rejected match from candidateData
+                        if (candidateData && candidateData.matches) {
+                            candidateData.matches = candidateData.matches.filter(match => match.job_id !== jobId);
+                            
+                            // Re-display matches without the rejected one
+                            displayMatches(candidateData.matches);
+                            
+                            // Update skill gaps if needed
+                            if (candidateData.matches.length > 0 && candidateData.skill_gaps) {
+                                displaySkillGaps(candidateData.skill_gaps);
+                            } else if (candidateData.matches.length === 0) {
+                                // Hide skill gap card if no matches left
+                                document.getElementById('skillGapCard').style.display = 'none';
+                            }
+                        }
+                        
+                        // Also reload data from server to ensure consistency
+                        setTimeout(() => {
+                            loadCandidateData();
+                        }, 500);
+                    } else if (action === 'accept') {
+                        // For accept action, reload data to show updated status
+                        setTimeout(() => {
+                            loadCandidateData();
+                        }, 1000);
+                    }
+                    
+                } else {
+                    throw new Error(result.message || 'Failed to submit feedback');
+                }
+                
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Error submitting feedback: ' + error.message);
+            }
+        }
+
+        // Updated quick action to use confirmation modal
+        function quickAction(action) {
+            if (!candidateData || !candidateData.matches || candidateData.matches.length === 0) {
+                alert('No matches available for quick action');
+                return;
+            }
+            
+            const topMatch = candidateData.matches[0];
+            
+            if (action === 'accept') {
+                showConfirmationModal(topMatch.job_id, 'accept', topMatch.job_details.title);
+            } else {
+                // For review action, use the old feedback modal
+                provideFeedback(topMatch.job_id, action);
+            }
         }
 
         // Load data on page load
