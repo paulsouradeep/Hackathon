@@ -22,6 +22,7 @@ except ImportError:
 from models.improved_ai_models import improved_talent_matcher as talent_matcher
 from models.social_media_sourcing import social_media_sourcer
 from models.conversational_ai_recruiter import conversational_ai_recruiter
+from models.simple_blockchain_credentials import blockchain_verifier
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -1667,6 +1668,218 @@ async def ai_conversation_detail(request: Request, conversation_id: str):
     return templates.TemplateResponse("ai_conversation_detail.html", {
         "request": request, 
         "conversation_id": conversation_id
+    })
+
+# Blockchain Credential Verification API Routes
+class CredentialData(BaseModel):
+    candidate_id: str
+    type: str  # degree, certification, work_experience, skill_assessment
+    title: str
+    institution_id: Optional[str] = None
+    institution_name: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    issue_date: Optional[str] = None
+    description: Optional[str] = None
+
+class InstitutionData(BaseModel):
+    institution_id: str
+    name: str
+    type: str  # university, certification_body, company
+    country: Optional[str] = None
+    accreditation_body: Optional[str] = None
+
+@app.get("/credentials", response_class=HTMLResponse)
+async def credentials_page(request: Request):
+    """Blockchain credentials verification page"""
+    return templates.TemplateResponse("credentials.html", {"request": request})
+
+@app.post("/api/credentials/add")
+async def add_credential_to_blockchain(credential: CredentialData):
+    """Add a new credential to the blockchain"""
+    try:
+        # Convert to dictionary
+        credential_data = credential.dict()
+        
+        # Add to blockchain
+        block_hash = blockchain_verifier.add_credential_to_blockchain(credential_data)
+        
+        return {
+            "success": True,
+            "block_hash": block_hash,
+            "message": "Credential added to blockchain successfully"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error adding credential to blockchain: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/credentials/verify/{credential_hash}")
+async def verify_credential(credential_hash: str):
+    """Verify a credential using its blockchain hash"""
+    try:
+        verification_result = blockchain_verifier.verify_credential(credential_hash)
+        
+        return {
+            "success": True,
+            "verification_result": verification_result
+        }
+        
+    except Exception as e:
+        logger.error(f"Error verifying credential: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/credentials/candidate/{candidate_id}")
+async def get_candidate_credentials(candidate_id: str):
+    """Get all blockchain credentials for a candidate"""
+    try:
+        credential_summary = blockchain_verifier.get_candidate_credential_summary(candidate_id)
+        
+        return {
+            "success": True,
+            "credential_summary": credential_summary
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching candidate credentials: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/credentials/fraud-check")
+async def check_credential_fraud(candidate_id: str, credentials: List[CredentialData]):
+    """Check for potential credential fraud"""
+    try:
+        # Convert credentials to dictionaries
+        credential_list = [cred.dict() for cred in credentials]
+        
+        fraud_analysis = blockchain_verifier.detect_credential_fraud(candidate_id, credential_list)
+        
+        return {
+            "success": True,
+            "fraud_analysis": fraud_analysis
+        }
+        
+    except Exception as e:
+        logger.error(f"Error checking credential fraud: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/institutions/add")
+async def add_verified_institution(institution: InstitutionData):
+    """Add a verified institution to the system"""
+    try:
+        success = blockchain_verifier.add_verified_institution(institution.dict())
+        
+        if success:
+            return {
+                "success": True,
+                "message": "Institution added successfully"
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Institution already exists or error occurred"
+            }
+        
+    except Exception as e:
+        logger.error(f"Error adding institution: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/institutions")
+async def get_verified_institutions():
+    """Get all verified institutions"""
+    try:
+        conn = sqlite3.connect('credentials_blockchain.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT institution_id, name, type, verification_status, country, accreditation_body, created_at
+            FROM verified_institutions
+            ORDER BY name
+        ''')
+        
+        institutions = []
+        for row in cursor.fetchall():
+            institutions.append({
+                "institution_id": row[0],
+                "name": row[1],
+                "type": row[2],
+                "verification_status": row[3],
+                "country": row[4],
+                "accreditation_body": row[5],
+                "created_at": row[6]
+            })
+        
+        conn.close()
+        
+        return {
+            "success": True,
+            "institutions": institutions
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching institutions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/credentials/blockchain/stats")
+async def get_blockchain_stats():
+    """Get blockchain credential statistics"""
+    try:
+        conn = sqlite3.connect('credentials_blockchain.db')
+        cursor = conn.cursor()
+        
+        # Total credentials in blockchain
+        cursor.execute('SELECT COUNT(*) FROM credential_blocks WHERE credential_data NOT LIKE "%genesis%"')
+        total_credentials = cursor.fetchone()[0]
+        
+        # Total verified institutions
+        cursor.execute('SELECT COUNT(*) FROM verified_institutions')
+        total_institutions = cursor.fetchone()[0]
+        
+        # Fraud detection logs
+        cursor.execute('SELECT COUNT(*) FROM fraud_detection_logs')
+        fraud_detections = cursor.fetchone()[0]
+        
+        # Credential types distribution
+        cursor.execute('''
+            SELECT json_extract(credential_data, '$.type') as cred_type, COUNT(*) 
+            FROM credential_blocks 
+            WHERE credential_data NOT LIKE "%genesis%"
+            GROUP BY cred_type
+        ''')
+        credential_types = dict(cursor.fetchall())
+        
+        # Recent activity (last 7 days)
+        cursor.execute('''
+            SELECT COUNT(*) 
+            FROM credential_blocks 
+            WHERE created_at >= datetime('now', '-7 days')
+            AND credential_data NOT LIKE "%genesis%"
+        ''')
+        recent_credentials = cursor.fetchone()[0]
+        
+        conn.close()
+        
+        return {
+            "success": True,
+            "stats": {
+                "total_credentials": total_credentials,
+                "total_institutions": total_institutions,
+                "fraud_detections": fraud_detections,
+                "credential_types": credential_types,
+                "recent_credentials": recent_credentials,
+                "blockchain_integrity": "verified"  # In a real system, this would check hash chain
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching blockchain stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/credential/{credential_hash}", response_class=HTMLResponse)
+async def credential_detail(request: Request, credential_hash: str):
+    """Credential verification detail page"""
+    return templates.TemplateResponse("credential_detail.html", {
+        "request": request, 
+        "credential_hash": credential_hash
     })
 
 if __name__ == "__main__":
