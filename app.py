@@ -93,6 +93,16 @@ class FeedbackData(BaseModel):
     reason_code: str
     comment: Optional[str] = ""
 
+class JobData(BaseModel):
+    title: str
+    department: str
+    location: str
+    requirements: List[str]
+    nice_to_have: Optional[List[str]] = []
+    summary: str
+    experience_years: str
+    employment_type: str
+
 # API Routes
 @app.get("/", response_class=HTMLResponse)
 async def dashboard(request: Request):
@@ -424,6 +434,136 @@ async def candidate_detail(request: Request, candidate_id: str):
     return templates.TemplateResponse("candidate_detail.html", {
         "request": request, 
         "candidate_id": candidate_id
+    })
+
+# Jobs API Routes
+@app.get("/jobs", response_class=HTMLResponse)
+async def jobs_page(request: Request):
+    """Jobs listing page"""
+    return templates.TemplateResponse("jobs.html", {"request": request})
+
+@app.get("/api/jobs")
+async def get_jobs():
+    """Get all jobs"""
+    try:
+        # Return jobs from the AI model's data
+        jobs = talent_matcher.jobs_data
+        return {"jobs": jobs}
+    except Exception as e:
+        logger.error(f"Error fetching jobs: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/jobs")
+async def create_job(job: JobData):
+    """Create a new job"""
+    try:
+        # Generate job ID
+        job_id = f"job_{str(uuid.uuid4())[:8]}"
+        
+        # Create job object
+        new_job = {
+            "job_id": job_id,
+            "title": job.title,
+            "department": job.department,
+            "location": job.location,
+            "requirements": job.requirements,
+            "nice_to_have": job.nice_to_have,
+            "summary": job.summary,
+            "experience_years": job.experience_years,
+            "employment_type": job.employment_type
+        }
+        
+        # Add to jobs data
+        talent_matcher.jobs_data.append(new_job)
+        
+        # Update the jobs.json file
+        with open('data/jobs/jobs.json', 'w') as f:
+            json.dump(talent_matcher.jobs_data, f, indent=2)
+        
+        # Reload the AI model with new jobs
+        talent_matcher.load_jobs()
+        
+        return {"success": True, "job_id": job_id, "message": "Job created successfully"}
+        
+    except Exception as e:
+        logger.error(f"Error creating job: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/jobs/{job_id}")
+async def get_job_details(job_id: str):
+    """Get job details"""
+    try:
+        job = next((job for job in talent_matcher.jobs_data if job['job_id'] == job_id), None)
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+        
+        return {"job": job}
+        
+    except Exception as e:
+        logger.error(f"Error fetching job details: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/jobs/{job_id}/recommendations")
+async def get_job_recommendations(job_id: str):
+    """Get candidate recommendations for a job"""
+    try:
+        # Get job details
+        job = next((job for job in talent_matcher.jobs_data if job['job_id'] == job_id), None)
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+        
+        # Get all candidates and their matches for this job
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT c.candidate_id, c.name, c.email, c.phone, c.applied_for, c.skills, c.experience_years,
+                   m.similarity_score, m.confidence_band, m.explanation
+            FROM candidates c
+            JOIN matches m ON c.candidate_id = m.candidate_id
+            WHERE m.job_id = ?
+            ORDER BY m.similarity_score DESC
+        ''', (job_id,))
+        
+        recommendations = []
+        for row in cursor.fetchall():
+            # Parse skills safely
+            try:
+                skills = json.loads(row[5]) if row[5] and row[5].strip() else []
+            except (json.JSONDecodeError, TypeError):
+                skills = []
+            
+            recommendations.append({
+                "candidate_id": row[0],
+                "name": row[1],
+                "email": row[2],
+                "phone": row[3],
+                "applied_for": row[4],
+                "skills": skills,
+                "experience_years": row[6] or 0,
+                "similarity_score": row[7],
+                "confidence_band": row[8],
+                "explanation": row[9]
+            })
+        
+        conn.close()
+        
+        return {
+            "job": job,
+            "recommendations": recommendations,
+            "total_candidates": len(recommendations)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching job recommendations: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/job/{job_id}", response_class=HTMLResponse)
+async def job_detail(request: Request, job_id: str):
+    """Job detail page"""
+    return templates.TemplateResponse("job_detail.html", {
+        "request": request, 
+        "job_id": job_id
     })
 
 if __name__ == "__main__":

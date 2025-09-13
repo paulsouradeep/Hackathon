@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details - Telus Talent Intelligence Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'telus-purple': '#4B0082',
+                        'telus-green': '#00A651',
+                        'telus-blue': '#0066CC',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .job-header {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .job-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .job-summary {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .skills-section {
+            margin-bottom: 2rem;
+        }
+
+        .skills-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .skill-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .skill-tag.nice-to-have {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .recommendations-section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .candidates-count {
+            background: #667eea;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .candidates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .candidate-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            border-left: 4px solid #667eea;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .candidate-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        }
+
+        .candidate-card.high-match {
+            border-left-color: #28a745;
+        }
+
+        .candidate-card.medium-match {
+            border-left-color: #ffc107;
+        }
+
+        .candidate-card.low-match {
+            border-left-color: #dc3545;
+        }
+
+        .candidate-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .candidate-contact {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .match-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .score-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .score-value.high {
+            color: #28a745;
+        }
+
+        .score-value.medium {
+            color: #ffc107;
+        }
+
+        .score-value.low {
+            color: #dc3545;
+        }
+
+        .confidence-band {
+            background: #e9ecef;
+            color: #495057;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .candidate-skills {
+            margin-bottom: 1rem;
+        }
+
+        .candidate-skills-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .candidate-skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .candidate-skill-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+
+        .match-explanation {
+            background: #f8f9fa;
+            border-left: 3px solid #667eea;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .explanation-text {
+            color: #555;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .candidate-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5a6fd8;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .error-state {
+            text-align: center;
+            padding: 3rem;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-telus-purple to-telus-blue rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">Telus Talent Intelligence</h1>
+                            <p class="text-xs text-gray-500">AI-Powered Recruitment Platform</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-700 hover:text-telus-blue px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                        Dashboard
+                    </a>
+                    <a href="/jobs" class="text-gray-700 hover:text-telus-blue px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                        Jobs
+                    </a>
+                    <a href="/upload" class="bg-telus-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload Resume</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <a href="/jobs" class="inline-flex items-center text-telus-blue hover:text-blue-700 mb-6 transition-colors duration-200">
+            <i class="fas fa-arrow-left mr-2"></i>
+            Back to Jobs
+        </a>
+        
+        <div id="jobDetails" class="bg-white rounded-xl shadow-lg border border-gray-100 p-8 mb-8">
+            <div class="text-center py-8">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-telus-blue mx-auto mb-4"></div>
+                <p class="text-gray-500">Loading job details...</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="px-8 py-6 bg-gradient-to-r from-telus-blue to-telus-purple flex justify-between items-center">
+                <h2 class="text-xl font-semibold text-white flex items-center">
+                    <i class="fas fa-users mr-3"></i>
+                    Candidate Recommendations
+                </h2>
+                <div id="candidatesCount" class="bg-white bg-opacity-20 text-white px-4 py-2 rounded-full text-sm font-medium">
+                    0 candidates
+                </div>
+            </div>
+            
+            <div id="recommendationsContainer" class="p-8">
+                <div class="text-center py-8">
+                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-telus-blue mx-auto mb-4"></div>
+                    <p class="text-gray-500">Loading recommendations...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const jobId = window.location.pathname.split('/').pop();
+        let jobData = null;
+        let recommendations = [];
+
+        // Load job details and recommendations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJobDetails();
+            loadRecommendations();
+        });
+
+        async function loadJobDetails() {
+            try {
+                const response = await fetch(`/api/jobs/${jobId}`);
+                const data = await response.json();
+                jobData = data.job;
+                renderJobDetails();
+            } catch (error) {
+                console.error('Error loading job details:', error);
+                document.getElementById('jobDetails').innerHTML = 
+                    '<div class="error-state"><h3>Error loading job details</h3><p>Please try again later.</p></div>';
+            }
+        }
+
+        async function loadRecommendations() {
+            try {
+                const response = await fetch(`/api/jobs/${jobId}/recommendations`);
+                const data = await response.json();
+                recommendations = data.recommendations;
+                renderRecommendations();
+                updateCandidatesCount(data.total_candidates);
+            } catch (error) {
+                console.error('Error loading recommendations:', error);
+                document.getElementById('recommendationsContainer').innerHTML = 
+                    '<div class="error-state"><h3>Error loading recommendations</h3><p>Please try again later.</p></div>';
+            }
+        }
+
+        function renderJobDetails() {
+            if (!jobData) return;
+
+            document.getElementById('jobDetails').innerHTML = `
+                <h1 class="job-title">${jobData.title}</h1>
+                <div class="job-meta">
+                    <div class="meta-item">
+                        <span>🏢</span>
+                        <span>${jobData.department}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>📍</span>
+                        <span>${jobData.location}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>⏰</span>
+                        <span>${jobData.experience_years} experience</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>💼</span>
+                        <span>${jobData.employment_type}</span>
+                    </div>
+                </div>
+                
+                <div class="job-summary">${jobData.summary}</div>
+                
+                <div class="skills-section">
+                    <h3 class="skills-title">Required Skills</h3>
+                    <div class="skills-list">
+                        ${jobData.requirements.map(skill => 
+                            `<span class="skill-tag">${skill}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                ${jobData.nice_to_have && jobData.nice_to_have.length > 0 ? `
+                    <div class="skills-section">
+                        <h3 class="skills-title">Nice to Have</h3>
+                        <div class="skills-list">
+                            ${jobData.nice_to_have.map(skill => 
+                                `<span class="skill-tag nice-to-have">${skill}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        function renderRecommendations() {
+            const container = document.getElementById('recommendationsContainer');
+            
+            if (recommendations.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No candidate recommendations</h3>
+                        <p>No candidates have been matched to this job yet. Upload some resumes to see recommendations!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="candidates-grid">
+                    ${recommendations.map(candidate => {
+                        const matchClass = getMatchClass(candidate.similarity_score);
+                        const scoreClass = getScoreClass(candidate.similarity_score);
+                        
+                        return `
+                            <div class="candidate-card ${matchClass}" onclick="viewCandidate('${candidate.candidate_id}')">
+                                <div class="candidate-name">${candidate.name}</div>
+                                <div class="candidate-contact">
+                                    📧 ${candidate.email} | 📞 ${candidate.phone}
+                                </div>
+                                
+                                <div class="match-score">
+                                    <span class="score-value ${scoreClass}">
+                                        ${Math.round(candidate.similarity_score * 100)}% Match
+                                    </span>
+                                    <span class="confidence-band">${candidate.confidence_band}</span>
+                                </div>
+                                
+                                ${candidate.skills && candidate.skills.length > 0 ? `
+                                    <div class="candidate-skills">
+                                        <div class="candidate-skills-title">Skills:</div>
+                                        <div class="candidate-skills-list">
+                                            ${candidate.skills.slice(0, 6).map(skill => 
+                                                `<span class="candidate-skill-tag">${skill}</span>`
+                                            ).join('')}
+                                            ${candidate.skills.length > 6 ? 
+                                                `<span class="candidate-skill-tag">+${candidate.skills.length - 6} more</span>` : ''
+                                            }
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                
+                                <div class="match-explanation">
+                                    <div class="explanation-text">${candidate.explanation}</div>
+                                </div>
+                                
+                                <div class="candidate-actions">
+                                    <button class="btn-small btn-primary" onclick="event.stopPropagation(); viewCandidate('${candidate.candidate_id}')">
+                                        View Profile
+                                    </button>
+                                    <button class="btn-small btn-secondary" onclick="event.stopPropagation(); contactCandidate('${candidate.email}')">
+                                        Contact
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }
+
+        function getMatchClass(score) {
+            if (score >= 0.7) return 'high-match';
+            if (score >= 0.5) return 'medium-match';
+            return 'low-match';
+        }
+
+        function getScoreClass(score) {
+            if (score >= 0.7) return 'high';
+            if (score >= 0.5) return 'medium';
+            return 'low';
+        }
+
+        function updateCandidatesCount(count) {
+            document.getElementById('candidatesCount').textContent = `${count} candidate${count !== 1 ? 's' : ''}`;
+        }
+
+        function viewCandidate(candidateId) {
+            window.location.href = `/candidate/${candidateId}`;
+        }
+
+        function contactCandidate(email) {
+            window.location.href = `mailto:${email}`;
+        }
+    </script>
+</body>
+</html>

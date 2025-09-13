@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobs - Telus Talent Intelligence Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'telus-purple': '#4B0082',
+                        'telus-green': '#00A651',
+                        'telus-blue': '#0066CC',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .job-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-department {
+            color: #667eea;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .job-location {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .job-summary {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .job-requirements {
+            margin-bottom: 1rem;
+        }
+
+        .requirements-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 0.25rem 0.5rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .job-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .experience-years {
+            background: #f0f0f0;
+            padding: 0.25rem 0.5rem;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .view-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+
+        .view-btn:hover {
+            background: #5a6fd8;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        .skills-input {
+            margin-bottom: 0.5rem;
+        }
+
+        .add-skill-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .remove-skill {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-telus-purple to-telus-blue rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">Telus Talent Intelligence</h1>
+                            <p class="text-xs text-gray-500">AI-Powered Recruitment Platform</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-700 hover:text-telus-blue px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200">
+                        Dashboard
+                    </a>
+                    <a href="/upload" class="bg-telus-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload Resume</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Job Openings</h1>
+                <p class="text-gray-600 mt-2">Manage and view all available positions</p>
+            </div>
+            <button onclick="openCreateJobModal()" class="bg-telus-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 transition-colors duration-200">
+                <i class="fas fa-plus"></i>
+                <span>Create New Job</span>
+            </button>
+        </div>
+
+        <div id="jobsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="text-center py-12 col-span-full">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-telus-blue mx-auto mb-4"></div>
+                <p class="text-gray-500">Loading jobs...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Job Modal -->
+    <div id="createJobModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCreateJobModal()">&times;</span>
+            <h2>Create New Job</h2>
+            <form id="createJobForm">
+                <div class="form-group">
+                    <label for="title">Job Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <input type="text" id="department" name="department" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="experience_years">Experience Required</label>
+                    <input type="text" id="experience_years" name="experience_years" placeholder="e.g., 3-5 years" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="employment_type">Employment Type</label>
+                    <select id="employment_type" name="employment_type" required>
+                        <option value="Full-time">Full-time</option>
+                        <option value="Part-time">Part-time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Internship">Internship</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Required Skills</label>
+                    <div id="requirementsContainer">
+                        <div class="skill-item">
+                            <input type="text" class="skills-input" placeholder="Enter a required skill">
+                            <button type="button" class="remove-skill" onclick="removeSkill(this)">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-skill-btn" onclick="addRequiredSkill()">+ Add Skill</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>Nice to Have Skills</label>
+                    <div id="niceToHaveContainer">
+                        <div class="skill-item">
+                            <input type="text" class="skills-input" placeholder="Enter a nice-to-have skill">
+                            <button type="button" class="remove-skill" onclick="removeSkill(this)">Remove</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-skill-btn" onclick="addNiceToHaveSkill()">+ Add Skill</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="summary">Job Summary</label>
+                    <textarea id="summary" name="summary" placeholder="Describe the role, responsibilities, and what you're looking for..." required></textarea>
+                </div>
+                
+                <button type="submit" class="btn">Create Job</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let jobs = [];
+
+        // Load jobs on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJobs();
+        });
+
+        async function loadJobs() {
+            try {
+                const response = await fetch('/api/jobs');
+                const data = await response.json();
+                jobs = data.jobs;
+                renderJobs();
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+                document.getElementById('jobsContainer').innerHTML = 
+                    '<div class="empty-state"><h3>Error loading jobs</h3><p>Please try again later.</p></div>';
+            }
+        }
+
+        function renderJobs() {
+            const container = document.getElementById('jobsContainer');
+            
+            if (jobs.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No jobs available</h3>
+                        <p>Create your first job posting to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = jobs.map(job => `
+                <div class="job-card" onclick="viewJob('${job.job_id}')">
+                    <div class="job-title">${job.title}</div>
+                    <div class="job-department">${job.department}</div>
+                    <div class="job-location">📍 ${job.location}</div>
+                    <div class="job-summary">${job.summary}</div>
+                    
+                    <div class="job-requirements">
+                        <div class="requirements-title">Required Skills:</div>
+                        <div class="skills-list">
+                            ${job.requirements.slice(0, 4).map(skill => 
+                                `<span class="skill-tag">${skill}</span>`
+                            ).join('')}
+                            ${job.requirements.length > 4 ? `<span class="skill-tag">+${job.requirements.length - 4} more</span>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="job-meta">
+                        <span class="experience-years">${job.experience_years} experience</span>
+                        <button class="view-btn" onclick="event.stopPropagation(); viewJob('${job.job_id}')">View Details</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewJob(jobId) {
+            window.location.href = `/job/${jobId}`;
+        }
+
+        function openCreateJobModal() {
+            document.getElementById('createJobModal').style.display = 'block';
+        }
+
+        function closeCreateJobModal() {
+            document.getElementById('createJobModal').style.display = 'none';
+            document.getElementById('createJobForm').reset();
+            resetSkillsContainers();
+        }
+
+        function addRequiredSkill() {
+            const container = document.getElementById('requirementsContainer');
+            const skillItem = document.createElement('div');
+            skillItem.className = 'skill-item';
+            skillItem.innerHTML = `
+                <input type="text" class="skills-input" placeholder="Enter a required skill">
+                <button type="button" class="remove-skill" onclick="removeSkill(this)">Remove</button>
+            `;
+            container.appendChild(skillItem);
+        }
+
+        function addNiceToHaveSkill() {
+            const container = document.getElementById('niceToHaveContainer');
+            const skillItem = document.createElement('div');
+            skillItem.className = 'skill-item';
+            skillItem.innerHTML = `
+                <input type="text" class="skills-input" placeholder="Enter a nice-to-have skill">
+                <button type="button" class="remove-skill" onclick="removeSkill(this)">Remove</button>
+            `;
+            container.appendChild(skillItem);
+        }
+
+        function removeSkill(button) {
+            const skillItem = button.parentElement;
+            const container = skillItem.parentElement;
+            if (container.children.length > 1) {
+                skillItem.remove();
+            }
+        }
+
+        function resetSkillsContainers() {
+            // Reset requirements container
+            const reqContainer = document.getElementById('requirementsContainer');
+            reqContainer.innerHTML = `
+                <div class="skill-item">
+                    <input type="text" class="skills-input" placeholder="Enter a required skill">
+                    <button type="button" class="remove-skill" onclick="removeSkill(this)">Remove</button>
+                </div>
+            `;
+
+            // Reset nice-to-have container
+            const niceContainer = document.getElementById('niceToHaveContainer');
+            niceContainer.innerHTML = `
+                <div class="skill-item">
+                    <input type="text" class="skills-input" placeholder="Enter a nice-to-have skill">
+                    <button type="button" class="remove-skill" onclick="removeSkill(this)">Remove</button>
+                </div>
+            `;
+        }
+
+        // Handle form submission
+        document.getElementById('createJobForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            // Collect required skills
+            const requirements = [];
+            document.querySelectorAll('#requirementsContainer .skills-input').forEach(input => {
+                if (input.value.trim()) {
+                    requirements.push(input.value.trim());
+                }
+            });
+            
+            // Collect nice-to-have skills
+            const niceToHave = [];
+            document.querySelectorAll('#niceToHaveContainer .skills-input').forEach(input => {
+                if (input.value.trim()) {
+                    niceToHave.push(input.value.trim());
+                }
+            });
+            
+            const jobData = {
+                title: formData.get('title'),
+                department: formData.get('department'),
+                location: formData.get('location'),
+                experience_years: formData.get('experience_years'),
+                employment_type: formData.get('employment_type'),
+                summary: formData.get('summary'),
+                requirements: requirements,
+                nice_to_have: niceToHave
+            };
+            
+            try {
+                const response = await fetch('/api/jobs', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(jobData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert('Job created successfully!');
+                    closeCreateJobModal();
+                    loadJobs(); // Reload jobs list
+                } else {
+                    alert('Error creating job: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error creating job:', error);
+                alert('Error creating job. Please try again.');
+            }
+        });
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('createJobModal');
+            if (event.target === modal) {
+                closeCreateJobModal();
+            }
+        }
+    </script>
+</body>
+</html>

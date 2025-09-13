@@ -1,0 +1,79 @@
+JOHN SMITH
+Senior Software Engineer
+Email: john.smith@email.com | Phone: +91-9876543210
+LinkedIn: linkedin.com/in/johnsmith | GitHub: github.com/johnsmith
+Location: Bengaluru, Karnataka, India
+
+PROFESSIONAL SUMMARY
+Experienced Senior Software Engineer with 6+ years of expertise in building scalable microservices and cloud infrastructure. Proven track record in Python development, AWS cloud services, containerization with Docker and Kubernetes, and implementing DevOps practices. Strong background in mentoring junior developers and leading technical initiatives in fast-paced environments.
+
+TECHNICAL SKILLS
+Programming Languages: Python, Java, JavaScript, Go
+Cloud Platforms: AWS (EC2, S3, Lambda, RDS, EKS), Azure
+Containerization: Docker, Kubernetes, Docker Compose
+Microservices: REST APIs, GraphQL, Service Mesh, API Gateway
+DevOps Tools: Jenkins, GitLab CI/CD, Terraform, Ansible
+Databases: PostgreSQL, MySQL, MongoDB, Redis
+Frameworks: Django, Flask, FastAPI, React, Node.js
+Monitoring: Prometheus, Grafana, ELK Stack, CloudWatch
+Version Control: Git, GitHub, GitLab
+
+PROFESSIONAL EXPERIENCE
+
+Senior Software Engineer | TechCorp Solutions | Bengaluru | Jan 2020 - Present
+• Designed and developed 15+ microservices using Python and FastAPI, serving 1M+ daily active users
+• Implemented containerization strategy using Docker and Kubernetes, reducing deployment time by 70%
+• Architected AWS cloud infrastructure using EC2, EKS, RDS, and S3, achieving 99.9% uptime
+• Led migration from monolithic architecture to microservices, improving system scalability by 300%
+• Mentored 5 junior developers and conducted code reviews, improving team productivity by 40%
+• Implemented CI/CD pipelines using Jenkins and GitLab, reducing release cycle from weeks to days
+• Optimized database queries and implemented caching strategies, improving API response time by 60%
+
+Software Engineer | DataFlow Systems | Bengaluru | Jun 2018 - Dec 2019
+• Developed Python-based data processing applications handling 10TB+ daily data volume
+• Built RESTful APIs using Django and Flask frameworks for internal and external clients
+• Implemented Docker containerization for development and production environments
+• Collaborated with DevOps team to deploy applications on AWS using Kubernetes
+• Participated in Agile development process and sprint planning sessions
+• Wrote comprehensive unit tests achieving 90%+ code coverage
+
+Junior Software Developer | StartupTech | Bengaluru | Jul 2017 - May 2018
+• Developed web applications using Python, Django, and React
+• Worked with PostgreSQL and MongoDB databases for data storage and retrieval
+• Participated in code reviews and followed best practices for software development
+• Gained experience with AWS services including EC2, S3, and RDS
+
+PROJECTS
+
+E-commerce Microservices Platform (2022)
+• Built scalable e-commerce platform using Python microservices architecture
+• Implemented using Docker, Kubernetes, AWS EKS, and PostgreSQL
+• Integrated payment gateways and implemented real-time inventory management
+• Technologies: Python, FastAPI, Docker, Kubernetes, AWS, PostgreSQL, Redis
+
+Real-time Analytics Dashboard (2021)
+• Developed real-time analytics platform processing 1M+ events per hour
+• Used Python, Apache Kafka, and React for data streaming and visualization
+• Deployed on AWS using EKS and implemented auto-scaling policies
+• Technologies: Python, Kafka, React, AWS, Kubernetes, InfluxDB
+
+EDUCATION
+Bachelor of Technology in Computer Science Engineering
+Indian Institute of Technology (IIT) Bengaluru | 2013 - 2017
+CGPA: 8.5/10
+
+CERTIFICATIONS
+• AWS Certified Solutions Architect - Associate (2021)
+• Certified Kubernetes Administrator (CKA) (2020)
+• Docker Certified Associate (2019)
+
+ACHIEVEMENTS
+• Led team that won "Best Innovation Award" for microservices migration project (2022)
+• Reduced infrastructure costs by 35% through optimization and right-sizing initiatives
+• Published technical blog posts on microservices and Kubernetes with 10K+ views
+• Speaker at Bengaluru Python Meetup on "Building Scalable APIs with FastAPI"
+
+LANGUAGES
+• English (Fluent)
+• Hindi (Native)
+• Kannada (Conversational)
