@@ -4,30 +4,62 @@
     "title": "Senior Software Engineer",
     "department": "Platform Engineering",
     "location": "Bengaluru",
-    "requirements": ["Python", "AWS", "Microservices", "Docker", "Kubernetes"],
-    "nice_to_have": ["React", "Machine Learning", "DevOps"],
+    "requirements": [
+      "Python",
+      "AWS",
+      "Microservices",
+      "Docker",
+      "Kubernetes"
+    ],
+    "nice_to_have": [
+      "React",
+      "Machine Learning",
+      "DevOps"
+    ],
     "summary": "We are looking for a Senior Software Engineer to join our Platform Engineering team. You will be responsible for building scalable microservices, working with cloud infrastructure, and mentoring junior developers. Strong experience with Python, AWS, and containerization technologies is required.",
     "experience_years": "5-8",
     "employment_type": "Full-time"
   },
   {
-    "job_id": "job_002", 
+    "job_id": "job_002",
     "title": "Cloud Data Engineer",
     "department": "Data Platform",
     "location": "Bengaluru",
-    "requirements": ["Python", "SQL", "GCP", "BigQuery", "Apache Spark"],
-    "nice_to_have": ["Kafka", "Airflow", "Terraform", "Machine Learning"],
+    "requirements": [
+      "Python",
+      "SQL",
+      "GCP",
+      "BigQuery",
+      "Apache Spark"
+    ],
+    "nice_to_have": [
+      "Kafka",
+      "Airflow",
+      "Terraform",
+      "Machine Learning"
+    ],
     "summary": "Join our Data Platform team as a Cloud Data Engineer. You will design and build data pipelines, work with large-scale data processing systems, and ensure data quality and reliability. Experience with GCP, BigQuery, and distributed computing frameworks is essential.",
     "experience_years": "4-7",
     "employment_type": "Full-time"
   },
   {
     "job_id": "job_003",
-    "title": "DevOps Specialist", 
+    "title": "DevOps Specialist",
     "department": "Infrastructure",
     "location": "Bengaluru",
-    "requirements": ["AWS", "Kubernetes", "Terraform", "CI/CD", "Docker"],
-    "nice_to_have": ["Python", "Monitoring", "Security", "Ansible"],
+    "requirements": [
+      "AWS",
+      "Kubernetes",
+      "Terraform",
+      "CI/CD",
+      "Docker"
+    ],
+    "nice_to_have": [
+      "Python",
+      "Monitoring",
+      "Security",
+      "Ansible"
+    ],
     "summary": "We need a DevOps Specialist to manage our cloud infrastructure and deployment pipelines. You will work on automating deployments, managing Kubernetes clusters, and ensuring system reliability. Strong knowledge of AWS, Kubernetes, and Infrastructure as Code is required.",
     "experience_years": "3-6",
     "employment_type": "Full-time"
@@ -36,9 +68,20 @@
     "job_id": "job_004",
     "title": "Machine Learning Engineer",
     "department": "AI/ML",
-    "location": "Bengaluru", 
-    "requirements": ["Python", "TensorFlow", "PyTorch", "MLOps", "Statistics"],
-    "nice_to_have": ["AWS", "Kubernetes", "Spark", "NLP"],
+    "location": "Bengaluru",
+    "requirements": [
+      "Python",
+      "TensorFlow",
+      "PyTorch",
+      "MLOps",
+      "Statistics"
+    ],
+    "nice_to_have": [
+      "AWS",
+      "Kubernetes",
+      "Spark",
+      "NLP"
+    ],
     "summary": "Join our AI/ML team to build and deploy machine learning models at scale. You will work on model development, MLOps pipelines, and productionizing ML systems. Strong background in machine learning frameworks and statistical modeling is essential.",
     "experience_years": "3-5",
     "employment_type": "Full-time"
@@ -48,8 +91,19 @@
     "title": "Frontend Developer",
     "department": "Product Engineering",
     "location": "Bengaluru",
-    "requirements": ["React", "JavaScript", "TypeScript", "CSS", "HTML"],
-    "nice_to_have": ["Node.js", "GraphQL", "Testing", "Design Systems"],
+    "requirements": [
+      "React",
+      "JavaScript",
+      "TypeScript",
+      "CSS",
+      "HTML"
+    ],
+    "nice_to_have": [
+      "Node.js",
+      "GraphQL",
+      "Testing",
+      "Design Systems"
+    ],
     "summary": "We are seeking a Frontend Developer to create exceptional user experiences. You will work closely with designers and backend engineers to build responsive, accessible web applications. Expertise in React, TypeScript, and modern frontend development practices is required.",
     "experience_years": "2-5",
     "employment_type": "Full-time"
@@ -59,10 +113,481 @@
     "title": "Product Manager",
     "department": "Product",
     "location": "Bengaluru",
-    "requirements": ["Product Strategy", "Analytics", "Stakeholder Management", "Agile", "User Research"],
-    "nice_to_have": ["Technical Background", "B2B SaaS", "Data Analysis", "Design Thinking"],
+    "requirements": [
+      "Product Strategy",
+      "Analytics",
+      "Stakeholder Management",
+      "Agile",
+      "User Research"
+    ],
+    "nice_to_have": [
+      "Technical Background",
+      "B2B SaaS",
+      "Data Analysis",
+      "Design Thinking"
+    ],
     "summary": "Lead product development as a Product Manager in our growing product team. You will define product strategy, work with cross-functional teams, and drive product roadmaps. Strong analytical skills and experience in product management methodologies are essential.",
     "experience_years": "4-7",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_007",
+    "title": "Full Stack Developer",
+    "department": "Product Engineering",
+    "location": "Toronto",
+    "requirements": [
+      "JavaScript",
+      "React",
+      "Node.js",
+      "MongoDB",
+      "Express"
+    ],
+    "nice_to_have": [
+      "TypeScript",
+      "GraphQL",
+      "AWS",
+      "Docker",
+      "Testing"
+    ],
+    "summary": "Join our product engineering team as a Full Stack Developer. Build end-to-end web applications using modern JavaScript technologies. Work with React frontend, Node.js backend, and MongoDB database.",
+    "experience_years": "3-6",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_008",
+    "title": "Data Scientist",
+    "department": "Analytics",
+    "location": "Vancouver",
+    "requirements": [
+      "Python",
+      "R",
+      "Statistics",
+      "Machine Learning",
+      "SQL"
+    ],
+    "nice_to_have": [
+      "TensorFlow",
+      "PyTorch",
+      "Tableau",
+      "AWS",
+      "Spark"
+    ],
+    "summary": "Drive data-driven insights as a Data Scientist. Analyze large datasets, build predictive models, and communicate findings to stakeholders. Strong statistical background required.",
+    "experience_years": "2-5",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_009",
+    "title": "Security Engineer",
+    "department": "Cybersecurity",
+    "location": "Montreal",
+    "requirements": [
+      "Security",
+      "Penetration Testing",
+      "CISSP",
+      "Network Security",
+      "Incident Response"
+    ],
+    "nice_to_have": [
+      "Python",
+      "AWS Security",
+      "SIEM",
+      "Compliance",
+      "Risk Assessment"
+    ],
+    "summary": "Protect our infrastructure as a Security Engineer. Conduct security assessments, implement security controls, and respond to incidents. Security certifications preferred.",
+    "experience_years": "4-8",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_010",
+    "title": "Mobile Developer",
+    "department": "Mobile Engineering",
+    "location": "Calgary",
+    "requirements": [
+      "React Native",
+      "iOS",
+      "Android",
+      "JavaScript",
+      "Mobile UI/UX"
+    ],
+    "nice_to_have": [
+      "Swift",
+      "Kotlin",
+      "Flutter",
+      "Firebase",
+      "App Store"
+    ],
+    "summary": "Build mobile applications for iOS and Android platforms. Work with React Native and native technologies to create engaging mobile experiences.",
+    "experience_years": "2-6",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_011",
+    "title": "QA Engineer",
+    "department": "Quality Assurance",
+    "location": "Ottawa",
+    "requirements": [
+      "Test Automation",
+      "Selenium",
+      "API Testing",
+      "Quality Assurance",
+      "Bug Tracking"
+    ],
+    "nice_to_have": [
+      "Python",
+      "Java",
+      "CI/CD",
+      "Performance Testing",
+      "Security Testing"
+    ],
+    "summary": "Ensure product quality as a QA Engineer. Design and execute test plans, automate testing processes, and work closely with development teams.",
+    "experience_years": "2-5",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_012",
+    "title": "UX Designer",
+    "department": "Design",
+    "location": "Toronto",
+    "requirements": [
+      "UX Design",
+      "User Research",
+      "Prototyping",
+      "Figma",
+      "Design Thinking"
+    ],
+    "nice_to_have": [
+      "UI Design",
+      "Usability Testing",
+      "Analytics",
+      "Frontend Knowledge",
+      "Accessibility"
+    ],
+    "summary": "Create exceptional user experiences as a UX Designer. Conduct user research, design wireframes and prototypes, and collaborate with product teams.",
+    "experience_years": "3-7",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_013",
+    "title": "Backend Developer",
+    "department": "Platform Engineering",
+    "location": "Bengaluru",
+    "requirements": [
+      "Java",
+      "Spring Boot",
+      "Microservices",
+      "PostgreSQL",
+      "REST APIs"
+    ],
+    "nice_to_have": [
+      "Kafka",
+      "Redis",
+      "Docker",
+      "Kubernetes",
+      "AWS"
+    ],
+    "summary": "Build robust backend systems as a Backend Developer. Design APIs, implement business logic, and ensure system scalability and performance.",
+    "experience_years": "3-7",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_014",
+    "title": "Site Reliability Engineer",
+    "department": "Infrastructure",
+    "location": "Vancouver",
+    "requirements": [
+      "SRE",
+      "Monitoring",
+      "Incident Management",
+      "Automation",
+      "Linux"
+    ],
+    "nice_to_have": [
+      "Python",
+      "Go",
+      "Kubernetes",
+      "Prometheus",
+      "Grafana"
+    ],
+    "summary": "Ensure system reliability as an SRE. Monitor production systems, automate operations, and improve system performance and availability.",
+    "experience_years": "4-8",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_015",
+    "title": "Business Analyst",
+    "department": "Business Operations",
+    "location": "Toronto",
+    "requirements": [
+      "Business Analysis",
+      "Requirements Gathering",
+      "Process Improvement",
+      "Stakeholder Management",
+      "Documentation"
+    ],
+    "nice_to_have": [
+      "SQL",
+      "Analytics",
+      "Project Management",
+      "Agile",
+      "Domain Knowledge"
+    ],
+    "summary": "Drive business improvements as a Business Analyst. Gather requirements, analyze processes, and work with stakeholders to implement solutions.",
+    "experience_years": "2-6",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_016",
+    "title": "Technical Writer",
+    "department": "Documentation",
+    "location": "Remote",
+    "requirements": [
+      "Technical Writing",
+      "Documentation",
+      "API Documentation",
+      "Content Strategy",
+      "Communication"
+    ],
+    "nice_to_have": [
+      "Markdown",
+      "Git",
+      "Developer Tools",
+      "UX Writing",
+      "Video Creation"
+    ],
+    "summary": "Create clear technical documentation as a Technical Writer. Document APIs, write user guides, and help developers and users understand our products.",
+    "experience_years": "2-5",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_007",
+    "title": "Full Stack Developer",
+    "department": "Product Engineering",
+    "location": "Toronto",
+    "requirements": [
+      "JavaScript",
+      "React",
+      "Node.js",
+      "MongoDB",
+      "Express"
+    ],
+    "nice_to_have": [
+      "TypeScript",
+      "GraphQL",
+      "AWS",
+      "Docker",
+      "Testing"
+    ],
+    "summary": "Join our product engineering team as a Full Stack Developer. Build end-to-end web applications using modern JavaScript technologies. Work with React frontend, Node.js backend, and MongoDB database.",
+    "experience_years": "3-6",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_008",
+    "title": "Data Scientist",
+    "department": "Analytics",
+    "location": "Vancouver",
+    "requirements": [
+      "Python",
+      "R",
+      "Statistics",
+      "Machine Learning",
+      "SQL"
+    ],
+    "nice_to_have": [
+      "TensorFlow",
+      "PyTorch",
+      "Tableau",
+      "AWS",
+      "Spark"
+    ],
+    "summary": "Drive data-driven insights as a Data Scientist. Analyze large datasets, build predictive models, and communicate findings to stakeholders. Strong statistical background required.",
+    "experience_years": "2-5",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_009",
+    "title": "Security Engineer",
+    "department": "Cybersecurity",
+    "location": "Montreal",
+    "requirements": [
+      "Security",
+      "Penetration Testing",
+      "CISSP",
+      "Network Security",
+      "Incident Response"
+    ],
+    "nice_to_have": [
+      "Python",
+      "AWS Security",
+      "SIEM",
+      "Compliance",
+      "Risk Assessment"
+    ],
+    "summary": "Protect our infrastructure as a Security Engineer. Conduct security assessments, implement security controls, and respond to incidents. Security certifications preferred.",
+    "experience_years": "4-8",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_010",
+    "title": "Mobile Developer",
+    "department": "Mobile Engineering",
+    "location": "Calgary",
+    "requirements": [
+      "React Native",
+      "iOS",
+      "Android",
+      "JavaScript",
+      "Mobile UI/UX"
+    ],
+    "nice_to_have": [
+      "Swift",
+      "Kotlin",
+      "Flutter",
+      "Firebase",
+      "App Store"
+    ],
+    "summary": "Build mobile applications for iOS and Android platforms. Work with React Native and native technologies to create engaging mobile experiences.",
+    "experience_years": "2-6",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_011",
+    "title": "QA Engineer",
+    "department": "Quality Assurance",
+    "location": "Ottawa",
+    "requirements": [
+      "Test Automation",
+      "Selenium",
+      "API Testing",
+      "Quality Assurance",
+      "Bug Tracking"
+    ],
+    "nice_to_have": [
+      "Python",
+      "Java",
+      "CI/CD",
+      "Performance Testing",
+      "Security Testing"
+    ],
+    "summary": "Ensure product quality as a QA Engineer. Design and execute test plans, automate testing processes, and work closely with development teams.",
+    "experience_years": "2-5",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_012",
+    "title": "UX Designer",
+    "department": "Design",
+    "location": "Toronto",
+    "requirements": [
+      "UX Design",
+      "User Research",
+      "Prototyping",
+      "Figma",
+      "Design Thinking"
+    ],
+    "nice_to_have": [
+      "UI Design",
+      "Usability Testing",
+      "Analytics",
+      "Frontend Knowledge",
+      "Accessibility"
+    ],
+    "summary": "Create exceptional user experiences as a UX Designer. Conduct user research, design wireframes and prototypes, and collaborate with product teams.",
+    "experience_years": "3-7",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_013",
+    "title": "Backend Developer",
+    "department": "Platform Engineering",
+    "location": "Bengaluru",
+    "requirements": [
+      "Java",
+      "Spring Boot",
+      "Microservices",
+      "PostgreSQL",
+      "REST APIs"
+    ],
+    "nice_to_have": [
+      "Kafka",
+      "Redis",
+      "Docker",
+      "Kubernetes",
+      "AWS"
+    ],
+    "summary": "Build robust backend systems as a Backend Developer. Design APIs, implement business logic, and ensure system scalability and performance.",
+    "experience_years": "3-7",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_014",
+    "title": "Site Reliability Engineer",
+    "department": "Infrastructure",
+    "location": "Vancouver",
+    "requirements": [
+      "SRE",
+      "Monitoring",
+      "Incident Management",
+      "Automation",
+      "Linux"
+    ],
+    "nice_to_have": [
+      "Python",
+      "Go",
+      "Kubernetes",
+      "Prometheus",
+      "Grafana"
+    ],
+    "summary": "Ensure system reliability as an SRE. Monitor production systems, automate operations, and improve system performance and availability.",
+    "experience_years": "4-8",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_015",
+    "title": "Business Analyst",
+    "department": "Business Operations",
+    "location": "Toronto",
+    "requirements": [
+      "Business Analysis",
+      "Requirements Gathering",
+      "Process Improvement",
+      "Stakeholder Management",
+      "Documentation"
+    ],
+    "nice_to_have": [
+      "SQL",
+      "Analytics",
+      "Project Management",
+      "Agile",
+      "Domain Knowledge"
+    ],
+    "summary": "Drive business improvements as a Business Analyst. Gather requirements, analyze processes, and work with stakeholders to implement solutions.",
+    "experience_years": "2-6",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_016",
+    "title": "Technical Writer",
+    "department": "Documentation",
+    "location": "Remote",
+    "requirements": [
+      "Technical Writing",
+      "Documentation",
+      "API Documentation",
+      "Content Strategy",
+      "Communication"
+    ],
+    "nice_to_have": [
+      "Markdown",
+      "Git",
+      "Developer Tools",
+      "UX Writing",
+      "Video Creation"
+    ],
+    "summary": "Create clear technical documentation as a Technical Writer. Document APIs, write user guides, and help developers and users understand our products.",
+    "experience_years": "2-5",
     "employment_type": "Full-time"
   }
 ]

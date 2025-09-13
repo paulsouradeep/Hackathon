@@ -304,7 +304,7 @@
                         confidenceBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">No Match</span>';
                     }
                     
-                    const score = topMatch ? (topMatch.similarity_score * 100).toFixed(1) + '%' : 'N/A';
+                    const score = topMatch ? topMatch.similarity_score.toFixed(1) + '%' : 'N/A';
                     const jobTitle = topMatch ? getJobTitle(topMatch.job_id) : 'N/A';
                     
                     row.innerHTML = `
@@ -384,7 +384,7 @@
                     row.onclick = () => window.location.href = `/candidate/${candidate.candidate_id}`;
                     
                     const acceptedMatch = candidate.accepted_match;
-                    const score = (acceptedMatch.similarity_score * 100).toFixed(1) + '%';
+                    const score = acceptedMatch.similarity_score.toFixed(1) + '%';
                     const acceptedJobTitle = acceptedMatch.job_details ? acceptedMatch.job_details.title : getJobTitle(acceptedMatch.job_id);
                     const acceptedDate = new Date(acceptedMatch.accepted_at).toLocaleDateString();
                     

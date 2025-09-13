@@ -130,16 +130,59 @@ class ImprovedTalentMatcher:
         
         return list(extracted_skills)
     
-    def parse_resume_enhanced(self, resume_text: str) -> Dict:
-        """Enhanced resume parser with better skill extraction"""
-        lines = resume_text.split('\n')
+    def clean_resume_text(self, text: str) -> str:
+        """Clean malformed resume text where words are separated by newlines"""
+        # Replace multiple newlines with single spaces
+        cleaned = re.sub(r'\n+', ' ', text)
+        # Remove extra spaces
+        cleaned = re.sub(r'\s+', ' ', cleaned)
+        # Clean up common PDF extraction artifacts
+        cleaned = cleaned.replace('|', ' ')
+        return cleaned.strip()
+    
+    def extract_name_robust(self, text: str) -> str:
+        """Extract name from resume text more robustly"""
+        lines = text.split('\n')
         
-        # Extract name (first non-empty line)
-        name = "Unknown"
-        for line in lines:
-            if line.strip():
-                name = line.strip()
-                break
+        # Look for name patterns
+        for line in lines[:10]:  # Check first 10 lines
+            line = line.strip()
+            if not line:
+                continue
+                
+            # Skip common headers
+            if any(skip in line.lower() for skip in ['resume', 'cv', 'curriculum', 'contact', 'phone', 'email', '@']):
+                continue
+                
+            # Look for name patterns (2-4 words, mostly alphabetic)
+            words = line.split()
+            if 2 <= len(words) <= 4:
+                # Check if it looks like a name (mostly alphabetic)
+                if all(word.replace('.', '').replace(',', '').isalpha() for word in words):
+                    return line
+        
+        # Fallback: look for capitalized words
+        words = text.split()[:20]  # First 20 words
+        name_words = []
+        for word in words:
+            if word.istitle() and word.isalpha() and len(word) > 1:
+                name_words.append(word)
+                if len(name_words) >= 2:
+                    break
+        
+        if len(name_words) >= 2:
+            return ' '.join(name_words)
+        
+        return "Unknown Candidate"
+    
+    def parse_resume_enhanced(self, resume_text: str) -> Dict:
+        """Enhanced resume parser with better skill extraction and malformed text handling"""
+        # Clean malformed PDF text first
+        cleaned_text = self.clean_resume_text(resume_text)
+        lines = cleaned_text.split('\n')
+        
+        # Extract name more robustly
+        name = self.extract_name_robust(cleaned_text)
         
         # Extract skills from multiple sources
         skills = set()
