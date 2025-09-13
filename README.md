@@ -45,3 +45,4 @@ python app.py
 ├── static/             # Frontend files
 ├── templates/          # HTML templates
 └── requirements.txt    # Python dependencies
+# Hackathon
