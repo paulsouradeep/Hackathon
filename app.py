@@ -106,11 +106,162 @@ def init_db():
         )
     ''')
     
+    # Create assessments table
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS assessments (
+            assessment_id TEXT PRIMARY KEY,
+            candidate_id TEXT,
+            job_id TEXT,
+            assessment_type TEXT,
+            candidate_score REAL,
+            cutoff_score REAL,
+            max_score REAL,
+            status TEXT DEFAULT 'completed',
+            assessment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            responses TEXT,
+            duration_minutes INTEGER,
+            FOREIGN KEY (candidate_id) REFERENCES candidates (candidate_id)
+        )
+    ''')
+    
     conn.commit()
     conn.close()
 
 # Initialize database on startup
 init_db()
+
+# Add sample assessment data
+def add_sample_assessments():
+    """Add sample assessment data for testing"""
+    try:
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        # Check if assessments already exist
+        cursor.execute('SELECT COUNT(*) FROM assessments')
+        count = cursor.fetchone()[0]
+        
+        if count == 0:
+            # Sample assessment data
+            sample_assessments = [
+                {
+                    "assessment_id": "assess_001",
+                    "candidate_id": "84bed765-a2c9-4674-b7f1-31e3a4c3ff45",
+                    "job_id": "job_001",
+                    "assessment_type": "Technical Skills Assessment",
+                    "candidate_score": 85.0,
+                    "cutoff_score": 70.0,
+                    "max_score": 100.0,
+                    "status": "completed",
+                    "responses": json.dumps([
+                        {
+                            "question": "What is the difference between supervised and unsupervised learning?",
+                            "answer": "Supervised learning uses labeled data to train models, while unsupervised learning finds patterns in unlabeled data.",
+                            "type": "text",
+                            "is_correct": True
+                        },
+                        {
+                            "question": "Which Python library is commonly used for machine learning?",
+                            "selected_option": "scikit-learn",
+                            "type": "multiple_choice",
+                            "is_correct": True
+                        },
+                        {
+                            "question": "Explain the concept of overfitting in machine learning.",
+                            "answer": "Overfitting occurs when a model learns the training data too well, including noise, resulting in poor generalization to new data.",
+                            "type": "text",
+                            "is_correct": True
+                        }
+                    ]),
+                    "duration_minutes": 45
+                },
+                {
+                    "assessment_id": "assess_002",
+                    "candidate_id": "84bed765-a2c9-4674-b7f1-31e3a4c3ff45",
+                    "job_id": "job_002",
+                    "assessment_type": "Cloud Architecture Assessment",
+                    "candidate_score": 72.0,
+                    "cutoff_score": 75.0,
+                    "max_score": 100.0,
+                    "status": "completed",
+                    "responses": json.dumps([
+                        {
+                            "question": "What are the benefits of using cloud computing?",
+                            "answer": "Scalability, cost-effectiveness, flexibility, and reduced infrastructure management.",
+                            "type": "text",
+                            "is_correct": True
+                        },
+                        {
+                            "question": "Which AWS service is used for object storage?",
+                            "selected_option": "S3",
+                            "type": "multiple_choice",
+                            "is_correct": True
+                        },
+                        {
+                            "question": "Describe the difference between IaaS, PaaS, and SaaS.",
+                            "answer": "IaaS provides infrastructure, PaaS provides platform services, SaaS provides complete applications.",
+                            "type": "text",
+                            "is_correct": False
+                        }
+                    ]),
+                    "duration_minutes": 60
+                },
+                {
+                    "assessment_id": "assess_003",
+                    "candidate_id": "a3ddd24d-7d8d-4482-9458-4018d83c6361",
+                    "job_id": "job_004",
+                    "assessment_type": "Machine Learning Fundamentals",
+                    "candidate_score": 92.0,
+                    "cutoff_score": 80.0,
+                    "max_score": 100.0,
+                    "status": "completed",
+                    "responses": json.dumps([
+                        {
+                            "question": "What is gradient descent?",
+                            "answer": "An optimization algorithm used to minimize the cost function by iteratively moving towards the steepest descent.",
+                            "type": "text",
+                            "is_correct": True
+                        },
+                        {
+                            "question": "Which activation function is commonly used in hidden layers?",
+                            "selected_option": "ReLU",
+                            "type": "multiple_choice",
+                            "is_correct": True
+                        }
+                    ]),
+                    "duration_minutes": 30
+                }
+            ]
+            
+            # Insert sample assessments
+            for assessment in sample_assessments:
+                cursor.execute('''
+                    INSERT INTO assessments (assessment_id, candidate_id, job_id, assessment_type, 
+                                           candidate_score, cutoff_score, max_score, status, responses, duration_minutes)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    assessment["assessment_id"],
+                    assessment["candidate_id"],
+                    assessment["job_id"],
+                    assessment["assessment_type"],
+                    assessment["candidate_score"],
+                    assessment["cutoff_score"],
+                    assessment["max_score"],
+                    assessment["status"],
+                    assessment["responses"],
+                    assessment["duration_minutes"]
+                ))
+            
+            conn.commit()
+            logger.info(f"Added {len(sample_assessments)} sample assessments")
+        
+        conn.close()
+        
+    except Exception as e:
+        logger.error(f"Error adding sample assessments: {e}")
+
+# Add sample assessments on startup
+add_sample_assessments()
 
 # Email configuration
 EMAIL_CONFIG = {
@@ -790,6 +941,121 @@ async def get_analytics():
         
     except Exception as e:
         logger.error(f"Error fetching analytics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/candidate/{candidate_id}/assessments")
+async def get_candidate_assessments(candidate_id: str):
+    """Get all assessments for a specific candidate"""
+    try:
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        # Get assessments for the candidate
+        cursor.execute('''
+            SELECT assessment_id, job_id, assessment_type, candidate_score, cutoff_score, max_score,
+                   status, assessment_date, responses, duration_minutes
+            FROM assessments 
+            WHERE candidate_id = ?
+            ORDER BY assessment_date DESC
+        ''', (candidate_id,))
+        
+        assessments = []
+        for row in cursor.fetchall():
+            # Get job details
+            job_details = next((job for job in talent_matcher.jobs_data if job['job_id'] == row[1]), None)
+            
+            # Parse responses safely
+            try:
+                responses = json.loads(row[8]) if row[8] and row[8].strip() else []
+            except (json.JSONDecodeError, TypeError):
+                responses = []
+            
+            # Determine pass/fail status
+            passed = row[3] >= row[4] if row[3] is not None and row[4] is not None else None
+            
+            assessments.append({
+                "assessment_id": row[0],
+                "job_id": row[1],
+                "job_title": job_details['title'] if job_details else "Unknown Job",
+                "job_department": job_details['department'] if job_details else "Unknown Department",
+                "assessment_type": row[2],
+                "candidate_score": row[3],
+                "cutoff_score": row[4],
+                "max_score": row[5],
+                "status": row[6],
+                "assessment_date": row[7],
+                "responses": responses,
+                "duration_minutes": row[9],
+                "passed": passed,
+                "score_percentage": round((row[3] / row[5]) * 100, 1) if row[3] is not None and row[5] is not None and row[5] > 0 else None
+            })
+        
+        conn.close()
+        
+        return {"assessments": assessments}
+        
+    except Exception as e:
+        logger.error(f"Error fetching candidate assessments: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/assessment/{assessment_id}/responses")
+async def get_assessment_responses(assessment_id: str):
+    """Get detailed responses for a specific assessment"""
+    try:
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT candidate_id, job_id, assessment_type, candidate_score, cutoff_score, max_score,
+                   status, assessment_date, responses, duration_minutes
+            FROM assessments 
+            WHERE assessment_id = ?
+        ''', (assessment_id,))
+        
+        assessment_row = cursor.fetchone()
+        if not assessment_row:
+            raise HTTPException(status_code=404, detail="Assessment not found")
+        
+        # Get candidate info
+        cursor.execute('SELECT name, email FROM candidates WHERE candidate_id = ?', (assessment_row[0],))
+        candidate_row = cursor.fetchone()
+        
+        # Get job details
+        job_details = next((job for job in talent_matcher.jobs_data if job['job_id'] == assessment_row[1]), None)
+        
+        # Parse responses safely
+        try:
+            responses = json.loads(assessment_row[8]) if assessment_row[8] and assessment_row[8].strip() else []
+        except (json.JSONDecodeError, TypeError):
+            responses = []
+        
+        conn.close()
+        
+        return {
+            "assessment_id": assessment_id,
+            "candidate": {
+                "candidate_id": assessment_row[0],
+                "name": candidate_row[0] if candidate_row else "Unknown",
+                "email": candidate_row[1] if candidate_row else "Unknown"
+            },
+            "job": {
+                "job_id": assessment_row[1],
+                "title": job_details['title'] if job_details else "Unknown Job",
+                "department": job_details['department'] if job_details else "Unknown Department"
+            },
+            "assessment_type": assessment_row[2],
+            "candidate_score": assessment_row[3],
+            "cutoff_score": assessment_row[4],
+            "max_score": assessment_row[5],
+            "status": assessment_row[6],
+            "assessment_date": assessment_row[7],
+            "responses": responses,
+            "duration_minutes": assessment_row[9],
+            "passed": assessment_row[3] >= assessment_row[4] if assessment_row[3] is not None and assessment_row[4] is not None else None
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching assessment responses: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/candidate/{candidate_id}", response_class=HTMLResponse)
