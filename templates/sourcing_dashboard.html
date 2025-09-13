@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Sourcing - Telus Talent Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sourcing-card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .sourcing-card:hover {
+            transform: translateY(-2px);
+        }
+        .platform-badge {
+            font-size: 0.8rem;
+            padding: 0.25rem 0.5rem;
+        }
+        .score-badge {
+            font-weight: bold;
+            padding: 0.4rem 0.8rem;
+        }
+        .passive-indicator {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+        }
+        .campaign-status {
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.85rem;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+        .linkedin-color { background-color: #0077b5; }
+        .github-color { background-color: #333; }
+        .skill-tag {
+            background-color: #e9ecef;
+            color: #495057;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin: 0.1rem;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-brain me-2"></i>Telus Talent Intelligence & Sourcing
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/"><i class="fas fa-home me-1"></i>Dashboard</a>
+                <a class="nav-link" href="/jobs"><i class="fas fa-briefcase me-1"></i>Jobs</a>
+                <a class="nav-link active" href="/sourcing"><i class="fas fa-search me-1"></i>Sourcing</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <h1 class="display-6 mb-2">
+                    <i class="fas fa-search text-primary me-3"></i>Social Media Sourcing
+                </h1>
+                <p class="text-muted">AI-powered candidate sourcing from LinkedIn and GitHub</p>
+            </div>
+        </div>
+
+        <!-- Analytics Cards -->
+        <div class="row mb-4" id="analyticsCards">
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-users fa-2x mb-2"></i>
+                        <h3 class="mb-0" id="totalSourced">0</h3>
+                        <small>Total Sourced</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-rocket fa-2x mb-2"></i>
+                        <h3 class="mb-0" id="activeCampaigns">0</h3>
+                        <small>Active Campaigns</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-star fa-2x mb-2"></i>
+                        <h3 class="mb-0" id="avgScore">0.0</h3>
+                        <small>Avg Score</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stats-card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-eye-slash fa-2x mb-2"></i>
+                        <h3 class="mb-0" id="passiveRate">0%</h3>
+                        <small>Passive Rate</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <button class="btn btn-primary btn-lg me-3" data-bs-toggle="modal" data-bs-target="#campaignModal">
+                    <i class="fas fa-plus me-2"></i>New Campaign
+                </button>
+                <button class="btn btn-outline-primary btn-lg" onclick="refreshData()">
+                    <i class="fas fa-sync-alt me-2"></i>Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <ul class="nav nav-tabs mb-4" id="sourcingTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="campaigns-tab" data-bs-toggle="tab" data-bs-target="#campaigns" type="button" role="tab">
+                    <i class="fas fa-rocket me-2"></i>Campaigns
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="candidates-tab" data-bs-toggle="tab" data-bs-target="#candidates" type="button" role="tab">
+                    <i class="fas fa-users me-2"></i>Sourced Candidates
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="sourcingTabContent">
+            <!-- Campaigns Tab -->
+            <div class="tab-pane fade show active" id="campaigns" role="tabpanel">
+                <div class="row" id="campaignsList">
+                    <!-- Campaigns will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Candidates Tab -->
+            <div class="tab-pane fade" id="candidates" role="tabpanel">
+                <div class="row" id="candidatesList">
+                    <!-- Candidates will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Campaign Modal -->
+    <div class="modal fade" id="campaignModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Sourcing Campaign</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="campaignForm">
+                        <div class="mb-3">
+                            <label for="campaignName" class="form-label">Campaign Name</label>
+                            <input type="text" class="form-control" id="campaignName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="targetSkills" class="form-label">Target Skills</label>
+                            <input type="text" class="form-control" id="targetSkills" 
+                                   placeholder="e.g., React, Python, Machine Learning (comma-separated)" required>
+                            <div class="form-text">Enter skills separated by commas</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="targetCompanies" class="form-label">Target Companies (Optional)</label>
+                            <input type="text" class="form-control" id="targetCompanies" 
+                                   placeholder="e.g., Google, Microsoft, Amazon (comma-separated)">
+                            <div class="form-text">Leave empty to search all companies</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="jobId" class="form-label">Associated Job (Optional)</label>
+                            <select class="form-select" id="jobId">
+                                <option value="">Select a job...</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="createCampaign()">Create Campaign</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Candidate Detail Modal -->
+    <div class="modal fade" id="candidateModal" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Candidate Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="candidateModalBody">
+                    <!-- Candidate details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let campaigns = [];
+        let candidates = [];
+        let jobs = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJobs();
+            loadAnalytics();
+            loadCampaigns();
+            loadCandidates();
+        });
+
+        // Load analytics
+        async function loadAnalytics() {
+            try {
+                const response = await fetch('/api/sourcing/analytics');
+                const data = await response.json();
+                const analytics = data.analytics;
+
+                document.getElementById('totalSourced').textContent = analytics.total_sourced;
+                document.getElementById('activeCampaigns').textContent = analytics.active_campaigns;
+                document.getElementById('avgScore').textContent = analytics.avg_sourcing_score;
+                document.getElementById('passiveRate').textContent = Math.round(analytics.avg_passive_score * 100) + '%';
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+
+        // Load jobs for campaign creation
+        async function loadJobs() {
+            try {
+                const response = await fetch('/api/jobs');
+                const data = await response.json();
+                jobs = data.jobs;
+
+                const jobSelect = document.getElementById('jobId');
+                jobSelect.innerHTML = '<option value="">Select a job...</option>';
+                jobs.forEach(job => {
+                    const option = document.createElement('option');
+                    option.value = job.job_id;
+                    option.textContent = `${job.title} - ${job.department}`;
+                    jobSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+            }
+        }
+
+        // Load campaigns
+        async function loadCampaigns() {
+            try {
+                const response = await fetch('/api/sourcing/campaigns');
+                const data = await response.json();
+                campaigns = data.campaigns;
+                renderCampaigns();
+            } catch (error) {
+                console.error('Error loading campaigns:', error);
+            }
+        }
+
+        // Load candidates
+        async function loadCandidates() {
+            try {
+                const response = await fetch('/api/sourcing/candidates');
+                const data = await response.json();
+                candidates = data.sourced_candidates;
+                renderCandidates();
+            } catch (error) {
+                console.error('Error loading candidates:', error);
+            }
+        }
+
+        // Render campaigns
+        function renderCampaigns() {
+            const container = document.getElementById('campaignsList');
+            container.innerHTML = '';
+
+            if (campaigns.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="text-center py-5">
+                            <i class="fas fa-rocket fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">No campaigns yet</h4>
+                            <p class="text-muted">Create your first sourcing campaign to find passive candidates</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            campaigns.forEach(campaign => {
+                const statusClass = campaign.status === 'active' ? 'bg-success' : 'bg-secondary';
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-lg-4 mb-4';
+                card.innerHTML = `
+                    <div class="card sourcing-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">${campaign.campaign_name}</h5>
+                                <span class="badge ${statusClass} campaign-status">${campaign.status}</span>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Target Skills:</small>
+                                <div class="mt-1">
+                                    ${campaign.target_skills.map(skill => 
+                                        `<span class="skill-tag">${skill}</span>`
+                                    ).join('')}
+                                </div>
+                            </div>
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <div class="fw-bold text-primary">${campaign.candidates_found}</div>
+                                    <small class="text-muted">Found</small>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fw-bold text-success">${campaign.candidates_contacted}</div>
+                                    <small class="text-muted">Contacted</small>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary btn-sm" onclick="runCampaign('${campaign.campaign_id}')">
+                                    <i class="fas fa-play me-1"></i>Run Campaign
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <small><i class="fas fa-calendar me-1"></i>${new Date(campaign.created_at).toLocaleDateString()}</small>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Render candidates
+        function renderCandidates() {
+            const container = document.getElementById('candidatesList');
+            container.innerHTML = '';
+
+            if (candidates.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="text-center py-5">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">No candidates found</h4>
+                            <p class="text-muted">Run a sourcing campaign to find passive candidates</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            candidates.forEach(candidate => {
+                const platformClass = candidate.source_platform === 'LinkedIn' ? 'linkedin-color' : 'github-color';
+                const platformIcon = candidate.source_platform === 'LinkedIn' ? 'fab fa-linkedin' : 'fab fa-github';
+                const scoreColor = candidate.sourcing_score >= 0.8 ? 'success' : candidate.sourcing_score >= 0.6 ? 'warning' : 'secondary';
+                
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-lg-4 mb-4';
+                card.innerHTML = `
+                    <div class="card sourcing-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">${candidate.name}</h5>
+                                <span class="badge ${platformClass} platform-badge">
+                                    <i class="${platformIcon} me-1"></i>${candidate.source_platform}
+                                </span>
+                            </div>
+                            <div class="mb-2">
+                                <strong>${candidate.current_role || 'Role not specified'}</strong>
+                                <br>
+                                <small class="text-muted">${candidate.current_company || 'Company not specified'}</small>
+                            </div>
+                            <div class="mb-3">
+                                <small class="text-muted">Skills:</small>
+                                <div class="mt-1">
+                                    ${candidate.skills.slice(0, 4).map(skill => 
+                                        `<span class="skill-tag">${skill}</span>`
+                                    ).join('')}
+                                    ${candidate.skills.length > 4 ? `<span class="skill-tag">+${candidate.skills.length - 4} more</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="row text-center mb-3">
+                                <div class="col-6">
+                                    <span class="badge bg-${scoreColor} score-badge">${Math.round(candidate.sourcing_score * 100)}%</span>
+                                    <br><small class="text-muted">Score</small>
+                                </div>
+                                <div class="col-6">
+                                    <span class="badge passive-indicator">${Math.round(candidate.passive_indicator * 100)}%</span>
+                                    <br><small class="text-muted">Passive</small>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-outline-primary btn-sm" onclick="viewCandidate('${candidate.sourced_id}')">
+                                    <i class="fas fa-eye me-1"></i>View Details
+                                </button>
+                                ${candidate.contact_status === 'not_contacted' ? 
+                                    `<button class="btn btn-success btn-sm" onclick="contactCandidate('${candidate.sourced_id}')">
+                                        <i class="fas fa-envelope me-1"></i>Contact
+                                    </button>` : 
+                                    `<span class="badge bg-info">Contacted</span>`
+                                }
+                            </div>
+                        </div>
+                        <div class="card-footer text-muted">
+                            <small><i class="fas fa-map-marker-alt me-1"></i>${candidate.location || 'Location not specified'}</small>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Create campaign
+        async function createCampaign() {
+            const campaignName = document.getElementById('campaignName').value;
+            const targetSkills = document.getElementById('targetSkills').value.split(',').map(s => s.trim()).filter(s => s);
+            const targetCompanies = document.getElementById('targetCompanies').value.split(',').map(s => s.trim()).filter(s => s);
+            const jobId = document.getElementById('jobId').value;
+
+            if (!campaignName || targetSkills.length === 0) {
+                alert('Please fill in campaign name and target skills');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/sourcing/campaigns', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        campaign_name: campaignName,
+                        target_skills: targetSkills,
+                        target_companies: targetCompanies,
+                        job_id: jobId || null
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Campaign created successfully!');
+                    document.getElementById('campaignForm').reset();
+                    bootstrap.Modal.getInstance(document.getElementById('campaignModal')).hide();
+                    loadCampaigns();
+                    loadAnalytics();
+                } else {
+                    alert('Error creating campaign');
+                }
+            } catch (error) {
+                console.error('Error creating campaign:', error);
+                alert('Error creating campaign');
+            }
+        }
+
+        // Run campaign
+        async function runCampaign(campaignId) {
+            try {
+                const response = await fetch(`/api/sourcing/campaigns/${campaignId}/run`, {
+                    method: 'POST'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert(`Campaign completed! Found ${data.results.candidates_found} candidates`);
+                    loadCampaigns();
+                    loadCandidates();
+                    loadAnalytics();
+                } else {
+                    alert('Error running campaign');
+                }
+            } catch (error) {
+                console.error('Error running campaign:', error);
+                alert('Error running campaign');
+            }
+        }
+
+        // View candidate details
+        async function viewCandidate(sourcedId) {
+            try {
+                const response = await fetch(`/api/sourcing/candidates/${sourcedId}/matches`);
+                const data = await response.json();
+                
+                const candidate = candidates.find(c => c.sourced_id === sourcedId);
+                if (!candidate) return;
+
+                const modalBody = document.getElementById('candidateModalBody');
+                modalBody.innerHTML = `
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">${candidate.name}</h5>
+                                    <p class="card-text">
+                                        <strong>${candidate.current_role || 'Role not specified'}</strong><br>
+                                        <small class="text-muted">${candidate.current_company || 'Company not specified'}</small>
+                                    </p>
+                                    <div class="mb-3">
+                                        <span class="badge ${candidate.source_platform === 'LinkedIn' ? 'linkedin-color' : 'github-color'}">
+                                            <i class="${candidate.source_platform === 'LinkedIn' ? 'fab fa-linkedin' : 'fab fa-github'} me-1"></i>
+                                            ${candidate.source_platform}
+                                        </span>
+                                    </div>
+                                    <div class="mb-3">
+                                        <strong>Skills:</strong><br>
+                                        ${candidate.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                                    </div>
+                                    <div class="row text-center">
+                                        <div class="col-6">
+                                            <div class="fw-bold text-primary">${Math.round(candidate.sourcing_score * 100)}%</div>
+                                            <small class="text-muted">Score</small>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="fw-bold text-success">${Math.round(candidate.passive_indicator * 100)}%</div>
+                                            <small class="text-muted">Passive</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <h6>Job Matches</h6>
+                            <div class="row">
+                                ${data.matches.slice(0, 6).map(match => `
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6 class="card-title">${match.job_details ? match.job_details.title : 'Unknown Job'}</h6>
+                                                <p class="card-text">
+                                                    <small class="text-muted">${match.job_details ? match.job_details.department : 'Unknown Department'}</small>
+                                                </p>
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="badge bg-primary">${Math.round(match.similarity_score * 100)}%</span>
+                                                    <span class="badge bg-${match.confidence_band === 'AUTO' ? 'success' : match.confidence_band === 'REVIEW' ? 'warning' : 'secondary'}">${match.confidence_band}</span>
+                                                </div>
+                                                <small class="text-muted">${match.explanation}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                new bootstrap.Modal(document.getElementById('candidateModal')).show();
+            } catch (error) {
+                console.error('Error loading candidate details:', error);
+                alert('Error loading candidate details');
+            }
+        }
+
+        // Contact candidate
+        async function contactCandidate(sourcedId) {
+            try {
+                const response = await fetch(`/api/sourcing/candidates/${sourcedId}/contact`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({})
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Candidate marked as contacted!');
+                    loadCandidates();
+                } else {
+                    alert('Error updating contact status');
+                }
+            } catch (error) {
+                console.error('Error contacting candidate:', error);
+                alert('Error contacting candidate');
+            }
+        }
+
+        // Refresh all data
+        function refreshData() {
+            loadAnalytics();
+            loadCampaigns();
+            loadCandidates();
+        }
+    </script>
+</body>
+</html>
