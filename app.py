@@ -19,7 +19,8 @@ except ImportError:
     # Fallback for systems where email modules might not be available
     MimeText = None
     MimeMultipart = None
-from models.improved_ai_models import improved_talent_matcher as talent_matcher
+from models.ai_models import talent_matcher
+from models.social_media_sourcing import social_media_sourcer
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -1235,6 +1236,239 @@ async def job_detail(request: Request, job_id: str):
     return templates.TemplateResponse("job_detail.html", {
         "request": request, 
         "job_id": job_id
+    })
+
+# Social Media Sourcing API Routes
+class SourcingCampaignData(BaseModel):
+    campaign_name: str
+    target_skills: List[str]
+    target_companies: Optional[List[str]] = []
+    job_id: Optional[str] = None
+
+@app.get("/sourcing", response_class=HTMLResponse)
+async def sourcing_dashboard(request: Request):
+    """Social media sourcing dashboard"""
+    return templates.TemplateResponse("sourcing_dashboard.html", {"request": request})
+
+@app.post("/api/sourcing/campaigns")
+async def create_sourcing_campaign(campaign: SourcingCampaignData):
+    """Create a new sourcing campaign"""
+    try:
+        campaign_id = social_media_sourcer.create_sourcing_campaign(
+            campaign.campaign_name,
+            campaign.target_skills,
+            campaign.target_companies or [],
+            campaign.job_id
+        )
+        
+        return {
+            "success": True,
+            "campaign_id": campaign_id,
+            "message": "Sourcing campaign created successfully"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error creating sourcing campaign: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/sourcing/campaigns/{campaign_id}/run")
+async def run_sourcing_campaign(campaign_id: str):
+    """Run a sourcing campaign to find candidates"""
+    try:
+        results = social_media_sourcer.run_sourcing_campaign(campaign_id)
+        
+        return {
+            "success": True,
+            "results": results,
+            "message": f"Found {results['candidates_found']} candidates"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error running sourcing campaign: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/sourcing/campaigns")
+async def get_sourcing_campaigns():
+    """Get all sourcing campaigns"""
+    try:
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT campaign_id, campaign_name, target_skills, target_companies, job_id,
+                   status, candidates_found, candidates_contacted, response_rate, created_at
+            FROM sourcing_campaigns
+            ORDER BY created_at DESC
+        ''')
+        
+        campaigns = []
+        for row in cursor.fetchall():
+            campaigns.append({
+                "campaign_id": row[0],
+                "campaign_name": row[1],
+                "target_skills": json.loads(row[2]) if row[2] else [],
+                "target_companies": json.loads(row[3]) if row[3] else [],
+                "job_id": row[4],
+                "status": row[5],
+                "candidates_found": row[6],
+                "candidates_contacted": row[7],
+                "response_rate": row[8],
+                "created_at": row[9]
+            })
+        
+        conn.close()
+        return {"campaigns": campaigns}
+        
+    except Exception as e:
+        logger.error(f"Error fetching sourcing campaigns: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/sourcing/candidates")
+async def get_sourced_candidates():
+    """Get all sourced candidates"""
+    try:
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT sourced_id, name, email, linkedin_url, github_url, current_company,
+                   current_role, location, skills, experience_years, sourcing_score,
+                   passive_indicator, contact_status, source_platform, profile_summary, created_at
+            FROM sourced_candidates
+            ORDER BY sourcing_score DESC, created_at DESC
+        ''')
+        
+        candidates = []
+        for row in cursor.fetchall():
+            # Parse skills safely
+            try:
+                skills = json.loads(row[8]) if row[8] and row[8].strip() else []
+            except (json.JSONDecodeError, TypeError):
+                skills = []
+            
+            candidates.append({
+                "sourced_id": row[0],
+                "name": row[1],
+                "email": row[2],
+                "linkedin_url": row[3],
+                "github_url": row[4],
+                "current_company": row[5],
+                "current_role": row[6],
+                "location": row[7],
+                "skills": skills,
+                "experience_years": row[9],
+                "sourcing_score": row[10],
+                "passive_indicator": row[11],
+                "contact_status": row[12],
+                "source_platform": row[13],
+                "profile_summary": row[14],
+                "created_at": row[15]
+            })
+        
+        conn.close()
+        return {"sourced_candidates": candidates}
+        
+    except Exception as e:
+        logger.error(f"Error fetching sourced candidates: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/sourcing/candidates/{sourced_id}/matches")
+async def get_sourced_candidate_matches(sourced_id: str):
+    """Get job matches for a sourced candidate"""
+    try:
+        # Get matches from database
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT sm.job_id, sm.similarity_score, sm.confidence_band, sm.explanation, sm.status,
+                   sc.name, sc.current_company, sc.current_role, sc.skills, sc.experience_years
+            FROM sourcing_matches sm
+            JOIN sourced_candidates sc ON sm.sourced_id = sc.sourced_id
+            WHERE sm.sourced_id = ?
+            ORDER BY sm.similarity_score DESC
+        ''', (sourced_id,))
+        
+        matches = []
+        for row in cursor.fetchall():
+            # Get job details
+            job_details = next((job for job in talent_matcher.jobs_data if job['job_id'] == row[0]), None)
+            
+            # Parse skills safely
+            try:
+                skills = json.loads(row[8]) if row[8] and row[8].strip() else []
+            except (json.JSONDecodeError, TypeError):
+                skills = []
+            
+            matches.append({
+                "job_id": row[0],
+                "similarity_score": row[1],
+                "confidence_band": row[2],
+                "explanation": row[3],
+                "status": row[4],
+                "job_details": job_details,
+                "candidate_info": {
+                    "name": row[5],
+                    "current_company": row[6],
+                    "current_role": row[7],
+                    "skills": skills,
+                    "experience_years": row[9]
+                }
+            })
+        
+        # If no matches in database, generate them
+        if not matches:
+            matches = social_media_sourcer.match_sourced_candidate_to_jobs(sourced_id, talent_matcher.jobs_data)
+        
+        conn.close()
+        return {"matches": matches}
+        
+    except Exception as e:
+        logger.error(f"Error fetching sourced candidate matches: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/sourcing/candidates/{sourced_id}/contact")
+async def contact_sourced_candidate(sourced_id: str, contact_data: dict):
+    """Mark a sourced candidate as contacted"""
+    try:
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            UPDATE sourced_candidates 
+            SET contact_status = 'contacted', last_updated = CURRENT_TIMESTAMP
+            WHERE sourced_id = ?
+        ''', (sourced_id,))
+        
+        conn.commit()
+        conn.close()
+        
+        return {
+            "success": True,
+            "message": "Candidate marked as contacted"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error updating contact status: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/sourcing/analytics")
+async def get_sourcing_analytics():
+    """Get sourcing analytics"""
+    try:
+        analytics = social_media_sourcer.get_sourcing_analytics()
+        return {"analytics": analytics}
+        
+    except Exception as e:
+        logger.error(f"Error fetching sourcing analytics: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/sourced-candidate/{sourced_id}", response_class=HTMLResponse)
+async def sourced_candidate_detail(request: Request, sourced_id: str):
+    """Sourced candidate detail page"""
+    return templates.TemplateResponse("sourced_candidate_detail.html", {
+        "request": request, 
+        "sourced_id": sourced_id
     })
 
 if __name__ == "__main__":
