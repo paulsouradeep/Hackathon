@@ -86,6 +86,12 @@ def init_db():
     except sqlite3.OperationalError:
         pass  # Column already exists
     
+    # Update existing rows to have updated_at if they don't have it
+    try:
+        cursor.execute('UPDATE matches SET updated_at = created_at WHERE updated_at IS NULL')
+    except sqlite3.OperationalError:
+        pass  # Column might not exist yet
+    
     # Create feedback table
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS feedback (
@@ -521,22 +527,28 @@ async def upload_resume(
 
 @app.get("/api/candidates")
 async def get_candidates():
-    """Get all candidates with their matches"""
+    """Get all candidates with their matches (excluding those with accepted matches)"""
     try:
         conn = sqlite3.connect('talent_platform.db')
         cursor = conn.cursor()
         
-        # Get candidates with their top match
+        # Get candidates with their top match, excluding those who have accepted matches
         cursor.execute('''
             SELECT c.candidate_id, c.name, c.email, c.applied_for, c.created_at,
                    m.job_id, m.similarity_score, m.confidence_band, m.explanation
             FROM candidates c
             LEFT JOIN matches m ON c.candidate_id = m.candidate_id
-            WHERE m.similarity_score = (
+            WHERE c.candidate_id NOT IN (
+                SELECT DISTINCT candidate_id 
+                FROM matches 
+                WHERE status = 'accepted'
+            )
+            AND (m.similarity_score = (
                 SELECT MAX(similarity_score) 
                 FROM matches m2 
                 WHERE m2.candidate_id = c.candidate_id
-            ) OR m.similarity_score IS NULL
+                AND m2.status != 'accepted'
+            ) OR m.similarity_score IS NULL)
             ORDER BY c.created_at DESC
         ''')
         
@@ -561,6 +573,54 @@ async def get_candidates():
         
     except Exception as e:
         logger.error(f"Error fetching candidates: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/candidates/accepted")
+async def get_accepted_candidates():
+    """Get all accepted candidates with their accepted job details"""
+    try:
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        # Get candidates with accepted matches
+        cursor.execute('''
+            SELECT c.candidate_id, c.name, c.email, c.phone, c.applied_for, c.created_at,
+                   m.job_id, m.similarity_score, m.confidence_band, m.explanation, 
+                   m.updated_at, m.email_sent
+            FROM candidates c
+            JOIN matches m ON c.candidate_id = m.candidate_id
+            WHERE m.status = 'accepted'
+            ORDER BY m.updated_at DESC
+        ''')
+        
+        accepted_candidates = []
+        for row in cursor.fetchall():
+            # Get job details
+            job_details = next((job for job in talent_matcher.jobs_data if job['job_id'] == row[6]), None)
+            
+            accepted_candidates.append({
+                "candidate_id": row[0],
+                "name": row[1],
+                "email": row[2],
+                "phone": row[3],
+                "applied_for": row[4],
+                "created_at": row[5],
+                "accepted_match": {
+                    "job_id": row[6],
+                    "similarity_score": row[7],
+                    "confidence_band": row[8],
+                    "explanation": row[9],
+                    "accepted_at": row[10],
+                    "email_sent": bool(row[11]) if row[11] is not None else False,
+                    "job_details": job_details
+                }
+            })
+        
+        conn.close()
+        return {"accepted_candidates": accepted_candidates}
+        
+    except Exception as e:
+        logger.error(f"Error fetching accepted candidates: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/candidate/{candidate_id}/matches")
@@ -635,6 +695,47 @@ async def get_candidate_matches(candidate_id: str):
         
     except Exception as e:
         logger.error(f"Error fetching candidate matches: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/match/accept/preview")
+async def preview_acceptance_email(candidate_id: str, job_id: str):
+    """Preview acceptance email before sending"""
+    try:
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        # Get candidate details
+        cursor.execute('SELECT name, email FROM candidates WHERE candidate_id = ?', (candidate_id,))
+        candidate_row = cursor.fetchone()
+        if not candidate_row:
+            raise HTTPException(status_code=404, detail="Candidate not found")
+        
+        candidate_name, candidate_email = candidate_row
+        
+        # Get job details
+        job_details = next((job for job in talent_matcher.jobs_data if job['job_id'] == job_id), None)
+        if not job_details:
+            raise HTTPException(status_code=404, detail="Job not found")
+        
+        # Generate email content
+        subject, body = generate_acceptance_email(candidate_name, job_details['title'], job_details['department'])
+        
+        conn.close()
+        
+        return {
+            "success": True,
+            "email_preview": {
+                "to": candidate_email,
+                "subject": subject,
+                "body": body,
+                "candidate_name": candidate_name,
+                "job_title": job_details['title'],
+                "job_department": job_details['department']
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error generating email preview: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/match/accept")

@@ -118,14 +118,28 @@
             </div>
         </div>
 
-        <!-- Candidates Table -->
-        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+        <!-- Tab Navigation -->
+        <div class="mb-6">
+            <div class="border-b border-gray-200">
+                <nav class="-mb-px flex space-x-8">
+                    <button onclick="switchTab('pending')" id="pendingTab" class="tab-button active py-2 px-1 border-b-2 border-telus-blue font-medium text-sm text-telus-blue">
+                        Pending Candidates
+                    </button>
+                    <button onclick="switchTab('accepted')" id="acceptedTab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                        Accepted Candidates
+                    </button>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Pending Candidates Table -->
+        <div id="pendingCandidatesSection" class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
                 <div class="flex items-center space-x-3">
                     <div class="w-8 h-8 bg-telus-blue rounded-lg flex items-center justify-center">
                         <i class="fas fa-list text-white text-sm"></i>
                     </div>
-                    <h2 class="text-lg font-semibold text-gray-900">Recent Candidates</h2>
+                    <h2 class="text-lg font-semibold text-gray-900">Pending Candidates</h2>
                 </div>
                 <button onclick="loadCandidates()" class="bg-telus-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200">
                     <i class="fas fa-refresh text-sm"></i>
@@ -152,6 +166,47 @@
                                     <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-telus-blue"></div>
                                 </div>
                                 <p class="mt-2 text-gray-500">Loading candidates...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Accepted Candidates Table -->
+        <div id="acceptedCandidatesSection" class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hidden">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check text-white text-sm"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-900">Accepted Candidates</h2>
+                </div>
+                <button onclick="loadAcceptedCandidates()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200">
+                    <i class="fas fa-refresh text-sm"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied For</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Accepted For</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Match Score</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Accepted Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="acceptedCandidatesTable" class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center">
+                                <div class="flex justify-center">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+                                </div>
+                                <p class="mt-2 text-gray-500">Loading accepted candidates...</p>
                             </td>
                         </tr>
                     </tbody>
@@ -267,6 +322,106 @@
                 'job_006': 'Product Manager'
             };
             return jobTitles[jobId] || jobId;
+        }
+
+        // Load accepted candidates data
+        async function loadAcceptedCandidates() {
+            try {
+                const response = await fetch('/api/candidates/accepted');
+                const data = await response.json();
+                
+                const tbody = document.getElementById('acceptedCandidatesTable');
+                tbody.innerHTML = '';
+                
+                if (data.accepted_candidates.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                                <i class="fas fa-check-circle text-4xl text-gray-300 mb-4"></i>
+                                <p>No accepted candidates found</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                data.accepted_candidates.forEach(candidate => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50 cursor-pointer transition-colors duration-200';
+                    row.onclick = () => window.location.href = `/candidate/${candidate.candidate_id}`;
+                    
+                    const acceptedMatch = candidate.accepted_match;
+                    const score = (acceptedMatch.similarity_score * 100).toFixed(1) + '%';
+                    const acceptedJobTitle = acceptedMatch.job_details ? acceptedMatch.job_details.title : getJobTitle(acceptedMatch.job_id);
+                    const acceptedDate = new Date(acceptedMatch.accepted_at).toLocaleDateString();
+                    
+                    // Email status badge
+                    const emailStatusBadge = acceptedMatch.email_sent 
+                        ? '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"><i class="fas fa-check mr-1"></i>Sent</span>'
+                        : '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"><i class="fas fa-clock mr-1"></i>Pending</span>';
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                                    <span class="text-white font-medium text-sm">${candidate.name.charAt(0).toUpperCase()}</span>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">${candidate.name}</div>
+                                    <div class="text-sm text-gray-500">${candidate.email}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">${getJobTitle(candidate.applied_for)}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">${acceptedJobTitle}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">${score}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${acceptedDate}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${emailStatusBadge}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="event.stopPropagation(); viewCandidate('${candidate.candidate_id}')" class="text-green-600 hover:text-green-700 transition-colors duration-200">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('Error loading accepted candidates:', error);
+                document.getElementById('acceptedCandidatesTable').innerHTML = 
+                    '<tr><td colspan="7" class="px-6 py-12 text-center text-red-500">Error loading accepted candidates</td></tr>';
+            }
+        }
+
+        // Tab switching functionality
+        function switchTab(tab) {
+            const pendingTab = document.getElementById('pendingTab');
+            const acceptedTab = document.getElementById('acceptedTab');
+            const pendingSection = document.getElementById('pendingCandidatesSection');
+            const acceptedSection = document.getElementById('acceptedCandidatesSection');
+            
+            // Reset all tabs
+            pendingTab.className = 'tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300';
+            acceptedTab.className = 'tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300';
+            
+            if (tab === 'pending') {
+                pendingTab.className = 'tab-button active py-2 px-1 border-b-2 border-telus-blue font-medium text-sm text-telus-blue';
+                pendingSection.classList.remove('hidden');
+                acceptedSection.classList.add('hidden');
+                loadCandidates();
+            } else if (tab === 'accepted') {
+                acceptedTab.className = 'tab-button active py-2 px-1 border-b-2 border-green-600 font-medium text-sm text-green-600';
+                pendingSection.classList.add('hidden');
+                acceptedSection.classList.remove('hidden');
+                loadAcceptedCandidates();
+            }
         }
 
         function viewCandidate(candidateId) {
