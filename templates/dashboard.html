@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telus Talent Intelligence Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'telus-purple': '#4B0082',
+                        'telus-green': '#00A651',
+                        'telus-blue': '#0066CC',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-telus-purple to-telus-blue rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">Telus Talent Intelligence</h1>
+                            <p class="text-xs text-gray-500">AI-Powered Recruitment Platform</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/upload" class="bg-telus-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload Resume</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Analytics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Total Candidates -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-users text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Candidates</p>
+                        <p class="text-2xl font-bold text-gray-900" id="totalCandidates">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Auto Matches -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check-circle text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Auto Matches</p>
+                        <p class="text-2xl font-bold text-green-600" id="autoMatches">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Needed -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-eye text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Need Review</p>
+                        <p class="text-2xl font-bold text-yellow-600" id="reviewMatches">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Human Review -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-user-check text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Human Review</p>
+                        <p class="text-2xl font-bold text-red-600" id="humanMatches">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Candidates Table -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-telus-blue rounded-lg flex items-center justify-center">
+                        <i class="fas fa-list text-white text-sm"></i>
+                    </div>
+                    <h2 class="text-lg font-semibold text-gray-900">Recent Candidates</h2>
+                </div>
+                <button onclick="loadCandidates()" class="bg-telus-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200">
+                    <i class="fas fa-refresh text-sm"></i>
+                    <span>Refresh</span>
+                </button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Candidate</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Applied For</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Top Match</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Confidence</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Score</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="candidatesTable" class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center">
+                                <div class="flex justify-center">
+                                    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-telus-blue"></div>
+                                </div>
+                                <p class="mt-2 text-gray-500">Loading candidates...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Load analytics data
+        async function loadAnalytics() {
+            try {
+                const response = await fetch('/api/analytics');
+                const data = await response.json();
+                
+                document.getElementById('totalCandidates').textContent = data.total_candidates || 0;
+                document.getElementById('autoMatches').textContent = data.confidence_distribution?.AUTO || 0;
+                document.getElementById('reviewMatches').textContent = data.confidence_distribution?.REVIEW || 0;
+                document.getElementById('humanMatches').textContent = data.confidence_distribution?.HUMAN || 0;
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+
+        // Load candidates data
+        async function loadCandidates() {
+            try {
+                const response = await fetch('/api/candidates');
+                const data = await response.json();
+                
+                const tbody = document.getElementById('candidatesTable');
+                tbody.innerHTML = '';
+                
+                if (data.candidates.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                                <i class="fas fa-users text-4xl text-gray-300 mb-4"></i>
+                                <p>No candidates found</p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                data.candidates.forEach(candidate => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50 cursor-pointer transition-colors duration-200';
+                    row.onclick = () => window.location.href = `/candidate/${candidate.candidate_id}`;
+                    
+                    const topMatch = candidate.top_match;
+                    
+                    // Confidence badge with Tailwind classes
+                    let confidenceBadge = '';
+                    if (topMatch) {
+                        const badgeClasses = {
+                            'AUTO': 'bg-green-100 text-green-800',
+                            'REVIEW': 'bg-yellow-100 text-yellow-800',
+                            'HUMAN': 'bg-red-100 text-red-800'
+                        };
+                        confidenceBadge = `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badgeClasses[topMatch.confidence_band] || 'bg-gray-100 text-gray-800'}">${topMatch.confidence_band}</span>`;
+                    } else {
+                        confidenceBadge = '<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">No Match</span>';
+                    }
+                    
+                    const score = topMatch ? (topMatch.similarity_score * 100).toFixed(1) + '%' : 'N/A';
+                    const jobTitle = topMatch ? getJobTitle(topMatch.job_id) : 'N/A';
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-gradient-to-r from-telus-purple to-telus-blue rounded-full flex items-center justify-center">
+                                    <span class="text-white font-medium text-sm">${candidate.name.charAt(0).toUpperCase()}</span>
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-gray-900">${candidate.name}</div>
+                                    <div class="text-sm text-gray-500">${candidate.email}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">${getJobTitle(candidate.applied_for)}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${jobTitle}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">${confidenceBadge}</td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">${score}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${new Date(candidate.created_at).toLocaleDateString()}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="event.stopPropagation(); viewCandidate('${candidate.candidate_id}')" class="text-telus-blue hover:text-blue-700 transition-colors duration-200">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('Error loading candidates:', error);
+                document.getElementById('candidatesTable').innerHTML = 
+                    '<tr><td colspan="7" class="px-6 py-12 text-center text-red-500">Error loading candidates</td></tr>';
+            }
+        }
+
+        function getJobTitle(jobId) {
+            const jobTitles = {
+                'job_001': 'Senior Software Engineer',
+                'job_002': 'Cloud Data Engineer',
+                'job_003': 'DevOps Specialist',
+                'job_004': 'Machine Learning Engineer',
+                'job_005': 'Frontend Developer',
+                'job_006': 'Product Manager'
+            };
+            return jobTitles[jobId] || jobId;
+        }
+
+        function viewCandidate(candidateId) {
+            window.location.href = `/candidate/${candidateId}`;
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAnalytics();
+            loadCandidates();
+            
+            // Auto-refresh every 30 seconds
+            setInterval(() => {
+                loadAnalytics();
+                loadCandidates();
+            }, 30000);
+        });
+    </script>
+</body>
+</html>

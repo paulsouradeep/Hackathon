@@ -1,0 +1,57 @@
+[
+  {
+    "candidate_id": "cand_001",
+    "name": "Rahul Sharma",
+    "email": "rahul.sharma@email.com",
+    "phone": "+91-9876543210",
+    "applied_for": "job_001",
+    "resume_text": "Rahul Sharma\nSenior Software Developer\n\nEXPERIENCE:\nSenior Software Developer at TechCorp (2020-2024)\n- Developed microservices using Python and Flask\n- Deployed applications on AWS using Docker and Kubernetes\n- Led a team of 4 developers in building scalable web applications\n- Implemented CI/CD pipelines using Jenkins and GitLab\n- Experience with Redis, PostgreSQL, and MongoDB\n\nSoftware Engineer at StartupXYZ (2018-2020)\n- Built REST APIs using Python and Django\n- Worked with AWS services including EC2, S3, and RDS\n- Collaborated with frontend team using React\n- Implemented automated testing and code reviews\n\nSKILLS:\nPython, AWS, Docker, Kubernetes, Microservices, Flask, Django, PostgreSQL, Redis, Git, Jenkins, React\n\nEDUCATION:\nB.Tech Computer Science, IIT Delhi (2014-2018)\n\nGITHUB: github.com/rahulsharma",
+    "skills": ["Python", "AWS", "Docker", "Kubernetes", "Microservices", "Flask", "Django", "PostgreSQL", "Redis", "React"],
+    "experience_years": 6,
+    "education": "B.Tech Computer Science, IIT Delhi"
+  },
+  {
+    "candidate_id": "cand_002", 
+    "name": "Priya Patel",
+    "email": "priya.patel@email.com",
+    "phone": "+91-9876543211",
+    "applied_for": "job_002",
+    "resume_text": "Priya Patel\nData Engineer\n\nEXPERIENCE:\nData Engineer at DataTech Solutions (2021-2024)\n- Built data pipelines using Python and Apache Spark\n- Worked extensively with AWS services including S3, EMR, and Redshift\n- Developed ETL processes for large-scale data processing\n- Experience with SQL, NoSQL databases, and data warehousing\n- Implemented real-time data streaming using Kafka\n\nJunior Data Analyst at Analytics Inc (2019-2021)\n- Performed data analysis using Python, Pandas, and NumPy\n- Created dashboards and reports using Tableau\n- Worked with MySQL and PostgreSQL databases\n- Basic experience with machine learning using scikit-learn\n\nSKILLS:\nPython, SQL, Apache Spark, AWS, Kafka, Pandas, NumPy, Tableau, MySQL, PostgreSQL, ETL, Data Warehousing\n\nEDUCATION:\nM.Tech Data Science, IIIT Bangalore (2017-2019)\nB.E. Computer Engineering, Mumbai University (2013-2017)\n\nGITHUB: github.com/priyapatel",
+    "skills": ["Python", "SQL", "Apache Spark", "AWS", "Kafka", "Pandas", "NumPy", "Tableau", "MySQL", "PostgreSQL", "ETL"],
+    "experience_years": 5,
+    "education": "M.Tech Data Science, IIIT Bangalore"
+  },
+  {
+    "candidate_id": "cand_003",
+    "name": "Amit Kumar",
+    "email": "amit.kumar@email.com", 
+    "phone": "+91-9876543212",
+    "applied_for": "job_001",
+    "resume_text": "Amit Kumar\nDevOps Engineer\n\nEXPERIENCE:\nDevOps Engineer at CloudOps Ltd (2020-2024)\n- Managed AWS infrastructure using Terraform and CloudFormation\n- Deployed and managed Kubernetes clusters on EKS\n- Implemented CI/CD pipelines using Jenkins, GitLab CI, and GitHub Actions\n- Monitoring and logging using Prometheus, Grafana, and ELK stack\n- Automated deployment processes and infrastructure provisioning\n\nSystem Administrator at TechStart (2018-2020)\n- Managed Linux servers and network infrastructure\n- Basic scripting in Python and Bash\n- Experience with Docker containerization\n- Database administration for MySQL and PostgreSQL\n\nSKILLS:\nAWS, Kubernetes, Terraform, Docker, Jenkins, Python, Bash, Linux, Prometheus, Grafana, CI/CD, Infrastructure as Code\n\nEDUCATION:\nB.Tech Information Technology, VIT Vellore (2014-2018)\n\nCERTIFICATIONS:\nAWS Certified Solutions Architect\nCertified Kubernetes Administrator (CKA)\n\nGITHUB: github.com/amitkumar",
+    "skills": ["AWS", "Kubernetes", "Terraform", "Docker", "Jenkins", "Python", "Linux", "CI/CD", "Infrastructure as Code"],
+    "experience_years": 6,
+    "education": "B.Tech Information Technology, VIT Vellore"
+  },
+  {
+    "candidate_id": "cand_004",
+    "name": "Sneha Reddy",
+    "email": "sneha.reddy@email.com",
+    "phone": "+91-9876543213", 
+    "applied_for": "job_004",
+    "resume_text": "Sneha Reddy\nMachine Learning Engineer\n\nEXPERIENCE:\nML Engineer at AI Innovations (2022-2024)\n- Developed and deployed machine learning models using TensorFlow and PyTorch\n- Built MLOps pipelines for model training and deployment\n- Experience with computer vision and natural language processing\n- Worked with cloud platforms including AWS SageMaker\n- Implemented A/B testing for ML model performance\n\nData Scientist at Analytics Pro (2020-2022)\n- Performed statistical analysis and predictive modeling\n- Used Python libraries including scikit-learn, pandas, and numpy\n- Created data visualizations using matplotlib and seaborn\n- Experience with SQL and NoSQL databases\n- Built recommendation systems and classification models\n\nSKILLS:\nPython, TensorFlow, PyTorch, scikit-learn, MLOps, AWS, Statistics, NLP, Computer Vision, SQL, Pandas, NumPy\n\nEDUCATION:\nM.S. Machine Learning, Carnegie Mellon University (2018-2020)\nB.Tech Computer Science, BITS Pilani (2014-2018)\n\nPUBLICATIONS:\n- \"Deep Learning for Image Classification\" - ICML 2023\n- \"NLP Applications in Customer Analytics\" - NeurIPS 2022\n\nGITHUB: github.com/snehareddy",
+    "skills": ["Python", "TensorFlow", "PyTorch", "MLOps", "AWS", "Statistics", "NLP", "Computer Vision", "SQL", "scikit-learn"],
+    "experience_years": 4,
+    "education": "M.S. Machine Learning, Carnegie Mellon University"
+  },
+  {
+    "candidate_id": "cand_005",
+    "name": "Vikash Singh",
+    "email": "vikash.singh@email.com",
+    "phone": "+91-9876543214",
+    "applied_for": "job_005", 
+    "resume_text": "Vikash Singh\nFrontend Developer\n\nEXPERIENCE:\nSenior Frontend Developer at WebTech Solutions (2021-2024)\n- Developed responsive web applications using React and TypeScript\n- Implemented state management using Redux and Context API\n- Built reusable component libraries and design systems\n- Experience with modern CSS frameworks and preprocessors\n- Collaborated with UX/UI designers and backend developers\n\nFrontend Developer at StartupHub (2019-2021)\n- Created interactive user interfaces using JavaScript and React\n- Worked with RESTful APIs and GraphQL\n- Implemented automated testing using Jest and React Testing Library\n- Experience with build tools like Webpack and Vite\n- Basic knowledge of Node.js and Express\n\nSKILLS:\nReact, TypeScript, JavaScript, CSS, HTML, Redux, GraphQL, Jest, Webpack, Node.js, Git, Responsive Design\n\nEDUCATION:\nB.Tech Computer Science, NIT Trichy (2015-2019)\n\nPORTFOLIO: vikashsingh.dev\nGITHUB: github.com/vikashsingh",
+    "skills": ["React", "TypeScript", "JavaScript", "CSS", "HTML", "Redux", "GraphQL", "Jest", "Node.js", "Responsive Design"],
+    "experience_years": 5,
+    "education": "B.Tech Computer Science, NIT Trichy"
+  }
+]

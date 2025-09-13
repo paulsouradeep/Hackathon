@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Resume - Telus Talent Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'telus-purple': '#4B0082',
+                        'telus-green': '#00A651',
+                        'telus-blue': '#0066CC',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .upload-area {
+            transition: all 0.3s ease;
+        }
+        .upload-area:hover {
+            transform: translateY(-2px);
+        }
+        .upload-area.dragover {
+            border-color: #10b981;
+            background-color: #ecfdf5;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-telus-purple to-telus-blue rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white text-lg"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-gray-900">Telus Talent Intelligence</h1>
+                            <p class="text-xs text-gray-500">AI-Powered Recruitment Platform</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-telus-blue flex items-center space-x-2 transition-colors duration-200">
+                        <i class="fas fa-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-gradient-to-r from-telus-blue to-telus-purple rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-upload text-white text-2xl"></i>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Upload Resume for AI Matching</h1>
+            <p class="text-lg text-gray-600">Let our AI analyze your skills and find the perfect job matches</p>
+        </div>
+
+        <!-- Upload Form -->
+        <div class="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+            <div class="px-8 py-6 bg-gradient-to-r from-telus-blue to-telus-purple">
+                <h2 class="text-xl font-semibold text-white flex items-center">
+                    <i class="fas fa-user-plus mr-3"></i>
+                    Candidate Information
+                </h2>
+            </div>
+            
+            <div class="p-8">
+                <form id="uploadForm" enctype="multipart/form-data" class="space-y-6">
+                    <!-- Personal Information -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-user text-telus-blue mr-2"></i>
+                                Full Name *
+                            </label>
+                            <input type="text" id="name" name="name" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent transition-all duration-200"
+                                   placeholder="Enter your full name">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-envelope text-telus-blue mr-2"></i>
+                                Email Address *
+                            </label>
+                            <input type="email" id="email" name="email" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent transition-all duration-200"
+                                   placeholder="your.email@example.com">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-phone text-telus-blue mr-2"></i>
+                                Phone Number *
+                            </label>
+                            <input type="tel" id="phone" name="phone" required
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent transition-all duration-200"
+                                   placeholder="+1 (555) 123-4567">
+                        </div>
+                        <div>
+                            <label for="applied_for" class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-briefcase text-telus-blue mr-2"></i>
+                                Applied For *
+                            </label>
+                            <select id="applied_for" name="applied_for" required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent transition-all duration-200">
+                                <option value="">Select a position</option>
+                                <option value="job_001">Senior Software Engineer</option>
+                                <option value="job_002">Cloud Data Engineer</option>
+                                <option value="job_003">DevOps Specialist</option>
+                                <option value="job_004">Machine Learning Engineer</option>
+                                <option value="job_005">Frontend Developer</option>
+                                <option value="job_006">Product Manager</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- File Upload Area -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-4">
+                            <i class="fas fa-file-upload text-telus-blue mr-2"></i>
+                            Resume File *
+                        </label>
+                        <div id="uploadArea" class="upload-area border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50 hover:bg-gray-100 cursor-pointer">
+                            <div class="space-y-4">
+                                <div class="w-16 h-16 bg-telus-blue rounded-full flex items-center justify-center mx-auto">
+                                    <i class="fas fa-cloud-upload-alt text-white text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-medium text-gray-900">Drag & Drop your resume here</h3>
+                                    <p class="text-gray-500">or click to browse files</p>
+                                </div>
+                                <div class="flex justify-center">
+                                    <button type="button" onclick="document.getElementById('resume_file').click()"
+                                            class="bg-telus-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 transition-colors duration-200">
+                                        <i class="fas fa-folder-open"></i>
+                                        <span>Browse Files</span>
+                                    </button>
+                                </div>
+                                <p class="text-xs text-gray-400">Supports PDF, DOC, DOCX, TXT files</p>
+                            </div>
+                            <input type="file" id="resume_file" name="resume_file" 
+                                   accept=".pdf,.doc,.docx,.txt" required class="hidden">
+                        </div>
+                        
+                        <!-- File Info -->
+                        <div id="fileInfo" class="hidden mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-file text-blue-600"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-900" id="fileName"></p>
+                                    <p class="text-sm text-gray-500" id="fileSize"></p>
+                                </div>
+                                <button type="button" onclick="removeFile()" class="text-red-500 hover:text-red-700">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-6">
+                        <button type="submit" id="submitBtn"
+                                class="w-full bg-gradient-to-r from-telus-blue to-telus-purple hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-xl flex items-center justify-center space-x-3 transition-all duration-200 transform hover:scale-105">
+                            <i class="fas fa-magic text-xl"></i>
+                            <span class="text-lg">Process Resume with AI</span>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Processing State -->
+                <div id="processing" class="hidden text-center py-12">
+                    <div class="w-16 h-16 bg-telus-blue rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                        <i class="fas fa-brain text-white text-2xl"></i>
+                    </div>
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-telus-blue mx-auto mb-4"></div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Processing your resume...</h3>
+                    <p class="text-gray-600">Our AI is analyzing your skills and finding the best matches</p>
+                    <div class="mt-6 bg-gray-100 rounded-full h-2 max-w-md mx-auto">
+                        <div class="bg-telus-blue h-2 rounded-full animate-pulse" style="width: 70%"></div>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div id="results" class="hidden">
+                    <div class="bg-green-50 border border-green-200 rounded-xl p-6 mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-green-900">Resume processed successfully!</h3>
+                                <p class="text-green-700">Here are your AI-generated job matches:</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="matchesContainer" class="space-y-4 mb-8"></div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="/" class="bg-telus-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center justify-center space-x-2 transition-colors duration-200">
+                            <i class="fas fa-dashboard"></i>
+                            <span>View in Dashboard</span>
+                        </a>
+                        <button onclick="resetForm()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-lg flex items-center justify-center space-x-2 transition-colors duration-200">
+                            <i class="fas fa-plus"></i>
+                            <span>Upload Another</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // File upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('resume_file');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                showFileInfo(files[0]);
+            }
+        });
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                showFileInfo(e.target.files[0]);
+            }
+        });
+
+        function showFileInfo(file) {
+            fileName.textContent = file.name;
+            fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+            fileInfo.classList.remove('hidden');
+            uploadArea.classList.add('border-green-300', 'bg-green-50');
+        }
+
+        function removeFile() {
+            fileInput.value = '';
+            fileInfo.classList.add('hidden');
+            uploadArea.classList.remove('border-green-300', 'bg-green-50');
+        }
+
+        // Form submission
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            // Show processing state
+            document.getElementById('uploadForm').classList.add('hidden');
+            document.getElementById('processing').classList.remove('hidden');
+            
+            try {
+                const response = await fetch('/api/upload-resume', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showResults(result);
+                } else {
+                    throw new Error(result.message || 'Upload failed');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error processing resume: ' + error.message);
+                resetForm();
+            }
+        });
+
+        function showResults(result) {
+            document.getElementById('processing').classList.add('hidden');
+            document.getElementById('results').classList.remove('hidden');
+            
+            const container = document.getElementById('matchesContainer');
+            container.innerHTML = '';
+            
+            result.matches.forEach((match, index) => {
+                const matchCard = document.createElement('div');
+                matchCard.className = 'bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow duration-200';
+                
+                const confidenceColors = {
+                    'AUTO': 'bg-green-100 text-green-800',
+                    'REVIEW': 'bg-yellow-100 text-yellow-800',
+                    'HUMAN': 'bg-red-100 text-red-800'
+                };
+                
+                const confidenceColor = confidenceColors[match.confidence_band] || 'bg-gray-100 text-gray-800';
+                
+                matchCard.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center space-x-3">
+                            ${index === 0 ? '<i class="fas fa-star text-yellow-500 text-lg"></i>' : ''}
+                            <div>
+                                <h3 class="text-lg font-semibold text-gray-900">${match.title}</h3>
+                                <p class="text-gray-600">${match.department}</p>
+                            </div>
+                            ${index === 0 ? '<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full">Primary Match</span>' : ''}
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${confidenceColor}">${match.confidence_band}</span>
+                            <p class="text-2xl font-bold text-gray-900 mt-1">${(match.similarity_score * 100).toFixed(1)}%</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-700">${match.explanation}</p>
+                `;
+                
+                container.appendChild(matchCard);
+            });
+        }
+
+        function resetForm() {
+            document.getElementById('uploadForm').reset();
+            document.getElementById('uploadForm').classList.remove('hidden');
+            document.getElementById('processing').classList.add('hidden');
+            document.getElementById('results').classList.add('hidden');
+            removeFile();
+        }
+    </script>
+</body>
+</html>

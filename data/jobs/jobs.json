@@ -1,0 +1,68 @@
+[
+  {
+    "job_id": "job_001",
+    "title": "Senior Software Engineer",
+    "department": "Platform Engineering",
+    "location": "Bengaluru",
+    "requirements": ["Python", "AWS", "Microservices", "Docker", "Kubernetes"],
+    "nice_to_have": ["React", "Machine Learning", "DevOps"],
+    "summary": "We are looking for a Senior Software Engineer to join our Platform Engineering team. You will be responsible for building scalable microservices, working with cloud infrastructure, and mentoring junior developers. Strong experience with Python, AWS, and containerization technologies is required.",
+    "experience_years": "5-8",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_002", 
+    "title": "Cloud Data Engineer",
+    "department": "Data Platform",
+    "location": "Bengaluru",
+    "requirements": ["Python", "SQL", "GCP", "BigQuery", "Apache Spark"],
+    "nice_to_have": ["Kafka", "Airflow", "Terraform", "Machine Learning"],
+    "summary": "Join our Data Platform team as a Cloud Data Engineer. You will design and build data pipelines, work with large-scale data processing systems, and ensure data quality and reliability. Experience with GCP, BigQuery, and distributed computing frameworks is essential.",
+    "experience_years": "4-7",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_003",
+    "title": "DevOps Specialist", 
+    "department": "Infrastructure",
+    "location": "Bengaluru",
+    "requirements": ["AWS", "Kubernetes", "Terraform", "CI/CD", "Docker"],
+    "nice_to_have": ["Python", "Monitoring", "Security", "Ansible"],
+    "summary": "We need a DevOps Specialist to manage our cloud infrastructure and deployment pipelines. You will work on automating deployments, managing Kubernetes clusters, and ensuring system reliability. Strong knowledge of AWS, Kubernetes, and Infrastructure as Code is required.",
+    "experience_years": "3-6",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_004",
+    "title": "Machine Learning Engineer",
+    "department": "AI/ML",
+    "location": "Bengaluru", 
+    "requirements": ["Python", "TensorFlow", "PyTorch", "MLOps", "Statistics"],
+    "nice_to_have": ["AWS", "Kubernetes", "Spark", "NLP"],
+    "summary": "Join our AI/ML team to build and deploy machine learning models at scale. You will work on model development, MLOps pipelines, and productionizing ML systems. Strong background in machine learning frameworks and statistical modeling is essential.",
+    "experience_years": "3-5",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_005",
+    "title": "Frontend Developer",
+    "department": "Product Engineering",
+    "location": "Bengaluru",
+    "requirements": ["React", "JavaScript", "TypeScript", "CSS", "HTML"],
+    "nice_to_have": ["Node.js", "GraphQL", "Testing", "Design Systems"],
+    "summary": "We are seeking a Frontend Developer to create exceptional user experiences. You will work closely with designers and backend engineers to build responsive, accessible web applications. Expertise in React, TypeScript, and modern frontend development practices is required.",
+    "experience_years": "2-5",
+    "employment_type": "Full-time"
+  },
+  {
+    "job_id": "job_006",
+    "title": "Product Manager",
+    "department": "Product",
+    "location": "Bengaluru",
+    "requirements": ["Product Strategy", "Analytics", "Stakeholder Management", "Agile", "User Research"],
+    "nice_to_have": ["Technical Background", "B2B SaaS", "Data Analysis", "Design Thinking"],
+    "summary": "Lead product development as a Product Manager in our growing product team. You will define product strategy, work with cross-functional teams, and drive product roadmaps. Strong analytical skills and experience in product management methodologies are essential.",
+    "experience_years": "4-7",
+    "employment_type": "Full-time"
+  }
+]

@@ -1,0 +1,19 @@
+John Doe
+Software Engineer
+
+SKILLS: Python, Machine Learning, Data Analysis, TensorFlow, Scikit-learn, SQL, Git
+
+EXPERIENCE:
+Software Developer at Tech Corp (2020-2024)
+- Developed machine learning models for predictive analytics
+- Built data pipelines using Python and SQL
+- Collaborated with cross-functional teams on AI projects
+
+EDUCATION:
+Bachelor of Science in Computer Science
+University of Technology (2016-2020)
+
+PROJECTS:
+- Customer Churn Prediction Model using Random Forest
+- Real-time Data Processing Pipeline with Apache Kafka
+- Web Application for Data Visualization using Flask
