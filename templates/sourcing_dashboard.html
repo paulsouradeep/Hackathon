@@ -552,7 +552,7 @@
                                                     <small class="text-muted">${match.job_details ? match.job_details.department : 'Unknown Department'}</small>
                                                 </p>
                                                 <div class="d-flex justify-content-between align-items-center">
-                                                    <span class="badge bg-primary">${Math.round(match.similarity_score * 100)}%</span>
+                                                    <span class="badge bg-primary">${Math.round(match.similarity_score)}%</span>
                                                     <span class="badge bg-${match.confidence_band === 'AUTO' ? 'success' : match.confidence_band === 'REVIEW' ? 'warning' : 'secondary'}">${match.confidence_band}</span>
                                                 </div>
                                                 <small class="text-muted">${match.explanation}</small>

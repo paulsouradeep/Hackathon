@@ -808,7 +808,7 @@
                         </div>
                         <div class="text-right ml-6">
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${confidenceColor} mb-2">${match.confidence_band}</span>
-                            <div class="text-2xl font-bold text-gray-900 mb-4">${(match.similarity_score * 100).toFixed(1)}%</div>
+                            <div class="text-2xl font-bold text-gray-900 mb-4">${match.similarity_score.toFixed(1)}%</div>
                             ${actionButtons}
                         </div>
                     </div>
@@ -932,7 +932,7 @@
                 } else {
                     // If no skill data available, calculate based on similarity score from matches
                     if (candidateData && candidateData.matches && candidateData.matches.length > 0) {
-                        readinessScore = Math.round(candidateData.matches[0].similarity_score * 100);
+                        readinessScore = Math.round(candidateData.matches[0].similarity_score);
                     } else {
                         readinessScore = 50; // Default fallback
                     }
@@ -1047,12 +1047,12 @@ Thank you for your application for ${getJobTitle(candidateData.candidate.applied
 
 While reviewing your profile, our AI-powered talent matching system identified that you may be an excellent fit for our ${alternativeRole.job_details.title} position in the ${alternativeRole.job_details.department} department.
 
-Your skills and experience show a ${(alternativeRole.similarity_score * 100).toFixed(1)}% match with this role.
+Your skills and experience show a ${alternativeRole.similarity_score.toFixed(1)}% match with this role.
 
 Key highlights of this opportunity:
 • Department: ${alternativeRole.job_details.department}
 • Location: ${alternativeRole.job_details.location}
-• Match Score: ${(alternativeRole.similarity_score * 100).toFixed(1)}%
+• Match Score: ${alternativeRole.similarity_score.toFixed(1)}%
 
 If you're interested in learning more about this opportunity, please reply to this email and we'll schedule a time to discuss the role in detail.
 

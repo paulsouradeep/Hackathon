@@ -19,7 +19,7 @@ except ImportError:
     # Fallback for systems where email modules might not be available
     MimeText = None
     MimeMultipart = None
-from models.ai_models import talent_matcher
+from models.improved_ai_models import improved_talent_matcher as talent_matcher
 from models.social_media_sourcing import social_media_sourcer
 
 # Configure logging
@@ -661,9 +661,9 @@ async def get_candidate_matches(candidate_id: str):
                 "job_details": job_details
             })
         
-        # Parse skills safely
+        # Parse skills safely (column 6 is skills, column 5 is resume_text)
         try:
-            skills = json.loads(candidate_row[5]) if candidate_row[5] and candidate_row[5].strip() else []
+            skills = json.loads(candidate_row[6]) if candidate_row[6] and candidate_row[6].strip() else []
         except (json.JSONDecodeError, TypeError):
             skills = []
         
@@ -672,7 +672,7 @@ async def get_candidate_matches(candidate_id: str):
         if matches:
             candidate_data = {
                 "skills": skills,
-                "experience_years": candidate_row[6] or 0
+                "experience_years": candidate_row[7] or 0
             }
             top_job = matches[0]["job_details"]
             if top_job:
@@ -688,7 +688,7 @@ async def get_candidate_matches(candidate_id: str):
                 "phone": candidate_row[3],
                 "applied_for": candidate_row[4],
                 "skills": skills,
-                "experience_years": candidate_row[6] or 0
+                "experience_years": candidate_row[7] or 0
             },
             "matches": matches,
             "skill_gaps": skill_gaps
