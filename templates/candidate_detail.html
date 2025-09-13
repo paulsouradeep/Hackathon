@@ -866,25 +866,110 @@ Telus Talent Acquisition Team`;
             confirmButton.disabled = true;
             
             try {
-                // First show feedback modal to get reason
-                closeConfirmationModal();
-                
-                // Set up feedback modal with the action
-                document.getElementById('feedbackCandidateId').value = candidateId;
-                document.getElementById('feedbackJobId').value = jobId;
-                document.getElementById('feedbackAction').value = action;
-                
-                // Populate reason options
-                populateReasonOptions(action);
-                
-                // Show feedback modal
-                document.getElementById('feedbackModal').classList.remove('hidden');
+                if (action === 'accept') {
+                    // For accept action, show email preview first
+                    closeConfirmationModal();
+                    await showEmailPreview(candidateId, jobId, action);
+                } else {
+                    // For other actions, show feedback modal directly
+                    closeConfirmationModal();
+                    
+                    // Set up feedback modal with the action
+                    document.getElementById('feedbackCandidateId').value = candidateId;
+                    document.getElementById('feedbackJobId').value = jobId;
+                    document.getElementById('feedbackAction').value = action;
+                    
+                    // Populate reason options
+                    populateReasonOptions(action);
+                    
+                    // Show feedback modal
+                    document.getElementById('feedbackModal').classList.remove('hidden');
+                }
                 
             } catch (error) {
                 console.error('Error in confirmAction:', error);
                 confirmButton.innerHTML = originalContent;
                 confirmButton.disabled = false;
                 alert('An error occurred. Please try again.');
+            }
+        }
+
+        // Show email preview for accept action
+        async function showEmailPreview(candidateIdValue, jobId, action) {
+            try {
+                const response = await fetch(`/api/match/accept/preview?candidate_id=${candidateIdValue}&job_id=${jobId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    const preview = result.email_preview;
+                    
+                    // Populate email modal
+                    document.getElementById('emailTo').textContent = preview.to;
+                    document.getElementById('emailSubject').textContent = preview.subject;
+                    document.getElementById('emailBody').textContent = preview.body;
+                    
+                    // Store the action data for later use
+                    window.emailPreviewData = {
+                        candidateId: candidateIdValue,
+                        jobId: jobId,
+                        action: action
+                    };
+                    
+                    // Show email modal
+                    document.getElementById('emailModal').classList.remove('hidden');
+                } else {
+                    throw new Error(result.message || 'Failed to generate email preview');
+                }
+                
+            } catch (error) {
+                console.error('Error showing email preview:', error);
+                alert('Error generating email preview: ' + error.message);
+            }
+        }
+
+        // Updated sendEmailConfirm to handle accept action
+        function sendEmailConfirm() {
+            if (window.emailPreviewData && window.emailPreviewData.action === 'accept') {
+                // Close email modal and show feedback modal for accept action
+                closeEmailModal();
+                
+                // Set up feedback modal with the action
+                document.getElementById('feedbackCandidateId').value = window.emailPreviewData.candidateId;
+                document.getElementById('feedbackJobId').value = window.emailPreviewData.jobId;
+                document.getElementById('feedbackAction').value = window.emailPreviewData.action;
+                
+                // Populate reason options
+                populateReasonOptions(window.emailPreviewData.action);
+                
+                // Show feedback modal
+                document.getElementById('feedbackModal').classList.remove('hidden');
+                
+                // Clear the stored data
+                window.emailPreviewData = null;
+            } else {
+                // Original alternative role email functionality
+                closeEmailModal();
+                
+                // Show success message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50';
+                alertDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fas fa-check-circle mr-2"></i>
+                        <span>Alternative role email sent successfully!</span>
+                        <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-green-700 hover:text-green-900">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `;
+                document.body.appendChild(alertDiv);
+                
+                // Auto-remove after 5 seconds
+                setTimeout(() => {
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 5000);
             }
         }
 
