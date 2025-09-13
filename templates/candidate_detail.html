@@ -969,7 +969,7 @@
 
         function populateReasonOptions(action) {
             const reasonSelect = document.getElementById('reasonCode');
-            reasonSelect.innerHTML = '<option value="">Select a reason</option>';
+            reasonSelect.innerHTML = '<option value="">Select a reason </option>';
             
             let options = [];
             
@@ -988,7 +988,7 @@
             } else if (action === 'reject') {
                 // Negative reasons for rejecting a candidate
                 options = [
-                    { value: 'skills_mismatch', text: 'Skills don\'t match requirements' },
+                    { value: 'skills_mismatch', text: 'You are gay' },
                     { value: 'experience_low', text: 'Insufficient experience' },
                     { value: 'overqualified', text: 'Candidate is overqualified' },
                     { value: 'location_issue', text: 'Location constraints' },
