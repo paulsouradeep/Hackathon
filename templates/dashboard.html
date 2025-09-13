@@ -64,7 +64,7 @@
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Analytics Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 mb-8">
             <!-- Total Candidates -->
             <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
                 <div class="flex items-center">
@@ -74,6 +74,19 @@
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600">Total Candidates</p>
                         <p class="text-2xl font-bold text-gray-900" id="totalCandidates">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Need Review -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-eye text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Need Review</p>
+                        <p class="text-2xl font-bold text-yellow-600" id="reviewMatches">0</p>
                     </div>
                 </div>
             </div>
@@ -91,19 +104,6 @@
                 </div>
             </div>
 
-            <!-- Review Needed -->
-            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
-                <div class="flex items-center">
-                    <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center">
-                        <i class="fas fa-eye text-white text-xl"></i>
-                    </div>
-                    <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Need Review</p>
-                        <p class="text-2xl font-bold text-yellow-600" id="reviewMatches">0</p>
-                    </div>
-                </div>
-            </div>
-
             <!-- Human Review -->
             <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
                 <div class="flex items-center">
@@ -113,6 +113,33 @@
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600">Human Review</p>
                         <p class="text-2xl font-bold text-red-600" id="humanMatches">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roles Offered -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-handshake text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Roles Offered</p>
+                        <p class="text-2xl font-bold text-purple-600" id="rolesOffered">0</p>
+                        <p class="text-xs text-gray-500" id="multipleOffersText">0 with multiple offers</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Rejections -->
+            <div class="bg-white rounded-xl shadow-lg p-6 card-hover border border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-12 h-12 bg-gradient-to-r from-gray-500 to-gray-600 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-times-circle text-white text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Rejections</p>
+                        <p class="text-2xl font-bold text-gray-600" id="totalRejections">0</p>
                     </div>
                 </div>
             </div>
@@ -224,7 +251,13 @@
                 document.getElementById('totalCandidates').textContent = data.total_candidates || 0;
                 document.getElementById('autoMatches').textContent = data.confidence_distribution?.AUTO || 0;
                 document.getElementById('reviewMatches').textContent = data.confidence_distribution?.REVIEW || 0;
-                document.getElementById('humanMatches').textContent = data.confidence_distribution?.HUMAN || 0;
+                document.getElementById('humanMatches').textContent = data.human_review_needed || 0;
+                document.getElementById('rolesOffered').textContent = data.total_roles_offered || 0;
+                document.getElementById('totalRejections').textContent = data.total_rejections || 0;
+                
+                // Update multiple offers text
+                const multipleOffersText = data.users_with_multiple_offers || 0;
+                document.getElementById('multipleOffersText').textContent = `${multipleOffersText} with multiple offers`;
             } catch (error) {
                 console.error('Error loading analytics:', error);
             }

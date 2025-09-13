@@ -906,13 +906,41 @@ async def get_analytics():
         cursor.execute('SELECT COUNT(*) FROM candidates')
         total_candidates = cursor.fetchone()[0]
         
-        # Confidence band distribution
+        # Confidence band distribution for pending matches only
         cursor.execute('''
             SELECT confidence_band, COUNT(*) 
             FROM matches 
+            WHERE status = 'pending'
             GROUP BY confidence_band
         ''')
         confidence_distribution = dict(cursor.fetchall())
+        
+        # Total roles offered (accepted matches)
+        cursor.execute('SELECT COUNT(*) FROM matches WHERE status = "accepted"')
+        total_roles_offered = cursor.fetchone()[0]
+        
+        # Total rejections (from feedback table)
+        cursor.execute('SELECT COUNT(*) FROM feedback WHERE recruiter_action = "reject"')
+        total_rejections = cursor.fetchone()[0]
+        
+        # Users with multiple role offers
+        cursor.execute('''
+            SELECT candidate_id, COUNT(*) as offer_count
+            FROM matches 
+            WHERE status = 'accepted'
+            GROUP BY candidate_id
+            HAVING COUNT(*) > 1
+        ''')
+        multiple_offers = cursor.fetchall()
+        users_with_multiple_offers = len(multiple_offers)
+        
+        # Candidates needing human review (low confidence matches)
+        cursor.execute('''
+            SELECT COUNT(*) 
+            FROM matches 
+            WHERE confidence_band = 'HUMAN' AND status = 'pending'
+        ''')
+        human_review_needed = cursor.fetchone()[0]
         
         # Feedback distribution
         cursor.execute('''
@@ -930,13 +958,26 @@ async def get_analytics():
         ''')
         avg_scores = dict(cursor.fetchall())
         
+        # Recent activity (candidates added in last 7 days)
+        cursor.execute('''
+            SELECT COUNT(*) 
+            FROM candidates 
+            WHERE created_at >= datetime('now', '-7 days')
+        ''')
+        recent_candidates = cursor.fetchone()[0]
+        
         conn.close()
         
         return {
             "total_candidates": total_candidates,
             "confidence_distribution": confidence_distribution,
             "feedback_distribution": feedback_distribution,
-            "average_scores": avg_scores
+            "average_scores": avg_scores,
+            "total_roles_offered": total_roles_offered,
+            "total_rejections": total_rejections,
+            "users_with_multiple_offers": users_with_multiple_offers,
+            "human_review_needed": human_review_needed,
+            "recent_candidates": recent_candidates
         }
         
     except Exception as e:
