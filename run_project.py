@@ -16,7 +16,7 @@ def check_setup():
     required_files = [
         "app.py",
         "requirements.txt",
-        "models/ai_models.py",
+        "models/improved_ai_models.py",
         "data/jobs/jobs.json"
     ]
     

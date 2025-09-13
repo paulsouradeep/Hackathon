@@ -7,7 +7,7 @@ Loads sample candidates from JSON data into the system for demonstration
 import json
 import sqlite3
 import uuid
-from models.ai_models import talent_matcher
+from models.improved_ai_models import improved_talent_matcher as talent_matcher
 
 def load_sample_candidates():
     """Load sample candidates into the database"""
