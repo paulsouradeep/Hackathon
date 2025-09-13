@@ -129,7 +129,7 @@
                                 <div class="space-y-4">
                                     <div>
                                         <span class="text-sm font-medium text-gray-600">Experience:</span>
-                                        <p class="text-gray-900"><span id="experienceYears"></span> years</p>
+                                        <p class="text-gray-900" id="experienceDisplay"></p>
                                     </div>
                                     <div>
                                         <span class="text-sm font-medium text-gray-600">Skills:</span>
@@ -295,10 +295,21 @@
             document.getElementById('candidatePhone').textContent = candidate.phone;
             document.getElementById('appliedFor').textContent = getJobTitle(candidate.applied_for);
             
-            // Handle experience years - show "N/A" if not present or empty
+            // Handle experience years - show "-" if not present, empty, or is an empty array
             const experienceYears = candidate.experience_years;
-            document.getElementById('experienceYears').textContent = 
-                (experienceYears && experienceYears !== '' && experienceYears !== 0) ? experienceYears : 'N/A';
+            let displayExperience = '-';
+            
+            if (experienceYears && 
+                experienceYears !== '' && 
+                experienceYears !== 0 && 
+                !Array.isArray(experienceYears) && 
+                experienceYears !== '[]') {
+                displayExperience = experienceYears + ' years';
+            } else if (Array.isArray(experienceYears) && experienceYears.length === 0) {
+                displayExperience = '-';
+            }
+            
+            document.getElementById('experienceDisplay').textContent = displayExperience;
             
             // Display skills
             const skillsContainer = document.getElementById('skillsContainer');
