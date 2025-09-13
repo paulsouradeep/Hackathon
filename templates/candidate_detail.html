@@ -213,6 +213,54 @@
         </div>
     </div>
 
+    <!-- Email Preview Modal -->
+    <div id="emailModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
+        <div class="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 flex items-center">
+                        <i class="fas fa-envelope mr-2 text-telus-blue"></i>
+                        Alternative Role Email Preview
+                    </h3>
+                    <button onclick="closeEmailModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span class="font-medium text-gray-600">To:</span>
+                            <span id="emailTo" class="text-gray-900 ml-2"></span>
+                        </div>
+                        <div>
+                            <span class="font-medium text-gray-600">From:</span>
+                            <span class="text-gray-900 ml-2">Telus Talent Acquisition Team</span>
+                        </div>
+                        <div class="md:col-span-2">
+                            <span class="font-medium text-gray-600">Subject:</span>
+                            <span id="emailSubject" class="text-gray-900 ml-2"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                    <div id="emailBody" class="text-gray-800 leading-relaxed whitespace-pre-line"></div>
+                </div>
+                
+                <div class="flex justify-end space-x-3">
+                    <button onclick="closeEmailModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition-colors duration-200">
+                        Cancel
+                    </button>
+                    <button onclick="sendEmailConfirm()" class="px-4 py-2 bg-telus-blue text-white rounded-md hover:bg-blue-700 transition-colors duration-200 flex items-center space-x-2">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Send Email</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Feedback Modal -->
     <div id="feedbackModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 hidden">
         <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
@@ -564,25 +612,62 @@
             }
             
             const alternativeRole = candidateData.matches[1];
-            const emailContent = `
-Subject: Alternative Role Opportunity at Telus
+            const subject = 'Alternative Role Opportunity at Telus';
+            const emailBody = `Dear ${candidateData.candidate.name},
 
-Dear ${candidateData.candidate.name},
-
-Thank you for your application for ${getJobTitle(candidateData.candidate.applied_for)}. 
+Thank you for your application for ${getJobTitle(candidateData.candidate.applied_for)}.
 
 While reviewing your profile, our AI-powered talent matching system identified that you may be an excellent fit for our ${alternativeRole.job_details.title} position in the ${alternativeRole.job_details.department} department.
 
 Your skills and experience show a ${(alternativeRole.similarity_score * 100).toFixed(1)}% match with this role.
 
-If you're interested in learning more about this opportunity, please reply to this email.
+Key highlights of this opportunity:
+• Department: ${alternativeRole.job_details.department}
+• Location: ${alternativeRole.job_details.location}
+• Match Score: ${(alternativeRole.similarity_score * 100).toFixed(1)}%
+
+If you're interested in learning more about this opportunity, please reply to this email and we'll schedule a time to discuss the role in detail.
 
 Best regards,
-Telus Talent Acquisition Team
-            `;
+Telus Talent Acquisition Team`;
             
-            // In a real implementation, this would trigger an actual email
-            alert('Email template generated:\n\n' + emailContent);
+            // Populate email modal
+            document.getElementById('emailTo').textContent = candidateData.candidate.email;
+            document.getElementById('emailSubject').textContent = subject;
+            document.getElementById('emailBody').textContent = emailBody;
+            
+            // Show email modal
+            document.getElementById('emailModal').classList.remove('hidden');
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModal').classList.add('hidden');
+        }
+
+        function sendEmailConfirm() {
+            // In a real implementation, this would send the actual email
+            closeEmailModal();
+            
+            // Show success message
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'fixed top-4 right-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded z-50';
+            alertDiv.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-check-circle mr-2"></i>
+                    <span>Alternative role email sent successfully!</span>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-green-700 hover:text-green-900">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
         }
 
         function getJobTitle(jobId) {
