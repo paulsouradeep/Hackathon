@@ -383,7 +383,7 @@
                     }
                     
                     const score = topMatch ? topMatch.similarity_score.toFixed(1) + '%' : 'N/A';
-                    const jobTitle = topMatch ? getJobTitle(topMatch.job_id) : 'N/A';
+                    const jobTitle = topMatch ? (topMatch.job_title || getJobTitle(topMatch.job_id)) : 'N/A';
                     
                     row.innerHTML = `
                         <td class="px-6 py-4 whitespace-nowrap">

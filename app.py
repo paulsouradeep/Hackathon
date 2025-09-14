@@ -622,6 +622,11 @@ async def get_candidates(
                 if not any(any(term in skill.lower() for skill in candidate_skills) for term in skill_terms):
                     continue
             
+            # Get job details for top match
+            job_details = None
+            if row[6]:
+                job_details = next((job for job in talent_matcher.jobs_data if job['job_id'] == row[6]), None)
+            
             candidates.append({
                 "candidate_id": row[0],
                 "name": row[1],
@@ -631,6 +636,7 @@ async def get_candidates(
                 "skills": candidate_skills,
                 "top_match": {
                     "job_id": row[6],
+                    "job_title": job_details['title'] if job_details else "Unknown Job",
                     "similarity_score": row[7],
                     "confidence_band": row[8],
                     "explanation": row[9]
