@@ -21,6 +21,8 @@ except ImportError:
     MimeMultipart = None
 from models.improved_ai_models import improved_talent_matcher as talent_matcher
 from models.social_media_sourcing import social_media_sourcer
+from models.conversational_ai_recruiter import conversational_ai_recruiter
+from models.simple_blockchain_credentials import blockchain_verifier
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -1704,6 +1706,415 @@ async def sourced_candidate_detail(request: Request, sourced_id: str):
     return templates.TemplateResponse("sourced_candidate_detail.html", {
         "request": request, 
         "sourced_id": sourced_id
+    })
+
+# Conversational AI Recruiter API Routes
+class ConversationStartData(BaseModel):
+    candidate_id: str
+    job_id: str
+
+class ConversationResponseData(BaseModel):
+    conversation_id: str
+    candidate_message: str
+
+@app.get("/ai-chat", response_class=HTMLResponse)
+async def ai_chat_page(request: Request):
+    """AI Chat interface page"""
+    return templates.TemplateResponse("ai_chat.html", {"request": request})
+
+@app.post("/api/ai-conversation/start")
+async def start_ai_conversation(conversation_data: ConversationStartData):
+    """Start a new AI conversation with a candidate"""
+    try:
+        # Get candidate info
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        logger.info(f"Looking for candidate with ID: {conversation_data.candidate_id}")
+        cursor.execute('SELECT name, email, phone, applied_for FROM candidates WHERE candidate_id = ?', 
+                      (conversation_data.candidate_id,))
+        candidate_row = cursor.fetchone()
+        
+        logger.info(f"Candidate row result: {candidate_row}")
+        
+        if not candidate_row:
+            conn.close()
+            raise HTTPException(status_code=404, detail="Candidate not found")
+        
+        candidate_info = {
+            "name": candidate_row[0],
+            "email": candidate_row[1],
+            "phone": candidate_row[2],
+            "applied_for": candidate_row[3]
+        }
+        
+        logger.info(f"Candidate info: {candidate_info}")
+        conn.close()
+        
+        # Start conversation
+        logger.info("Starting conversation with conversational_ai_recruiter")
+        conversation_id = conversational_ai_recruiter.start_conversation(
+            conversation_data.candidate_id,
+            conversation_data.job_id,
+            candidate_info
+        )
+        
+        logger.info(f"Conversation started with ID: {conversation_id}")
+        
+        # Get opening message
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT message FROM conversation_messages 
+            WHERE conversation_id = ? AND sender = 'ai' 
+            ORDER BY timestamp DESC LIMIT 1
+        ''', (conversation_id,))
+        
+        message_row = cursor.fetchone()
+        opening_message = message_row[0] if message_row else "Hello! Let's start our conversation."
+        conn.close()
+        
+        return {
+            "success": True,
+            "conversation_id": conversation_id,
+            "opening_message": opening_message,
+            "message": "Conversation started successfully"
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error starting AI conversation: {e}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/ai-conversation/respond")
+async def respond_to_ai_conversation(response_data: ConversationResponseData):
+    """Process candidate response and get AI reply"""
+    try:
+        ai_response = conversational_ai_recruiter.process_candidate_response(
+            response_data.conversation_id,
+            response_data.candidate_message
+        )
+        
+        return {
+            "success": True,
+            "ai_response": ai_response,
+            "message": "Response processed successfully"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error processing AI conversation response: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/ai-conversation/{conversation_id}/summary")
+async def get_conversation_summary(conversation_id: str):
+    """Get conversation summary for recruiters"""
+    try:
+        summary = conversational_ai_recruiter.get_conversation_summary(conversation_id)
+        
+        if not summary:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        
+        return {"summary": summary}
+        
+    except Exception as e:
+        logger.error(f"Error fetching conversation summary: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/ai-conversation/{conversation_id}/messages")
+async def get_conversation_messages(conversation_id: str):
+    """Get all messages in a conversation"""
+    try:
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT sender, message, timestamp, message_type
+            FROM conversation_messages 
+            WHERE conversation_id = ? 
+            ORDER BY timestamp
+        ''', (conversation_id,))
+        
+        messages = []
+        for row in cursor.fetchall():
+            messages.append({
+                "sender": row[0],
+                "message": row[1],
+                "timestamp": row[2],
+                "message_type": row[3]
+            })
+        
+        conn.close()
+        
+        return {"messages": messages}
+        
+    except Exception as e:
+        logger.error(f"Error fetching conversation messages: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/ai-conversations")
+async def get_all_conversations():
+    """Get all AI conversations for recruiter dashboard"""
+    try:
+        conn = sqlite3.connect('talent_platform.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT ac.conversation_id, ac.candidate_id, ac.job_id, ac.stage, 
+                   ac.screening_score, ac.status, ac.created_at,
+                   c.name, c.email
+            FROM ai_conversations ac
+            JOIN candidates c ON ac.candidate_id = c.candidate_id
+            ORDER BY ac.created_at DESC
+        ''')
+        
+        conversations = []
+        for row in cursor.fetchall():
+            # Get job details
+            job_details = next((job for job in talent_matcher.jobs_data if job['job_id'] == row[2]), None)
+            
+            conversations.append({
+                "conversation_id": row[0],
+                "candidate_id": row[1],
+                "job_id": row[2],
+                "stage": row[3],
+                "screening_score": row[4],
+                "status": row[5],
+                "created_at": row[6],
+                "candidate_name": row[7],
+                "candidate_email": row[8],
+                "job_title": job_details['title'] if job_details else "Unknown Job"
+            })
+        
+        conn.close()
+        
+        return {"conversations": conversations}
+        
+    except Exception as e:
+        logger.error(f"Error fetching AI conversations: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/ai-conversation/{conversation_id}", response_class=HTMLResponse)
+async def ai_conversation_detail(request: Request, conversation_id: str):
+    """AI conversation detail page for recruiters"""
+    return templates.TemplateResponse("ai_conversation_detail.html", {
+        "request": request, 
+        "conversation_id": conversation_id
+    })
+
+# Blockchain Credential Verification API Routes
+class CredentialData(BaseModel):
+    candidate_id: str
+    type: str  # degree, certification, work_experience, skill_assessment
+    title: str
+    institution_id: Optional[str] = None
+    institution_name: Optional[str] = None
+    start_date: Optional[str] = None
+    end_date: Optional[str] = None
+    issue_date: Optional[str] = None
+    description: Optional[str] = None
+
+class InstitutionData(BaseModel):
+    institution_id: str
+    name: str
+    type: str  # university, certification_body, company
+    country: Optional[str] = None
+    accreditation_body: Optional[str] = None
+
+@app.get("/credentials", response_class=HTMLResponse)
+async def credentials_page(request: Request):
+    """Blockchain credentials verification page"""
+    return templates.TemplateResponse("credentials.html", {"request": request})
+
+@app.post("/api/credentials/add")
+async def add_credential_to_blockchain(credential: CredentialData):
+    """Add a new credential to the blockchain"""
+    try:
+        # Convert to dictionary
+        credential_data = credential.dict()
+        
+        # Add to blockchain
+        block_hash = blockchain_verifier.add_credential_to_blockchain(credential_data)
+        
+        return {
+            "success": True,
+            "block_hash": block_hash,
+            "message": "Credential added to blockchain successfully"
+        }
+        
+    except Exception as e:
+        logger.error(f"Error adding credential to blockchain: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/credentials/verify/{credential_hash}")
+async def verify_credential(credential_hash: str):
+    """Verify a credential using its blockchain hash"""
+    try:
+        verification_result = blockchain_verifier.verify_credential(credential_hash)
+        
+        return {
+            "success": True,
+            "verification_result": verification_result
+        }
+        
+    except Exception as e:
+        logger.error(f"Error verifying credential: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/credentials/candidate/{candidate_id}")
+async def get_candidate_credentials(candidate_id: str):
+    """Get all blockchain credentials for a candidate"""
+    try:
+        credential_summary = blockchain_verifier.get_candidate_credential_summary(candidate_id)
+        
+        return {
+            "success": True,
+            "credential_summary": credential_summary
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching candidate credentials: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/credentials/fraud-check")
+async def check_credential_fraud(candidate_id: str, credentials: List[CredentialData]):
+    """Check for potential credential fraud"""
+    try:
+        # Convert credentials to dictionaries
+        credential_list = [cred.dict() for cred in credentials]
+        
+        fraud_analysis = blockchain_verifier.detect_credential_fraud(candidate_id, credential_list)
+        
+        return {
+            "success": True,
+            "fraud_analysis": fraud_analysis
+        }
+        
+    except Exception as e:
+        logger.error(f"Error checking credential fraud: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/institutions/add")
+async def add_verified_institution(institution: InstitutionData):
+    """Add a verified institution to the system"""
+    try:
+        success = blockchain_verifier.add_verified_institution(institution.dict())
+        
+        if success:
+            return {
+                "success": True,
+                "message": "Institution added successfully"
+            }
+        else:
+            return {
+                "success": False,
+                "message": "Institution already exists or error occurred"
+            }
+        
+    except Exception as e:
+        logger.error(f"Error adding institution: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/institutions")
+async def get_verified_institutions():
+    """Get all verified institutions"""
+    try:
+        conn = sqlite3.connect('credentials_blockchain.db')
+        cursor = conn.cursor()
+        
+        cursor.execute('''
+            SELECT institution_id, name, type, verification_status, country, accreditation_body, created_at
+            FROM verified_institutions
+            ORDER BY name
+        ''')
+        
+        institutions = []
+        for row in cursor.fetchall():
+            institutions.append({
+                "institution_id": row[0],
+                "name": row[1],
+                "type": row[2],
+                "verification_status": row[3],
+                "country": row[4],
+                "accreditation_body": row[5],
+                "created_at": row[6]
+            })
+        
+        conn.close()
+        
+        return {
+            "success": True,
+            "institutions": institutions
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching institutions: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/credentials/blockchain/stats")
+async def get_blockchain_stats():
+    """Get blockchain credential statistics"""
+    try:
+        conn = sqlite3.connect('credentials_blockchain.db')
+        cursor = conn.cursor()
+        
+        # Total credentials in blockchain
+        cursor.execute('SELECT COUNT(*) FROM credential_blocks WHERE credential_data NOT LIKE "%genesis%"')
+        total_credentials = cursor.fetchone()[0]
+        
+        # Total verified institutions
+        cursor.execute('SELECT COUNT(*) FROM verified_institutions')
+        total_institutions = cursor.fetchone()[0]
+        
+        # Fraud detection logs
+        cursor.execute('SELECT COUNT(*) FROM fraud_detection_logs')
+        fraud_detections = cursor.fetchone()[0]
+        
+        # Credential types distribution
+        cursor.execute('''
+            SELECT json_extract(credential_data, '$.type') as cred_type, COUNT(*) 
+            FROM credential_blocks 
+            WHERE credential_data NOT LIKE "%genesis%"
+            GROUP BY cred_type
+        ''')
+        credential_types = dict(cursor.fetchall())
+        
+        # Recent activity (last 7 days)
+        cursor.execute('''
+            SELECT COUNT(*) 
+            FROM credential_blocks 
+            WHERE created_at >= datetime('now', '-7 days')
+            AND credential_data NOT LIKE "%genesis%"
+        ''')
+        recent_credentials = cursor.fetchone()[0]
+        
+        conn.close()
+        
+        return {
+            "success": True,
+            "stats": {
+                "total_credentials": total_credentials,
+                "total_institutions": total_institutions,
+                "fraud_detections": fraud_detections,
+                "credential_types": credential_types,
+                "recent_credentials": recent_credentials,
+                "blockchain_integrity": "verified"  # In a real system, this would check hash chain
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error fetching blockchain stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/credential/{credential_hash}", response_class=HTMLResponse)
+async def credential_detail(request: Request, credential_hash: str):
+    """Credential verification detail page"""
+    return templates.TemplateResponse("credential_detail.html", {
+        "request": request, 
+        "credential_hash": credential_hash
     })
 
 if __name__ == "__main__":

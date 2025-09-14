@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Recruiter Chat - Telus Talent Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .chat-container {
+            height: 70vh;
+            overflow-y: auto;
+        }
+        .message {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .typing-indicator {
+            display: none;
+        }
+        .typing-indicator.show {
+            display: flex;
+        }
+        .dot {
+            animation: typing 1.4s infinite;
+        }
+        .dot:nth-child(2) { animation-delay: 0.2s; }
+        .dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="text-xl font-bold text-purple-600">
+                        <i class="fas fa-brain mr-2"></i>Telus AI Talent Platform
+                    </a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-purple-600">
+                        <i class="fas fa-arrow-left mr-1"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-4xl mx-auto py-8 px-4">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                <i class="fas fa-robot text-purple-600 mr-3"></i>AI Recruiter Assistant
+            </h1>
+            <p class="text-gray-600">Experience our conversational AI for candidate screening</p>
+        </div>
+
+        <!-- Demo Setup -->
+        <div id="setup-section" class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h2 class="text-xl font-semibold mb-4">
+                <i class="fas fa-play-circle text-green-600 mr-2"></i>Start AI Conversation Demo
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Candidate</label>
+                    <select id="candidate-select" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="">Loading candidates...</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Select Job Position</label>
+                    <select id="job-select" class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="">Loading jobs...</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="mt-6">
+                <button id="start-conversation" class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed">
+                    <i class="fas fa-comments mr-2"></i>Start AI Conversation
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div id="chat-section" class="bg-white rounded-lg shadow-md hidden">
+            <!-- Chat Header -->
+            <div class="bg-purple-600 text-white p-4 rounded-t-lg">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="font-semibold">AI Recruiter: Alex</h3>
+                        <p class="text-purple-200 text-sm">Screening Assistant</p>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                        <span class="text-sm">Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chat-messages" class="chat-container p-4 space-y-4">
+                <!-- Messages will be added here dynamically -->
+            </div>
+
+            <!-- Typing Indicator -->
+            <div id="typing-indicator" class="typing-indicator px-4 pb-2">
+                <div class="flex items-center space-x-2 text-gray-500">
+                    <div class="flex space-x-1">
+                        <div class="dot w-2 h-2 bg-gray-400 rounded-full"></div>
+                        <div class="dot w-2 h-2 bg-gray-400 rounded-full"></div>
+                        <div class="dot w-2 h-2 bg-gray-400 rounded-full"></div>
+                    </div>
+                    <span class="text-sm">Alex is typing...</span>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="border-t p-4">
+                <div class="flex space-x-3">
+                    <input 
+                        type="text" 
+                        id="message-input" 
+                        placeholder="Type your response here..." 
+                        class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        disabled
+                    >
+                    <button 
+                        id="send-message" 
+                        class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        disabled
+                    >
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="mt-2 text-xs text-gray-500">
+                    Press Enter to send • This is a demo conversation
+                </div>
+            </div>
+        </div>
+
+        <!-- Conversation Summary -->
+        <div id="summary-section" class="bg-white rounded-lg shadow-md p-6 mt-6 hidden">
+            <h3 class="text-xl font-semibold mb-4">
+                <i class="fas fa-chart-line text-blue-600 mr-2"></i>Conversation Summary
+            </h3>
+            <div id="summary-content">
+                <!-- Summary will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentConversationId = null;
+        let candidates = [];
+        let jobs = [];
+
+        // Load candidates and jobs on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCandidates();
+            loadJobs();
+            setupEventListeners();
+        });
+
+        async function loadCandidates() {
+            try {
+                const response = await fetch('/api/candidates');
+                const data = await response.json();
+                candidates = data.candidates;
+                
+                const select = document.getElementById('candidate-select');
+                select.innerHTML = '<option value="">Select a candidate...</option>';
+                
+                candidates.forEach(candidate => {
+                    const option = document.createElement('option');
+                    option.value = candidate.candidate_id;
+                    option.textContent = `${candidate.name} (${candidate.email})`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading candidates:', error);
+            }
+        }
+
+        async function loadJobs() {
+            try {
+                const response = await fetch('/api/jobs');
+                const data = await response.json();
+                jobs = data.jobs;
+                
+                const select = document.getElementById('job-select');
+                select.innerHTML = '<option value="">Select a job...</option>';
+                
+                jobs.forEach(job => {
+                    const option = document.createElement('option');
+                    option.value = job.job_id;
+                    option.textContent = `${job.title} - ${job.department}`;
+                    select.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+            }
+        }
+
+        function setupEventListeners() {
+            // Start conversation button
+            document.getElementById('start-conversation').addEventListener('click', startConversation);
+            
+            // Send message button
+            document.getElementById('send-message').addEventListener('click', sendMessage);
+            
+            // Enter key to send message
+            document.getElementById('message-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        async function startConversation() {
+            const candidateId = document.getElementById('candidate-select').value;
+            const jobId = document.getElementById('job-select').value;
+            
+            if (!candidateId || !jobId) {
+                alert('Please select both a candidate and a job position.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/ai-conversation/start', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        candidate_id: candidateId,
+                        job_id: jobId
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentConversationId = data.conversation_id;
+                    
+                    // Hide setup section and show chat
+                    document.getElementById('setup-section').classList.add('hidden');
+                    document.getElementById('chat-section').classList.remove('hidden');
+                    
+                    // Enable input
+                    document.getElementById('message-input').disabled = false;
+                    document.getElementById('send-message').disabled = false;
+                    
+                    // Add opening message
+                    addMessage('ai', data.opening_message);
+                    
+                    // Focus on input
+                    document.getElementById('message-input').focus();
+                } else {
+                    // Handle both message and detail fields for error responses
+                    const errorMessage = data.message || data.detail || 'Unknown error occurred';
+                    alert('Error starting conversation: ' + errorMessage);
+                }
+            } catch (error) {
+                console.error('Error starting conversation:', error);
+                alert('Error starting conversation. Please try again.');
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value.trim();
+            
+            if (!message || !currentConversationId) return;
+            
+            // Add user message to chat
+            addMessage('candidate', message);
+            
+            // Clear input and disable temporarily
+            input.value = '';
+            input.disabled = true;
+            document.getElementById('send-message').disabled = true;
+            
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                const response = await fetch('/api/ai-conversation/respond', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        conversation_id: currentConversationId,
+                        candidate_message: message
+                    })
+                });
+
+                const data = await response.json();
+                
+                // Hide typing indicator
+                hideTypingIndicator();
+                
+                if (data.success) {
+                    // Add AI response
+                    setTimeout(() => {
+                        addMessage('ai', data.ai_response);
+                        
+                        // Re-enable input
+                        input.disabled = false;
+                        document.getElementById('send-message').disabled = false;
+                        input.focus();
+                        
+                        // Check if conversation is complete
+                        if (data.ai_response.includes('Have a great day!') || data.ai_response.includes('Thank you again')) {
+                            setTimeout(() => {
+                                loadConversationSummary();
+                            }, 2000);
+                        }
+                    }, 1000); // Simulate AI thinking time
+                } else {
+                    alert('Error processing response: ' + data.message);
+                    input.disabled = false;
+                    document.getElementById('send-message').disabled = false;
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+                hideTypingIndicator();
+                alert('Error sending message. Please try again.');
+                input.disabled = false;
+                document.getElementById('send-message').disabled = false;
+            }
+        }
+
+        function addMessage(sender, message) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message flex ${sender === 'candidate' ? 'justify-end' : 'justify-start'}`;
+            
+            const isAI = sender === 'ai';
+            const bgColor = isAI ? 'bg-gray-100' : 'bg-purple-600 text-white';
+            const alignment = isAI ? 'text-left' : 'text-right';
+            
+            messageDiv.innerHTML = `
+                <div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${bgColor} ${alignment}">
+                    ${isAI ? '<i class="fas fa-robot mr-2 text-purple-600"></i>' : ''}
+                    <span class="whitespace-pre-wrap">${message}</span>
+                    <div class="text-xs mt-1 opacity-70">
+                        ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                    </div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            document.getElementById('typing-indicator').classList.add('show');
+            const chatContainer = document.getElementById('chat-messages');
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typing-indicator').classList.remove('show');
+        }
+
+        async function loadConversationSummary() {
+            if (!currentConversationId) return;
+            
+            try {
+                const response = await fetch(`/api/ai-conversation/${currentConversationId}/summary`);
+                const data = await response.json();
+                
+                if (data.summary) {
+                    displayConversationSummary(data.summary);
+                }
+            } catch (error) {
+                console.error('Error loading conversation summary:', error);
+            }
+        }
+
+        function displayConversationSummary(summary) {
+            const summarySection = document.getElementById('summary-section');
+            const summaryContent = document.getElementById('summary-content');
+            
+            const recommendation = summary.recommendation;
+            const score = Math.round(summary.final_score * 100);
+            
+            let recommendationColor = 'text-gray-600';
+            let recommendationIcon = 'fas fa-question-circle';
+            
+            if (recommendation === 'STRONG_RECOMMEND') {
+                recommendationColor = 'text-green-600';
+                recommendationIcon = 'fas fa-thumbs-up';
+            } else if (recommendation === 'RECOMMEND') {
+                recommendationColor = 'text-blue-600';
+                recommendationIcon = 'fas fa-check-circle';
+            } else if (recommendation === 'CONSIDER') {
+                recommendationColor = 'text-yellow-600';
+                recommendationIcon = 'fas fa-exclamation-triangle';
+            } else if (recommendation === 'NOT_RECOMMEND') {
+                recommendationColor = 'text-red-600';
+                recommendationIcon = 'fas fa-times-circle';
+            }
+            
+            summaryContent.innerHTML = `
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-gray-800 mb-2">Overall Assessment</h4>
+                            <div class="flex items-center space-x-3">
+                                <div class="text-2xl ${recommendationColor}">
+                                    <i class="${recommendationIcon}"></i>
+                                </div>
+                                <div>
+                                    <div class="font-semibold ${recommendationColor}">${recommendation.replace('_', ' ')}</div>
+                                    <div class="text-sm text-gray-600">Screening Score: ${score}%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-gray-800 mb-2">Conversation Details</h4>
+                            <div class="space-y-2 text-sm">
+                                <div><strong>Stage Reached:</strong> ${summary.stage_reached.replace('_', ' ')}</div>
+                                <div><strong>Messages Exchanged:</strong> ${summary.message_count}</div>
+                                <div><strong>Conversation ID:</strong> ${summary.conversation_id}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        ${summary.positive_indicators && summary.positive_indicators.length > 0 ? `
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-green-800 mb-2">
+                                <i class="fas fa-plus-circle mr-1"></i>Positive Indicators
+                            </h4>
+                            <ul class="text-sm text-green-700 space-y-1">
+                                ${summary.positive_indicators.slice(0, 3).map(indicator => 
+                                    `<li><i class="fas fa-check mr-1"></i>${indicator}</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                        
+                        ${summary.red_flags && summary.red_flags.length > 0 ? `
+                        <div class="bg-red-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-red-800 mb-2">
+                                <i class="fas fa-exclamation-triangle mr-1"></i>Areas of Concern
+                            </h4>
+                            <ul class="text-sm text-red-700 space-y-1">
+                                ${summary.red_flags.slice(0, 3).map(flag => 
+                                    `<li><i class="fas fa-times mr-1"></i>${flag}</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                        
+                        ${summary.key_insights && summary.key_insights.length > 0 ? `
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-blue-800 mb-2">
+                                <i class="fas fa-lightbulb mr-1"></i>Key Insights
+                            </h4>
+                            <ul class="text-sm text-blue-700 space-y-1">
+                                ${summary.key_insights.map(insight => 
+                                    `<li><i class="fas fa-arrow-right mr-1"></i>${insight}</li>`
+                                ).join('')}
+                            </ul>
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex space-x-4">
+                    <button onclick="window.location.href='/'" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+                    </button>
+                    <button onclick="startNewConversation()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Start New Conversation
+                    </button>
+                </div>
+            `;
+            
+            summarySection.classList.remove('hidden');
+        }
+        
+        function startNewConversation() {
+            // Reset the interface
+            currentConversationId = null;
+            document.getElementById('setup-section').classList.remove('hidden');
+            document.getElementById('chat-section').classList.add('hidden');
+            document.getElementById('summary-section').classList.add('hidden');
+            document.getElementById('chat-messages').innerHTML = '';
+            document.getElementById('message-input').value = '';
+            document.getElementById('candidate-select').value = '';
+            document.getElementById('job-select').value = '';
+        }
+    </script>
+</body>
+</html>
