@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telus Talent Intelligence Platform - AI-Powered Recruitment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        // Sample news data for dynamic feed
+        const newsTemplates = [
+            {
+                type: 'hire',
+                templates: [
+                    '{name} completed the {course} certification and was hired as a {position} at {company}!',
+                    '{name} successfully finished {course} training and landed a {position} role at {company}!',
+                    'Congratulations to {name} for completing {course} and securing a {position} position at {company}!',
+                    '{name} graduated from {course} program and joined {company} as a {position}!'
+                ]
+            },
+            {
+                type: 'match',
+                templates: [
+                    'AI successfully matched {name} with {position} role - 95% compatibility score!',
+                    'Perfect match found: {name} matched with {position} at {company} with 98% confidence!',
+                    'Our AI identified {name} as an ideal candidate for {position} role at {company}!',
+                    'Talent Intelligence Platform matched {name} to {position} with exceptional accuracy!'
+                ]
+            },
+            {
+                type: 'assessment',
+                templates: [
+                    '{name} scored {score}% on {course} assessment - exceeding industry standards!',
+                    'Outstanding performance: {name} achieved {score}% in {course} evaluation!',
+                    '{name} demonstrated excellence with {score}% score in {course} assessment!',
+                    'Impressive results: {name} scored {score}% on advanced {course} test!'
+                ]
+            }
+        ];
+
+        const names = [
+            'Sarah Chen', 'Michael Rodriguez', 'Priya Patel', 'David Kim', 'Emily Johnson',
+            'Ahmed Hassan', 'Lisa Wang', 'Carlos Silva', 'Aisha Okafor', 'Ryan O\'Connor',
+            'Fatima Al-Zahra', 'James Thompson', 'Meera Sharma', 'Alex Petrov', 'Grace Liu',
+            'Omar Benali', 'Sophie Martin', 'Raj Gupta', 'Isabella Garcia', 'Kevin Zhang'
+        ];
+
+        const courses = [
+            'Advanced Python Programming', 'Cloud Architecture', 'Machine Learning Fundamentals',
+            'DevOps Engineering', 'Full Stack Development', 'Data Science Bootcamp',
+            'Cybersecurity Essentials', 'React Development', 'AWS Solutions Architect',
+            'Product Management', 'UX/UI Design', 'Agile Methodology', 'Digital Marketing',
+            'Business Analytics', 'Mobile App Development', 'Blockchain Technology'
+        ];
+
+        const positions = [
+            'Software Engineer', 'Data Scientist', 'Product Manager', 'DevOps Engineer',
+            'Frontend Developer', 'Backend Developer', 'ML Engineer', 'Cloud Architect',
+            'UX Designer', 'Security Analyst', 'Business Analyst', 'Technical Lead',
+            'Full Stack Developer', 'Mobile Developer', 'QA Engineer', 'Scrum Master'
+        ];
+
+        const companies = [
+            'Telus', 'Microsoft', 'Google', 'Amazon', 'Meta', 'Apple', 'Netflix',
+            'Shopify', 'Spotify', 'Uber', 'Airbnb', 'Tesla', 'Adobe', 'Salesforce',
+            'IBM', 'Oracle', 'Intel', 'NVIDIA', 'Cisco', 'VMware'
+        ];
+
+        let newsItems = [];
+        let newsCounter = 0;
+
+        function getRandomElement(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        function generateNewsItem() {
+            const newsType = getRandomElement(newsTemplates);
+            const template = getRandomElement(newsType.templates);
+            const name = getRandomElement(names);
+            const course = getRandomElement(courses);
+            const position = getRandomElement(positions);
+            const company = getRandomElement(companies);
+            const score = Math.floor(Math.random() * 20) + 80; // 80-99%
+
+            let message = template
+                .replace('{name}', name)
+                .replace('{course}', course)
+                .replace('{position}', position)
+                .replace('{company}', company)
+                .replace('{score}', score);
+
+            const icons = {
+                'hire': 'fas fa-briefcase text-green-500',
+                'match': 'fas fa-bullseye text-blue-500',
+                'assessment': 'fas fa-trophy text-yellow-500'
+            };
+
+            return {
+                id: ++newsCounter,
+                type: newsType.type,
+                message: message,
+                icon: icons[newsType.type],
+                timestamp: new Date(),
+                name: name,
+                course: course,
+                position: position,
+                company: company
+            };
+        }
+
+        function addNewsItem() {
+            const newsItem = generateNewsItem();
+            newsItems.unshift(newsItem);
+
+            // Keep only last 10 items
+            if (newsItems.length > 10) {
+                newsItems = newsItems.slice(0, 10);
+            }
+
+            renderNewsItems();
+        }
+
+        function renderNewsItems() {
+            const container = document.getElementById('newsContainer');
+            
+            if (newsItems.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-newspaper text-4xl mb-4"></i>
+                        <p>Loading success stories...</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = newsItems.map(item => `
+                <div class="news-item bg-white rounded-lg shadow-md p-6 border-l-4 border-telus-blue">
+                    <div class="flex items-start space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                                <i class="${item.icon}"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-gray-900 mb-2">${item.message}</p>
+                            <div class="flex items-center text-sm text-gray-500">
+                                <i class="fas fa-clock mr-1"></i>
+                                <span>${formatTimeAgo(item.timestamp)}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatTimeAgo(timestamp) {
+            const now = new Date();
+            const diff = Math.floor((now - timestamp) / 1000);
+
+            if (diff < 60) return 'Just now';
+            if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)} hours ago`;
+            return `${Math.floor(diff / 86400)} days ago`;
+        }
+
+        // Load analytics data
+        async function loadAnalytics() {
+            try {
+                const response = await fetch('/api/analytics');
+                const data = await response.json();
+                
+                // Animate counters
+                animateCounter('totalCandidatesCount', data.total_candidates || 0);
+                animateCounter('successfulMatchesCount', data.total_roles_offered || 0);
+                
+                // Get jobs count
+                const jobsResponse = await fetch('/api/jobs');
+                const jobsData = await jobsResponse.json();
+                animateCounter('activeJobsCount', jobsData.jobs?.length || 0);
+                
+                // Calculate average match score
+                const avgScore = data.average_scores ? 
+                    Math.round(Object.values(data.average_scores).reduce((a, b) => a + b, 0) / Object.values(data.average_scores).length) : 
+                    85;
+                animateCounter('avgMatchScoreCount', avgScore, '%');
+                
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                // Set default values
+                animateCounter('totalCandidatesCount', 247);
+                animateCounter('successfulMatchesCount', 89);
+                animateCounter('activeJobsCount', 23);
+                animateCounter('avgMatchScoreCount', 87, '%');
+            }
+        }
+
+        function animateCounter(elementId, targetValue, suffix = '') {
+            const element = document.getElementById(elementId);
+            const startValue = 0;
+            const duration = 2000; // 2 seconds
+            const startTime = performance.now();
+
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function for smooth animation
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+                const currentValue = Math.floor(startValue + (targetValue - startValue) * easeOutQuart);
+                
+                element.textContent = currentValue + suffix;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+            
+            requestAnimationFrame(updateCounter);
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load initial analytics
+            loadAnalytics();
+            
+            // Generate initial news items
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    addNewsItem();
+                }, i * 500);
+            }
+            
+            // Add new news item every 10 seconds
+            setInterval(addNewsItem, 10000);
+            
+            // Update analytics every 30 seconds
+            setInterval(loadAnalytics, 30000);
+            
+            // Update timestamps every minute
+            setInterval(() => {
+                renderNewsItems();
+            }, 60000);
+        });
+    </script>
+    <style>
+        /* Telus Brand Colors */
+        :root {
+            --telus-purple: #4B0082;
+            --telus-green: #00A651;
+            --telus-blue: #0066CC;
+        }
+        
+        /* Custom Navbar Styling */
+        .navbar-gradient {
+            background: linear-gradient(135deg, var(--telus-purple) 0%, var(--telus-blue) 50%, var(--telus-green) 100%);
+        }
+        
+        .nav-link {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--telus-green);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::before {
+            width: 100%;
+        }
+        
+        /* Custom Footer Styling */
+        .footer-gradient {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .news-item {
+            animation: slideInRight 0.5s ease-out;
+        }
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .pulse-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="navbar-gradient shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-lg">
+                            <i class="fas fa-brain text-2xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"></i>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-white">Telus Talent Intelligence</h1>
+                            <p class="text-xs text-gray-200">AI-Powered Recruitment Platform</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="flex items-center space-x-1">
+                    <a href="/dashboard" class="nav-link text-white hover:text-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center space-x-2">
+                        <i class="fas fa-chart-dashboard"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/jobs" class="nav-link text-white hover:text-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center space-x-2">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Jobs</span>
+                    </a>
+                    <a href="/sourcing" class="nav-link text-white hover:text-gray-200 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center space-x-2">
+                        <i class="fas fa-search"></i>
+                        <span>Sourcing</span>
+                    </a>
+                    <a href="/upload" class="bg-white text-purple-700 hover:bg-gray-100 px-4 py-2 rounded-lg flex items-center space-x-2 transition-all duration-300 font-semibold shadow-lg">
+                        <i class="fas fa-upload"></i>
+                        <span>Upload Resume</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="gradient-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold mb-6">
+                    Welcome to Telus Talent Intelligence
+                </h1>
+                <p class="text-xl mb-8 max-w-3xl mx-auto">
+                    Revolutionizing recruitment with AI-powered talent matching, intelligent candidate sourcing, 
+                    and automated assessment tools. Find the perfect candidates faster than ever before.
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <a href="/upload" class="bg-white text-telus-blue px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-200">
+                        Get Started
+                    </a>
+                    <a href="/dashboard" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-telus-blue transition-colors duration-200">
+                        View Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Powerful AI-Driven Features</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Our platform combines cutting-edge AI technology with intuitive design to streamline your recruitment process
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-white rounded-xl shadow-lg p-8 card-hover border border-gray-100">
+                <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-6">
+                    <i class="fas fa-robot text-white text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">AI-Powered Matching</h3>
+                <p class="text-gray-600">
+                    Advanced machine learning algorithms analyze resumes and job requirements to find the perfect matches with confidence scoring.
+                </p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-white rounded-xl shadow-lg p-8 card-hover border border-gray-100">
+                <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-lg flex items-center justify-center mb-6">
+                    <i class="fas fa-search text-white text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Smart Candidate Sourcing</h3>
+                <p class="text-gray-600">
+                    Automatically discover and engage with potential candidates across multiple platforms using intelligent sourcing algorithms.
+                </p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-white rounded-xl shadow-lg p-8 card-hover border border-gray-100">
+                <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mb-6">
+                    <i class="fas fa-chart-line text-white text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Advanced Analytics</h3>
+                <p class="text-gray-600">
+                    Comprehensive dashboards and insights to track recruitment performance, candidate quality, and hiring trends.
+                </p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="bg-white rounded-xl shadow-lg p-8 card-hover border border-gray-100">
+                <div class="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg flex items-center justify-center mb-6">
+                    <i class="fas fa-clipboard-check text-white text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Automated Assessments</h3>
+                <p class="text-gray-600">
+                    Intelligent assessment tools that evaluate candidates' skills and competencies automatically with detailed scoring.
+                </p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="bg-white rounded-xl shadow-lg p-8 card-hover border border-gray-100">
+                <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-lg flex items-center justify-center mb-6">
+                    <i class="fas fa-envelope text-white text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Smart Communication</h3>
+                <p class="text-gray-600">
+                    Automated email notifications and personalized communication templates for seamless candidate engagement.
+                </p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="bg-white rounded-xl shadow-lg p-8 card-hover border border-gray-100">
+                <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center mb-6">
+                    <i class="fas fa-cogs text-white text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Workflow Automation</h3>
+                <p class="text-gray-600">
+                    Streamline your recruitment process with automated workflows, reducing manual tasks and improving efficiency.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live News Feed Section -->
+    <div class="bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Success Stories</h2>
+                    <p class="text-gray-600">Real-time updates from our talent intelligence platform</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-3 h-3 bg-green-500 rounded-full pulse-dot"></div>
+                    <span class="text-sm text-gray-500">Live Updates</span>
+                </div>
+            </div>
+
+            <div id="newsContainer" class="space-y-4 max-h-96 overflow-y-auto">
+                <!-- News items will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="bg-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Platform Statistics</h2>
+                <p class="text-lg text-gray-600">See the impact of our AI-powered recruitment platform</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-telus-blue mb-2" id="totalCandidatesCount">0</div>
+                    <div class="text-gray-600">Total Candidates</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-telus-green mb-2" id="successfulMatchesCount">0</div>
+                    <div class="text-gray-600">Successful Matches</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-telus-purple mb-2" id="activeJobsCount">0</div>
+                    <div class="text-gray-600">Active Jobs</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-yellow-600 mb-2" id="avgMatchScoreCount">0%</div>
+                    <div class="text-gray-600">Avg Match Score</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer-gradient text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-3 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-r from-telus-purple to-telus-blue rounded-lg flex items-center justify-center">
+                            <i class="fas fa-brain text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-semibold">Telus Talent Intelligence</h3>
+                    </div>
+                    <p class="text-gray-400">
+                        Revolutionizing recruitment with AI-powered solutions for modern businesses.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="/dashboard" class="hover:text-white transition-colors">Dashboard</a></li>
+                        <li><a href="/jobs" class="hover:text-white transition-colors">Jobs</a></li>
+                        <li><a href="/upload" class="hover:text-white transition-colors">Upload Resume</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                    <div class="space-y-2 text-gray-400">
+                        <p><i class="fas fa-envelope mr-2"></i>talent@telus.com</p>
+                        <p><i class="fas fa-phone mr-2"></i>+1 (800) TELUS-AI</p>
+                        <p><i class="fas fa-map-marker-alt mr-2"></i>Toronto, Canada</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 Telus Corporation. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>

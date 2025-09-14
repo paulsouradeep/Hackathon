@@ -396,6 +396,11 @@ class JobData(BaseModel):
 
 # API Routes
 @app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    """Home page with platform information and news feed"""
+    return templates.TemplateResponse("home.html", {"request": request})
+
+@app.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request):
     """Main recruiter dashboard"""
     return templates.TemplateResponse("dashboard.html", {"request": request})
@@ -527,15 +532,24 @@ async def upload_resume(
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/api/candidates")
-async def get_candidates():
-    """Get all candidates with their matches (excluding those with accepted matches)"""
+async def get_candidates(
+    search: Optional[str] = None,
+    confidence_band: Optional[str] = None,
+    applied_for: Optional[str] = None,
+    min_score: Optional[float] = None,
+    max_score: Optional[float] = None,
+    skills: Optional[str] = None,
+    date_from: Optional[str] = None,
+    date_to: Optional[str] = None
+):
+    """Get all candidates with their matches (excluding those with accepted matches) with optional search and filtering"""
     try:
         conn = sqlite3.connect('talent_platform.db')
         cursor = conn.cursor()
         
-        # Get candidates with their top match, excluding those who have accepted matches
-        cursor.execute('''
-            SELECT c.candidate_id, c.name, c.email, c.applied_for, c.created_at,
+        # Base query
+        base_query = '''
+            SELECT c.candidate_id, c.name, c.email, c.applied_for, c.created_at, c.skills,
                    m.job_id, m.similarity_score, m.confidence_band, m.explanation
             FROM candidates c
             LEFT JOIN matches m ON c.candidate_id = m.candidate_id
@@ -550,27 +564,81 @@ async def get_candidates():
                 WHERE m2.candidate_id = c.candidate_id
                 AND m2.status != 'accepted'
             ) OR m.similarity_score IS NULL)
-            ORDER BY c.created_at DESC
-        ''')
+        '''
+        
+        # Build WHERE conditions
+        conditions = []
+        params = []
+        
+        if search:
+            conditions.append("(LOWER(c.name) LIKE ? OR LOWER(c.email) LIKE ?)")
+            search_param = f"%{search.lower()}%"
+            params.extend([search_param, search_param])
+        
+        if confidence_band:
+            conditions.append("m.confidence_band = ?")
+            params.append(confidence_band)
+        
+        if applied_for:
+            conditions.append("LOWER(c.applied_for) LIKE ?")
+            params.append(f"%{applied_for.lower()}%")
+        
+        if min_score is not None:
+            conditions.append("m.similarity_score >= ?")
+            params.append(min_score)
+        
+        if max_score is not None:
+            conditions.append("m.similarity_score <= ?")
+            params.append(max_score)
+        
+        if date_from:
+            conditions.append("DATE(c.created_at) >= ?")
+            params.append(date_from)
+        
+        if date_to:
+            conditions.append("DATE(c.created_at) <= ?")
+            params.append(date_to)
+        
+        # Add conditions to query
+        if conditions:
+            base_query += " AND " + " AND ".join(conditions)
+        
+        base_query += " ORDER BY c.created_at DESC"
+        
+        cursor.execute(base_query, params)
         
         candidates = []
         for row in cursor.fetchall():
+            # Parse skills for filtering
+            candidate_skills = []
+            try:
+                candidate_skills = json.loads(row[5]) if row[5] and row[5].strip() else []
+            except (json.JSONDecodeError, TypeError):
+                candidate_skills = []
+            
+            # Apply skills filter if specified
+            if skills:
+                skill_terms = [s.strip().lower() for s in skills.split(',')]
+                if not any(any(term in skill.lower() for skill in candidate_skills) for term in skill_terms):
+                    continue
+            
             candidates.append({
                 "candidate_id": row[0],
                 "name": row[1],
                 "email": row[2],
                 "applied_for": row[3],
                 "created_at": row[4],
+                "skills": candidate_skills,
                 "top_match": {
-                    "job_id": row[5],
-                    "similarity_score": row[6],
-                    "confidence_band": row[7],
-                    "explanation": row[8]
-                } if row[5] else None
+                    "job_id": row[6],
+                    "similarity_score": row[7],
+                    "confidence_band": row[8],
+                    "explanation": row[9]
+                } if row[6] else None
             })
         
         conn.close()
-        return {"candidates": candidates}
+        return {"candidates": candidates, "total": len(candidates)}
         
     except Exception as e:
         logger.error(f"Error fetching candidates: {e}")
@@ -1115,12 +1183,43 @@ async def jobs_page(request: Request):
     return templates.TemplateResponse("jobs.html", {"request": request})
 
 @app.get("/api/jobs")
-async def get_jobs():
-    """Get all jobs"""
+async def get_jobs(
+    search: Optional[str] = None,
+    department: Optional[str] = None,
+    location: Optional[str] = None,
+    experience_level: Optional[str] = None,
+    skills: Optional[str] = None
+):
+    """Get all jobs with optional search and filtering"""
     try:
-        # Return jobs from the AI model's data
         jobs = talent_matcher.jobs_data
-        return {"jobs": jobs}
+        
+        # Apply filters
+        if search:
+            search_lower = search.lower()
+            jobs = [job for job in jobs if 
+                   search_lower in job['title'].lower() or
+                   search_lower in job['department'].lower() or
+                   search_lower in job['summary'].lower() or
+                   any(search_lower in req.lower() for req in job['requirements']) or
+                   any(search_lower in nice.lower() for nice in job.get('nice_to_have', []))]
+        
+        if department:
+            jobs = [job for job in jobs if department.lower() in job['department'].lower()]
+        
+        if location:
+            jobs = [job for job in jobs if location.lower() in job['location'].lower()]
+        
+        if experience_level:
+            jobs = [job for job in jobs if experience_level.lower() in job['experience_years'].lower()]
+        
+        if skills:
+            skill_terms = [s.strip().lower() for s in skills.split(',')]
+            jobs = [job for job in jobs if 
+                   any(any(term in req.lower() for req in job['requirements']) for term in skill_terms) or
+                   any(any(term in nice.lower() for nice in job.get('nice_to_have', [])) for term in skill_terms)]
+        
+        return {"jobs": jobs, "total": len(jobs)}
     except Exception as e:
         logger.error(f"Error fetching jobs: {e}")
         raise HTTPException(status_code=500, detail=str(e))

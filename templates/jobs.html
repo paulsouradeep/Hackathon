@@ -287,6 +287,74 @@
             </button>
         </div>
 
+        <!-- Search and Filter Section -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-8">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-8 h-8 bg-telus-blue rounded-lg flex items-center justify-center">
+                    <i class="fas fa-search text-white text-sm"></i>
+                </div>
+                <h2 class="text-lg font-semibold text-gray-900">Search & Filter Jobs</h2>
+                <button onclick="clearFilters()" class="text-sm text-gray-500 hover:text-gray-700 ml-auto">
+                    <i class="fas fa-times mr-1"></i>Clear All
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                <!-- Search Input -->
+                <div class="lg:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                    <div class="relative">
+                        <input type="text" id="searchInput" placeholder="Search jobs, skills, departments..." 
+                               class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <!-- Department Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                    <select id="departmentFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent">
+                        <option value="">All Departments</option>
+                    </select>
+                </div>
+                
+                <!-- Location Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                    <select id="locationFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent">
+                        <option value="">All Locations</option>
+                    </select>
+                </div>
+                
+                <!-- Experience Filter -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Experience</label>
+                    <select id="experienceFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent">
+                        <option value="">All Levels</option>
+                        <option value="0-2">0-2 years</option>
+                        <option value="2-5">2-5 years</option>
+                        <option value="3-6">3-6 years</option>
+                        <option value="4-7">4-7 years</option>
+                        <option value="5-8">5-8 years</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Skills Filter -->
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Skills</label>
+                <input type="text" id="skillsFilter" placeholder="Enter skills separated by commas (e.g., Python, AWS, React)" 
+                       class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent">
+            </div>
+            
+            <!-- Filter Actions -->
+            <div class="flex justify-between items-center mt-4">
+                <div class="text-sm text-gray-500">
+                    <span id="resultsCount">Loading...</span>
+                </div>
+            </div>
+        </div>
+
         <div id="jobsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div class="text-center py-12 col-span-full">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-telus-blue mx-auto mb-4"></div>
@@ -365,10 +433,12 @@
 
     <script>
         let jobs = [];
+        let allJobs = [];
 
         // Load jobs on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadJobs();
+            setupFilterListeners();
         });
 
         async function loadJobs() {
@@ -376,12 +446,101 @@
                 const response = await fetch('/api/jobs');
                 const data = await response.json();
                 jobs = data.jobs;
+                allJobs = [...data.jobs]; // Keep a copy of all jobs
                 renderJobs();
+                populateFilterOptions();
+                updateResultsCount();
             } catch (error) {
                 console.error('Error loading jobs:', error);
                 document.getElementById('jobsContainer').innerHTML = 
                     '<div class="empty-state"><h3>Error loading jobs</h3><p>Please try again later.</p></div>';
             }
+        }
+
+        function populateFilterOptions() {
+            // Populate department filter
+            const departments = [...new Set(allJobs.map(job => job.department))];
+            const departmentFilter = document.getElementById('departmentFilter');
+            departments.forEach(dept => {
+                const option = document.createElement('option');
+                option.value = dept;
+                option.textContent = dept;
+                departmentFilter.appendChild(option);
+            });
+
+            // Populate location filter
+            const locations = [...new Set(allJobs.map(job => job.location))];
+            const locationFilter = document.getElementById('locationFilter');
+            locations.forEach(loc => {
+                const option = document.createElement('option');
+                option.value = loc;
+                option.textContent = loc;
+                locationFilter.appendChild(option);
+            });
+        }
+
+        function setupFilterListeners() {
+            // Add event listeners for real-time filtering
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('departmentFilter').addEventListener('change', applyFilters);
+            document.getElementById('locationFilter').addEventListener('change', applyFilters);
+            document.getElementById('experienceFilter').addEventListener('change', applyFilters);
+            document.getElementById('skillsFilter').addEventListener('input', debounce(applyFilters, 500));
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        async function applyFilters() {
+            const search = document.getElementById('searchInput').value;
+            const department = document.getElementById('departmentFilter').value;
+            const location = document.getElementById('locationFilter').value;
+            const experience = document.getElementById('experienceFilter').value;
+            const skills = document.getElementById('skillsFilter').value;
+
+            try {
+                const params = new URLSearchParams();
+                if (search) params.append('search', search);
+                if (department) params.append('department', department);
+                if (location) params.append('location', location);
+                if (experience) params.append('experience_level', experience);
+                if (skills) params.append('skills', skills);
+
+                const response = await fetch(`/api/jobs?${params.toString()}`);
+                const data = await response.json();
+                jobs = data.jobs;
+                renderJobs();
+                updateResultsCount();
+            } catch (error) {
+                console.error('Error applying filters:', error);
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('departmentFilter').value = '';
+            document.getElementById('locationFilter').value = '';
+            document.getElementById('experienceFilter').value = '';
+            document.getElementById('skillsFilter').value = '';
+            jobs = [...allJobs];
+            renderJobs();
+            updateResultsCount();
+        }
+
+        function updateResultsCount() {
+            const count = jobs.length;
+            const total = allJobs.length;
+            document.getElementById('resultsCount').textContent = 
+                `Showing ${count} of ${total} jobs`;
         }
 
         function renderJobs() {

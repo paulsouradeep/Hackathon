@@ -164,17 +164,72 @@
 
         <!-- Pending Candidates Table -->
         <div id="pendingCandidatesSection" class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <div class="w-8 h-8 bg-telus-blue rounded-lg flex items-center justify-center">
-                        <i class="fas fa-list text-white text-sm"></i>
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-telus-blue rounded-lg flex items-center justify-center">
+                            <i class="fas fa-list text-white text-sm"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-900">Pending Candidates</h2>
                     </div>
-                    <h2 class="text-lg font-semibold text-gray-900">Pending Candidates</h2>
+                    <button onclick="loadCandidates()" class="bg-telus-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200">
+                        <i class="fas fa-refresh text-sm"></i>
+                        <span>Refresh</span>
+                    </button>
                 </div>
-                <button onclick="loadCandidates()" class="bg-telus-blue hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200">
-                    <i class="fas fa-refresh text-sm"></i>
-                    <span>Refresh</span>
-                </button>
+                
+                <!-- Search and Filter for Candidates -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-4">
+                    <!-- Search Input -->
+                    <div class="lg:col-span-2">
+                        <div class="relative">
+                            <input type="text" id="candidateSearchInput" placeholder="Search candidates..." 
+                                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent text-sm">
+                            <i class="fas fa-search absolute left-3 top-3 text-gray-400 text-sm"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Confidence Filter -->
+                    <div>
+                        <select id="confidenceFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent text-sm">
+                            <option value="">All Confidence</option>
+                            <option value="AUTO">Auto Match</option>
+                            <option value="REVIEW">Review</option>
+                            <option value="HUMAN">Human Review</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Applied For Filter -->
+                    <div>
+                        <select id="appliedForFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent text-sm">
+                            <option value="">All Positions</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Score Range -->
+                    <div>
+                        <select id="scoreRangeFilter" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-telus-blue focus:border-transparent text-sm">
+                            <option value="">All Scores</option>
+                            <option value="90-100">90-100%</option>
+                            <option value="80-89">80-89%</option>
+                            <option value="70-79">70-79%</option>
+                            <option value="60-69">60-69%</option>
+                            <option value="0-59">Below 60%</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Clear Filters -->
+                    <div class="flex items-end">
+                        <button onclick="clearCandidateFilters()" class="w-full bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-lg text-sm transition-colors duration-200">
+                            <i class="fas fa-times mr-1"></i>Clear
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Results Count -->
+                <div class="text-sm text-gray-500 mb-2">
+                    <span id="candidateResultsCount">Loading...</span>
+                </div>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
@@ -266,28 +321,48 @@
             }
         }
 
+        // Global variables for candidate filtering
+        let allCandidates = [];
+        let filteredCandidates = [];
+
         // Load candidates data
         async function loadCandidates() {
             try {
                 const response = await fetch('/api/candidates');
                 const data = await response.json();
                 
-                const tbody = document.getElementById('candidatesTable');
-                tbody.innerHTML = '';
+                allCandidates = data.candidates;
+                filteredCandidates = [...allCandidates];
                 
-                if (data.candidates.length === 0) {
-                    tbody.innerHTML = `
-                        <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-gray-500">
-                                <i class="fas fa-users text-4xl text-gray-300 mb-4"></i>
-                                <p>No candidates found</p>
-                            </td>
-                        </tr>
-                    `;
-                    return;
-                }
+                renderCandidatesTable();
+                populateCandidateFilterOptions();
+                updateCandidateResultsCount();
+                setupCandidateFilterListeners();
                 
-                data.candidates.forEach(candidate => {
+            } catch (error) {
+                console.error('Error loading candidates:', error);
+                document.getElementById('candidatesTable').innerHTML = 
+                    '<tr><td colspan="7" class="px-6 py-12 text-center text-red-500">Error loading candidates</td></tr>';
+            }
+        }
+
+        function renderCandidatesTable() {
+            const tbody = document.getElementById('candidatesTable');
+            tbody.innerHTML = '';
+            
+            if (filteredCandidates.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center text-gray-500">
+                            <i class="fas fa-users text-4xl text-gray-300 mb-4"></i>
+                            <p>No candidates found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+                
+            filteredCandidates.forEach(candidate => {
                     const row = document.createElement('tr');
                     row.className = 'hover:bg-gray-50 cursor-pointer transition-colors duration-200';
                     row.onclick = () => window.location.href = `/candidate/${candidate.candidate_id}`;
@@ -340,12 +415,86 @@
                     
                     tbody.appendChild(row);
                 });
-                
-            } catch (error) {
-                console.error('Error loading candidates:', error);
-                document.getElementById('candidatesTable').innerHTML = 
-                    '<tr><td colspan="7" class="px-6 py-12 text-center text-red-500">Error loading candidates</td></tr>';
-            }
+        }
+
+        function populateCandidateFilterOptions() {
+            // Populate applied for filter
+            const appliedForPositions = [...new Set(allCandidates.map(candidate => candidate.applied_for))];
+            const appliedForFilter = document.getElementById('appliedForFilter');
+            
+            // Clear existing options except the first one
+            appliedForFilter.innerHTML = '<option value="">All Positions</option>';
+            
+            appliedForPositions.forEach(position => {
+                const option = document.createElement('option');
+                option.value = position;
+                option.textContent = getJobTitle(position);
+                appliedForFilter.appendChild(option);
+            });
+        }
+
+        function setupCandidateFilterListeners() {
+            // Add event listeners for real-time filtering
+            document.getElementById('candidateSearchInput').addEventListener('input', applyCandidateFilters);
+            document.getElementById('confidenceFilter').addEventListener('change', applyCandidateFilters);
+            document.getElementById('appliedForFilter').addEventListener('change', applyCandidateFilters);
+            document.getElementById('scoreRangeFilter').addEventListener('change', applyCandidateFilters);
+        }
+
+        function applyCandidateFilters() {
+            const search = document.getElementById('candidateSearchInput').value.toLowerCase();
+            const confidence = document.getElementById('confidenceFilter').value;
+            const appliedFor = document.getElementById('appliedForFilter').value;
+            const scoreRange = document.getElementById('scoreRangeFilter').value;
+
+            filteredCandidates = allCandidates.filter(candidate => {
+                // Search filter
+                if (search && !candidate.name.toLowerCase().includes(search) && !candidate.email.toLowerCase().includes(search)) {
+                    return false;
+                }
+
+                // Confidence filter
+                if (confidence && (!candidate.top_match || candidate.top_match.confidence_band !== confidence)) {
+                    return false;
+                }
+
+                // Applied for filter
+                if (appliedFor && candidate.applied_for !== appliedFor) {
+                    return false;
+                }
+
+                // Score range filter
+                if (scoreRange && candidate.top_match) {
+                    const score = candidate.top_match.similarity_score;
+                    const [min, max] = scoreRange.split('-').map(Number);
+                    if (score < min || score > max) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            renderCandidatesTable();
+            updateCandidateResultsCount();
+        }
+
+        function clearCandidateFilters() {
+            document.getElementById('candidateSearchInput').value = '';
+            document.getElementById('confidenceFilter').value = '';
+            document.getElementById('appliedForFilter').value = '';
+            document.getElementById('scoreRangeFilter').value = '';
+            
+            filteredCandidates = [...allCandidates];
+            renderCandidatesTable();
+            updateCandidateResultsCount();
+        }
+
+        function updateCandidateResultsCount() {
+            const count = filteredCandidates.length;
+            const total = allCandidates.length;
+            document.getElementById('candidateResultsCount').textContent = 
+                `Showing ${count} of ${total} candidates`;
         }
 
         function getJobTitle(jobId) {
