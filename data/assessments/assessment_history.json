@@ -1,0 +1,353 @@
+[
+  {
+    "assessment_id": "assess_001",
+    "candidate_id": "8ef2c6e1-2ea2-4f59-9474-3dc65c7ae793",
+    "candidate_name": "Jennifer Martinez",
+    "job_id": "job_001",
+    "job_title": "Senior Machine Learning Engineer",
+    "assessment_type": "Technical Skills Assessment",
+    "candidate_score": 87,
+    "cutoff_score": 75,
+    "max_score": 100,
+    "status": "completed",
+    "assessment_date": "2024-12-10T14:30:00Z",
+    "duration_minutes": 45,
+    "responses": [
+      {
+        "question": "What is the difference between supervised and unsupervised learning?",
+        "answer": "Supervised learning uses labeled data to train models, while unsupervised learning finds patterns in unlabeled data without labels.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 10,
+        "max_points": 10
+      },
+      {
+        "question": "Which Python library is commonly used for machine learning?",
+        "options": ["NumPy", "scikit-learn", "Pandas", "Matplotlib"],
+        "selected_option": "scikit-learn",
+        "correct_option": "scikit-learn",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 8,
+        "max_points": 8
+      },
+      {
+        "question": "Explain the concept of overfitting in machine learning.",
+        "answer": "Overfitting occurs when a model learns the training data too well, including noise, resulting in poor generalization to new data.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 12,
+        "max_points": 12
+      }
+    ]
+  },
+  {
+    "assessment_id": "assess_002",
+    "candidate_id": "1362f53c-ffb4-4bab-80d9-53665a971a5c",
+    "candidate_name": "Robert Chen",
+    "job_id": "job_005",
+    "job_title": "Senior QA Engineer",
+    "assessment_type": "QA Testing Assessment",
+    "candidate_score": 92,
+    "cutoff_score": 80,
+    "max_score": 100,
+    "status": "completed",
+    "assessment_date": "2024-12-09T10:15:00Z",
+    "duration_minutes": 60,
+    "responses": [
+      {
+        "question": "What is the difference between functional and non-functional testing?",
+        "answer": "Functional testing verifies that software functions work as expected, while non-functional testing checks performance, usability, and reliability aspects.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 15,
+        "max_points": 15
+      },
+      {
+        "question": "Which testing approach is best for API testing?",
+        "options": ["Manual Testing", "Automated Testing", "Both", "Neither"],
+        "selected_option": "Both",
+        "correct_option": "Both",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 10,
+        "max_points": 10
+      }
+    ]
+  },
+  {
+    "assessment_id": "assess_003",
+    "candidate_id": "5dd50025-0c99-4ef7-b2bf-3b0d2cc560e2",
+    "candidate_name": "Amanda Thompson",
+    "job_id": "job_013",
+    "job_title": "Full Stack Developer",
+    "assessment_type": "Full Stack Development Assessment",
+    "candidate_score": 78,
+    "cutoff_score": 70,
+    "max_score": 100,
+    "status": "completed",
+    "assessment_date": "2024-12-08T16:45:00Z",
+    "duration_minutes": 90,
+    "responses": [
+      {
+        "question": "Explain the difference between REST and GraphQL APIs.",
+        "answer": "REST uses multiple endpoints for different resources, while GraphQL uses a single endpoint and allows clients to specify exactly what data they need. GraphQL also provides better type safety and allows for more efficient data fetching by avoiding over-fetching and under-fetching issues.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 12,
+        "max_points": 15
+      },
+      {
+        "question": "Which database type is best for handling complex relationships?",
+        "options": ["NoSQL", "Relational", "Graph", "Document"],
+        "selected_option": "Relational",
+        "correct_option": "Relational",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 8,
+        "max_points": 8
+      },
+      {
+        "question": "What is the purpose of middleware in Express.js?",
+        "answer": "Middleware functions are functions that have access to the request object, response object, and the next middleware function in the application's request-response cycle. They can execute code, modify request/response objects, end the request-response cycle, or call the next middleware.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 10,
+        "max_points": 12
+      },
+      {
+        "question": "Which React hook is used for managing component state?",
+        "options": ["useEffect", "useState", "useContext", "useReducer"],
+        "selected_option": "useState",
+        "correct_option": "useState",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 6,
+        "max_points": 6
+      },
+      {
+        "question": "Explain the concept of database normalization.",
+        "answer": "Database normalization is the process of organizing data in a database to reduce redundancy and improve data integrity. It involves dividing large tables into smaller, related tables and defining relationships between them.",
+        "type": "text",
+        "is_correct": false,
+        "points_awarded": 8,
+        "max_points": 12,
+        "feedback": "Good basic understanding, but missing details about normal forms (1NF, 2NF, 3NF) and specific benefits like eliminating insertion, update, and deletion anomalies."
+      },
+      {
+        "question": "What is the difference between SQL and NoSQL databases?",
+        "answer": "SQL databases are relational and use structured query language, while NoSQL databases are non-relational and can store data in various formats like documents, key-value pairs, or graphs. NoSQL is more flexible for unstructured data.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 9,
+        "max_points": 10
+      },
+      {
+        "question": "Which HTTP status code indicates a successful POST request that created a new resource?",
+        "options": ["200", "201", "204", "301"],
+        "selected_option": "201",
+        "correct_option": "201",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 5,
+        "max_points": 5
+      },
+      {
+        "question": "Explain the concept of responsive web design.",
+        "answer": "Responsive web design is an approach that makes web pages render well on different devices and screen sizes. It uses flexible layouts, images, and CSS media queries to adapt the design.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 8,
+        "max_points": 10
+      },
+      {
+        "question": "What is the purpose of version control systems like Git?",
+        "answer": "Version control systems track changes to files over time, allowing multiple developers to collaborate, maintain history of changes, and revert to previous versions when needed.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 7,
+        "max_points": 8
+      },
+      {
+        "question": "Which CSS framework is known for utility-first approach?",
+        "options": ["Bootstrap", "Tailwind CSS", "Foundation", "Bulma"],
+        "selected_option": "Tailwind CSS",
+        "correct_option": "Tailwind CSS",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 5,
+        "max_points": 5
+      }
+    ]
+  },
+  {
+    "assessment_id": "assess_004",
+    "candidate_id": "721e24f5-c03c-482a-b6a1-7d69f1edf075",
+    "candidate_name": "Michael Rodriguez",
+    "job_id": "job_007",
+    "job_title": "Cloud Solutions Architect",
+    "assessment_type": "Cloud Architecture Assessment",
+    "candidate_score": 85,
+    "cutoff_score": 75,
+    "max_score": 100,
+    "status": "completed",
+    "assessment_date": "2024-12-07T11:20:00Z",
+    "duration_minutes": 75,
+    "responses": [
+      {
+        "question": "What are the benefits of using microservices architecture?",
+        "answer": "Microservices provide better scalability, technology diversity, fault isolation, and easier deployment and maintenance of individual services.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 14,
+        "max_points": 15
+      },
+      {
+        "question": "Which AWS service is used for container orchestration?",
+        "options": ["EC2", "ECS", "Lambda", "S3"],
+        "selected_option": "ECS",
+        "correct_option": "ECS",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 10,
+        "max_points": 10
+      }
+    ]
+  },
+  {
+    "assessment_id": "assess_005",
+    "candidate_id": "444c99c5-9b35-4c96-a82b-1838bd7033ba",
+    "candidate_name": "Sarah Kim",
+    "job_id": "job_014",
+    "job_title": "Senior Frontend Developer",
+    "assessment_type": "Frontend Development Assessment",
+    "candidate_score": 89,
+    "cutoff_score": 70,
+    "max_score": 100,
+    "status": "completed",
+    "assessment_date": "2024-12-06T13:30:00Z",
+    "duration_minutes": 60,
+    "responses": [
+      {
+        "question": "What is the Virtual DOM and how does it improve performance?",
+        "answer": "Virtual DOM is a JavaScript representation of the real DOM. It improves performance by batching updates and only re-rendering changed elements.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 15,
+        "max_points": 15
+      },
+      {
+        "question": "Which CSS methodology helps with maintainable styles?",
+        "options": ["BEM", "OOCSS", "SMACSS", "All of the above"],
+        "selected_option": "All of the above",
+        "correct_option": "All of the above",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 8,
+        "max_points": 8
+      }
+    ]
+  },
+  {
+    "assessment_id": "assess_006",
+    "candidate_id": "93539345-27c3-4a99-aa8b-4153c83dd2e6",
+    "candidate_name": "Daniel Park",
+    "job_id": "job_009",
+    "job_title": "Senior Backend Developer",
+    "assessment_type": "Backend Development Assessment",
+    "candidate_score": 82,
+    "cutoff_score": 75,
+    "max_score": 100,
+    "status": "completed",
+    "assessment_date": "2024-12-05T15:00:00Z",
+    "duration_minutes": 80,
+    "responses": [
+      {
+        "question": "Explain the concept of database indexing and its benefits.",
+        "answer": "Database indexing creates data structures that improve query performance by providing faster data retrieval paths, reducing the need for full table scans.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 13,
+        "max_points": 15
+      },
+      {
+        "question": "Which design pattern is commonly used for API development?",
+        "options": ["Singleton", "Observer", "Repository", "Factory"],
+        "selected_option": "Repository",
+        "correct_option": "Repository",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 9,
+        "max_points": 10
+      }
+    ]
+  },
+  {
+    "assessment_id": "assess_007",
+    "candidate_id": "67c65fa9-b177-4999-8e5d-ba4362f67eed",
+    "candidate_name": "Kamesh Khatri",
+    "job_id": "job_001",
+    "job_title": "Senior Machine Learning Engineer",
+    "assessment_type": "Machine Learning Assessment",
+    "candidate_score": 94,
+    "cutoff_score": 80,
+    "max_score": 100,
+    "status": "completed",
+    "assessment_date": "2024-12-04T09:45:00Z",
+    "duration_minutes": 70,
+    "responses": [
+      {
+        "question": "What is gradient descent and how does it work?",
+        "answer": "Gradient descent is an optimization algorithm that iteratively moves towards the minimum of a cost function by calculating gradients and updating parameters in the opposite direction.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 18,
+        "max_points": 20
+      },
+      {
+        "question": "Which activation function helps with vanishing gradient problem?",
+        "options": ["Sigmoid", "Tanh", "ReLU", "Linear"],
+        "selected_option": "ReLU",
+        "correct_option": "ReLU",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 12,
+        "max_points": 12
+      }
+    ]
+  },
+  {
+    "assessment_id": "assess_008",
+    "candidate_id": "bd6d624e-ea0e-4f45-a3f7-161d7a97faec",
+    "candidate_name": "John Doe",
+    "job_id": "job_011",
+    "job_title": "Senior Business Analyst",
+    "assessment_type": "Business Analysis Assessment",
+    "candidate_score": 76,
+    "cutoff_score": 70,
+    "max_score": 100,
+    "status": "completed",
+    "assessment_date": "2024-12-03T14:15:00Z",
+    "duration_minutes": 55,
+    "responses": [
+      {
+        "question": "What is the purpose of requirements gathering in project management?",
+        "answer": "Requirements gathering ensures that all stakeholder needs are understood and documented before development begins, reducing scope creep and project risks.",
+        "type": "text",
+        "is_correct": true,
+        "points_awarded": 12,
+        "max_points": 15
+      },
+      {
+        "question": "Which methodology is best for iterative development?",
+        "options": ["Waterfall", "Agile", "V-Model", "Spiral"],
+        "selected_option": "Agile",
+        "correct_option": "Agile",
+        "type": "multiple_choice",
+        "is_correct": true,
+        "points_awarded": 10,
+        "max_points": 10
+      }
+    ]
+  }
+]

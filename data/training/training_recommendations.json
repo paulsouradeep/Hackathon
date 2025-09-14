@@ -1,0 +1,685 @@
+[
+  {
+    "candidate_id": "8ef2c6e1-2ea2-4f59-9474-3dc65c7ae793",
+    "candidate_name": "Jennifer Martinez",
+    "job_id": "job_001",
+    "job_title": "Senior Machine Learning Engineer",
+    "assessment_date": "2024-12-10T14:30:00Z",
+    "overall_readiness_score": 87,
+    "skill_gaps": [
+      {
+        "skill": "Deep Learning Frameworks",
+        "current_level": "Intermediate",
+        "required_level": "Advanced",
+        "priority": "High",
+        "gap_severity": "Medium"
+      },
+      {
+        "skill": "MLOps and Model Deployment",
+        "current_level": "Beginner",
+        "required_level": "Intermediate",
+        "priority": "Medium",
+        "gap_severity": "Medium"
+      }
+    ],
+    "training_recommendations": [
+      {
+        "skill": "Deep Learning Frameworks",
+        "priority": "High",
+        "estimated_duration": "6-8 weeks",
+        "difficulty": "Advanced",
+        "suggested_resources": [
+          "Deep Learning Specialization (Coursera)",
+          "PyTorch for Deep Learning",
+          "TensorFlow Advanced Techniques",
+          "Neural Networks and Deep Learning",
+          "Hands-on Machine Learning Book"
+        ],
+        "learning_path": [
+          "1. Neural network fundamentals",
+          "2. Convolutional Neural Networks (CNNs)",
+          "3. Recurrent Neural Networks (RNNs)",
+          "4. Advanced architectures (Transformers, GANs)",
+          "5. Model optimization and fine-tuning",
+          "6. Production deployment strategies"
+        ],
+        "practical_projects": [
+          "Build an image classification model",
+          "Create a natural language processing pipeline",
+          "Implement a recommendation system"
+        ]
+      }
+    ],
+    "strengths": [
+      "Strong machine learning fundamentals",
+      "Good programming skills in Python",
+      "Understanding of statistical concepts",
+      "Experience with data preprocessing"
+    ],
+    "development_plan": {
+      "immediate_focus": "Advanced deep learning techniques",
+      "short_term": "MLOps and model deployment",
+      "long_term": "AI research and innovation leadership",
+      "mentorship_needed": false,
+      "estimated_readiness_timeline": "2-3 months"
+    }
+  },
+  {
+    "candidate_id": "1362f53c-ffb4-4bab-80d9-53665a971a5c",
+    "candidate_name": "Robert Chen",
+    "job_id": "job_005",
+    "job_title": "Senior QA Engineer",
+    "assessment_date": "2024-12-09T10:15:00Z",
+    "overall_readiness_score": 92,
+    "skill_gaps": [
+      {
+        "skill": "Test Automation Frameworks",
+        "current_level": "Intermediate",
+        "required_level": "Advanced",
+        "priority": "Medium",
+        "gap_severity": "Low"
+      }
+    ],
+    "training_recommendations": [
+      {
+        "skill": "Test Automation Frameworks",
+        "priority": "Medium",
+        "estimated_duration": "4-5 weeks",
+        "difficulty": "Intermediate",
+        "suggested_resources": [
+          "Selenium WebDriver Advanced Course",
+          "Cypress Testing Framework",
+          "API Testing with Postman and Newman",
+          "TestNG and JUnit Frameworks",
+          "Continuous Testing in DevOps"
+        ],
+        "learning_path": [
+          "1. Advanced Selenium techniques",
+          "2. Page Object Model implementation",
+          "3. Data-driven testing strategies",
+          "4. API testing automation",
+          "5. CI/CD integration",
+          "6. Performance testing automation"
+        ],
+        "practical_projects": [
+          "Build a comprehensive test suite",
+          "Implement API testing framework",
+          "Create performance testing scenarios"
+        ]
+      }
+    ],
+    "strengths": [
+      "Excellent testing fundamentals",
+      "Strong analytical skills",
+      "Good understanding of SDLC",
+      "Experience with manual testing"
+    ],
+    "development_plan": {
+      "immediate_focus": "Advanced test automation",
+      "short_term": "Performance and security testing",
+      "long_term": "QA leadership and strategy",
+      "mentorship_needed": false,
+      "estimated_readiness_timeline": "1-2 months"
+    }
+  },
+  {
+    "candidate_id": "5dd50025-0c99-4ef7-b2bf-3b0d2cc560e2",
+    "candidate_name": "Amanda Thompson",
+    "job_id": "job_013",
+    "job_title": "Full Stack Developer",
+    "assessment_date": "2024-12-08T16:45:00Z",
+    "overall_readiness_score": 78,
+    "skill_gaps": [
+      {
+        "skill": "Advanced Database Design",
+        "current_level": "Beginner",
+        "required_level": "Intermediate",
+        "priority": "High",
+        "gap_severity": "Medium"
+      },
+      {
+        "skill": "Cloud Deployment",
+        "current_level": "Beginner",
+        "required_level": "Intermediate",
+        "priority": "Medium",
+        "gap_severity": "Medium"
+      }
+    ],
+    "training_recommendations": [
+      {
+        "skill": "Advanced Database Design",
+        "priority": "High",
+        "estimated_duration": "5-6 weeks",
+        "difficulty": "Intermediate",
+        "suggested_resources": [
+          {
+            "title": "The Complete Database Design & Modeling Course",
+            "platform": "Udemy",
+            "instructor": "Stephane Maarek",
+            "duration": "12 hours",
+            "rating": 4.6,
+            "students": "45,000+",
+            "price": "$89.99",
+            "url": "https://udemy.com/database-design-course",
+            "description": "Master database design from scratch with hands-on projects",
+            "skills_covered": ["ER Diagrams", "Normalization", "SQL Design", "Performance Optimization"]
+          },
+          {
+            "title": "SQL Performance Tuning Masterclass",
+            "platform": "Pluralsight",
+            "instructor": "Pinal Dave",
+            "duration": "8 hours",
+            "rating": 4.8,
+            "students": "12,000+",
+            "price": "$29/month",
+            "url": "https://pluralsight.com/sql-performance",
+            "description": "Advanced SQL optimization techniques and best practices",
+            "skills_covered": ["Query Optimization", "Index Tuning", "Execution Plans", "Performance Monitoring"]
+          },
+          {
+            "title": "PostgreSQL Administration Deep Dive",
+            "platform": "Coursera",
+            "instructor": "University of Michigan",
+            "duration": "6 weeks",
+            "rating": 4.7,
+            "students": "25,000+",
+            "price": "$49/month",
+            "url": "https://coursera.org/postgresql-admin",
+            "description": "Comprehensive PostgreSQL administration and optimization",
+            "skills_covered": ["Database Administration", "Backup & Recovery", "Security", "Monitoring"]
+          },
+            {
+              "title": "NoSQL Database Fundamentals",
+              "platform": "edX",
+              "instructor": "MongoDB University",
+              "duration": "4 weeks",
+              "rating": 4.5,
+              "students": "18,000+",
+              "price": "Free (Verified: $99)",
+              "url": "https://edx.org/nosql-fundamentals",
+              "description": "Learn MongoDB, Cassandra, and other NoSQL technologies",
+              "skills_covered": ["Document Databases", "Key-Value Stores", "Graph Databases", "Data Modeling"]
+            },
+            {
+              "title": "Advanced SQL for Data Scientists",
+              "platform": "DataCamp",
+              "instructor": "Chester Ismay",
+              "duration": "4 hours",
+              "rating": 4.4,
+              "students": "32,000+",
+              "price": "$35/month",
+              "url": "https://datacamp.com/advanced-sql",
+              "description": "Master complex SQL queries, window functions, and advanced analytics",
+              "skills_covered": ["Window Functions", "CTEs", "Advanced Joins", "Query Optimization", "Data Analytics"]
+            },
+            {
+              "title": "Database Design and Management",
+              "platform": "LinkedIn Learning",
+              "instructor": "Adam Wilbert",
+              "duration": "3 hours",
+              "rating": 4.6,
+              "students": "28,000+",
+              "price": "$29.99/month",
+              "url": "https://linkedin.com/learning/database-design",
+              "description": "Comprehensive database design principles and best practices",
+              "skills_covered": ["Entity Relationship Modeling", "Database Normalization", "Schema Design", "Performance Tuning"]
+            }
+        ],
+        "learning_path": [
+          "1. Database design principles and ER modeling",
+          "2. Normalization techniques (1NF, 2NF, 3NF, BCNF)",
+          "3. Advanced indexing strategies and performance",
+          "4. Query optimization and execution plans",
+          "5. Transaction management and ACID properties",
+          "6. Database security and access control"
+        ],
+        "practical_projects": [
+          {
+            "title": "E-commerce Database Design",
+            "description": "Design a complete database schema for an online store with products, orders, customers, and inventory management",
+            "estimated_time": "2 weeks",
+            "skills_practiced": ["Schema Design", "Relationships", "Constraints", "Indexing"]
+          },
+          {
+            "title": "Performance Optimization Challenge",
+            "description": "Optimize slow-running queries in a sample database with millions of records",
+            "estimated_time": "1 week",
+            "skills_practiced": ["Query Tuning", "Index Optimization", "Execution Plan Analysis"]
+          },
+          {
+            "title": "Database Migration Project",
+            "description": "Migrate data from legacy system to modern database with data transformation",
+            "estimated_time": "2 weeks",
+            "skills_practiced": ["Data Migration", "ETL Processes", "Data Validation", "Rollback Strategies"]
+          }
+        ]
+      },
+      {
+        "skill": "Cloud Deployment",
+        "priority": "Medium",
+        "estimated_duration": "4-5 weeks",
+        "difficulty": "Intermediate",
+        "suggested_resources": [
+          {
+            "title": "AWS Certified Developer Associate 2024",
+            "platform": "Udemy",
+            "instructor": "Stephane Maarek",
+            "duration": "23 hours",
+            "rating": 4.7,
+            "students": "180,000+",
+            "price": "$94.99",
+            "url": "https://udemy.com/aws-certified-developer",
+            "description": "Complete AWS development course with hands-on labs",
+            "skills_covered": ["EC2", "S3", "Lambda", "API Gateway", "CloudFormation"]
+          },
+          {
+            "title": "Docker & Kubernetes Complete Guide",
+            "platform": "Udemy",
+            "instructor": "Stephen Grider",
+            "duration": "21 hours",
+            "rating": 4.6,
+            "students": "120,000+",
+            "price": "$89.99",
+            "url": "https://udemy.com/docker-kubernetes",
+            "description": "Master containerization and orchestration",
+            "skills_covered": ["Docker", "Kubernetes", "Container Orchestration", "Microservices"]
+          },
+            {
+              "title": "DevOps on AWS Specialization",
+              "platform": "Coursera",
+              "instructor": "Amazon Web Services",
+              "duration": "4 months",
+              "rating": 4.5,
+              "students": "35,000+",
+              "price": "$49/month",
+              "url": "https://coursera.org/aws-devops",
+              "description": "Learn DevOps practices on AWS cloud platform",
+              "skills_covered": ["CI/CD", "Infrastructure as Code", "Monitoring", "Security"]
+            },
+            {
+              "title": "Google Cloud Platform Fundamentals",
+              "platform": "Coursera",
+              "instructor": "Google Cloud",
+              "duration": "1 week",
+              "rating": 4.7,
+              "students": "95,000+",
+              "price": "$39/month",
+              "url": "https://coursera.org/gcp-fundamentals",
+              "description": "Introduction to Google Cloud Platform services and deployment",
+              "skills_covered": ["Compute Engine", "App Engine", "Cloud Storage", "BigQuery", "Kubernetes Engine"]
+            },
+            {
+              "title": "Azure Fundamentals AZ-900",
+              "platform": "Microsoft Learn",
+              "instructor": "Microsoft",
+              "duration": "6 hours",
+              "rating": 4.8,
+              "students": "150,000+",
+              "price": "Free",
+              "url": "https://docs.microsoft.com/learn/azure-fundamentals",
+              "description": "Foundational knowledge of cloud services and Microsoft Azure",
+              "skills_covered": ["Azure Services", "Cloud Concepts", "Security", "Pricing", "Support"]
+            },
+            {
+              "title": "Terraform for Beginners",
+              "platform": "Udemy",
+              "instructor": "Zeal Vora",
+              "duration": "8 hours",
+              "rating": 4.5,
+              "students": "42,000+",
+              "price": "$84.99",
+              "url": "https://udemy.com/terraform-beginners",
+              "description": "Learn Infrastructure as Code with Terraform from scratch",
+              "skills_covered": ["Infrastructure as Code", "Terraform Syntax", "AWS Integration", "State Management", "Modules"]
+            }
+        ],
+        "learning_path": [
+          "1. Cloud computing fundamentals and AWS basics",
+          "2. Containerization with Docker",
+          "3. Container orchestration with Kubernetes",
+          "4. CI/CD pipeline setup and automation",
+          "5. Infrastructure as Code with Terraform/CloudFormation",
+          "6. Monitoring, logging, and security best practices"
+        ],
+        "practical_projects": [
+          {
+            "title": "Full-Stack App Deployment",
+            "description": "Deploy a complete web application to AWS with auto-scaling and load balancing",
+            "estimated_time": "2 weeks",
+            "skills_practiced": ["AWS Services", "Load Balancing", "Auto Scaling", "Security Groups"]
+          },
+          {
+            "title": "CI/CD Pipeline Implementation",
+            "description": "Set up automated deployment pipeline using GitHub Actions and AWS",
+            "estimated_time": "1 week",
+            "skills_practiced": ["GitHub Actions", "Automated Testing", "Deployment Automation", "Rollback Strategies"]
+          }
+        ]
+      }
+    ],
+    "strengths": [
+      "Good full-stack development foundation",
+      "Understanding of modern frameworks (React, Express.js)",
+      "Solid programming fundamentals",
+      "Experience with version control (Git)",
+      "Good grasp of REST API concepts",
+      "Understanding of responsive web design"
+    ],
+    "development_plan": {
+      "immediate_focus": "Database design and optimization skills",
+      "short_term": "Cloud deployment and DevOps practices",
+      "long_term": "Senior full-stack development expertise with cloud architecture",
+      "mentorship_needed": true,
+      "estimated_readiness_timeline": "3-4 months",
+      "recommended_certifications": [
+        "AWS Certified Developer Associate",
+        "MongoDB Certified Developer",
+        "Docker Certified Associate"
+      ]
+    }
+  },
+  {
+    "candidate_id": "721e24f5-c03c-482a-b6a1-7d69f1edf075",
+    "candidate_name": "Michael Rodriguez",
+    "job_id": "job_007",
+    "job_title": "Cloud Solutions Architect",
+    "assessment_date": "2024-12-07T11:20:00Z",
+    "overall_readiness_score": 85,
+    "skill_gaps": [
+      {
+        "skill": "Kubernetes and Container Orchestration",
+        "current_level": "Intermediate",
+        "required_level": "Advanced",
+        "priority": "High",
+        "gap_severity": "Medium"
+      }
+    ],
+    "training_recommendations": [
+      {
+        "skill": "Kubernetes and Container Orchestration",
+        "priority": "High",
+        "estimated_duration": "6-7 weeks",
+        "difficulty": "Advanced",
+        "suggested_resources": [
+          "Certified Kubernetes Administrator (CKA)",
+          "Kubernetes in Action Book",
+          "Docker and Kubernetes Complete Guide",
+          "Helm Charts and Package Management",
+          "Kubernetes Security Best Practices"
+        ],
+        "learning_path": [
+          "1. Kubernetes architecture and components",
+          "2. Pod, Service, and Deployment management",
+          "3. ConfigMaps, Secrets, and Volumes",
+          "4. Networking and Ingress controllers",
+          "5. Monitoring and logging",
+          "6. Security and RBAC implementation"
+        ],
+        "practical_projects": [
+          "Deploy microservices on Kubernetes",
+          "Implement CI/CD with Kubernetes",
+          "Set up monitoring and alerting"
+        ]
+      }
+    ],
+    "strengths": [
+      "Strong cloud platform knowledge",
+      "Good understanding of microservices",
+      "Experience with containerization",
+      "Solid system design skills"
+    ],
+    "development_plan": {
+      "immediate_focus": "Advanced Kubernetes and orchestration",
+      "short_term": "Cloud-native security and monitoring",
+      "long_term": "Enterprise architecture leadership",
+      "mentorship_needed": false,
+      "estimated_readiness_timeline": "2-3 months"
+    }
+  },
+  {
+    "candidate_id": "444c99c5-9b35-4c96-a82b-1838bd7033ba",
+    "candidate_name": "Sarah Kim",
+    "job_id": "job_014",
+    "job_title": "Senior Frontend Developer",
+    "assessment_date": "2024-12-06T13:30:00Z",
+    "overall_readiness_score": 89,
+    "skill_gaps": [
+      {
+        "skill": "Advanced State Management",
+        "current_level": "Intermediate",
+        "required_level": "Advanced",
+        "priority": "Medium",
+        "gap_severity": "Low"
+      }
+    ],
+    "training_recommendations": [
+      {
+        "skill": "Advanced State Management",
+        "priority": "Medium",
+        "estimated_duration": "3-4 weeks",
+        "difficulty": "Advanced",
+        "suggested_resources": [
+          "Redux Toolkit Advanced Patterns",
+          "Zustand State Management",
+          "React Query for Server State",
+          "MobX State Tree",
+          "Advanced React Patterns"
+        ],
+        "learning_path": [
+          "1. Advanced Redux patterns",
+          "2. Server state management",
+          "3. Optimistic updates",
+          "4. State normalization",
+          "5. Performance optimization",
+          "6. Testing state management"
+        ],
+        "practical_projects": [
+          "Build complex state management system",
+          "Implement real-time data synchronization",
+          "Create reusable state hooks"
+        ]
+      }
+    ],
+    "strengths": [
+      "Excellent React and JavaScript skills",
+      "Strong UI/UX understanding",
+      "Good performance optimization knowledge",
+      "Experience with modern build tools"
+    ],
+    "development_plan": {
+      "immediate_focus": "Advanced state management patterns",
+      "short_term": "Micro-frontend architecture",
+      "long_term": "Frontend architecture leadership",
+      "mentorship_needed": false,
+      "estimated_readiness_timeline": "1-2 months"
+    }
+  },
+  {
+    "candidate_id": "93539345-27c3-4a99-aa8b-4153c83dd2e6",
+    "candidate_name": "Daniel Park",
+    "job_id": "job_009",
+    "job_title": "Senior Backend Developer",
+    "assessment_date": "2024-12-05T15:00:00Z",
+    "overall_readiness_score": 82,
+    "skill_gaps": [
+      {
+        "skill": "Microservices Architecture",
+        "current_level": "Intermediate",
+        "required_level": "Advanced",
+        "priority": "High",
+        "gap_severity": "Medium"
+      },
+      {
+        "skill": "System Design",
+        "current_level": "Beginner",
+        "required_level": "Intermediate",
+        "priority": "Medium",
+        "gap_severity": "Medium"
+      }
+    ],
+    "training_recommendations": [
+      {
+        "skill": "Microservices Architecture",
+        "priority": "High",
+        "estimated_duration": "7-8 weeks",
+        "difficulty": "Advanced",
+        "suggested_resources": [
+          "Microservices Patterns Book",
+          "Building Microservices (O'Reilly)",
+          "Spring Boot Microservices",
+          "API Gateway Patterns",
+          "Distributed Systems Design"
+        ],
+        "learning_path": [
+          "1. Microservices design principles",
+          "2. Service decomposition strategies",
+          "3. Inter-service communication",
+          "4. Data management patterns",
+          "5. Monitoring and observability",
+          "6. Deployment and scaling"
+        ],
+        "practical_projects": [
+          "Decompose monolith into microservices",
+          "Implement service mesh",
+          "Build distributed monitoring system"
+        ]
+      }
+    ],
+    "strengths": [
+      "Strong backend development skills",
+      "Good database knowledge",
+      "Understanding of API design",
+      "Experience with cloud platforms"
+    ],
+    "development_plan": {
+      "immediate_focus": "Microservices architecture patterns",
+      "short_term": "System design and scalability",
+      "long_term": "Senior backend architecture leadership",
+      "mentorship_needed": true,
+      "estimated_readiness_timeline": "3-4 months"
+    }
+  },
+  {
+    "candidate_id": "67c65fa9-b177-4999-8e5d-ba4362f67eed",
+    "candidate_name": "Kamesh Khatri",
+    "job_id": "job_001",
+    "job_title": "Senior Machine Learning Engineer",
+    "assessment_date": "2024-12-04T09:45:00Z",
+    "overall_readiness_score": 94,
+    "skill_gaps": [
+      {
+        "skill": "Production ML Systems",
+        "current_level": "Intermediate",
+        "required_level": "Advanced",
+        "priority": "Medium",
+        "gap_severity": "Low"
+      }
+    ],
+    "training_recommendations": [
+      {
+        "skill": "Production ML Systems",
+        "priority": "Medium",
+        "estimated_duration": "4-5 weeks",
+        "difficulty": "Advanced",
+        "suggested_resources": [
+          "MLOps Specialization (Coursera)",
+          "Machine Learning Engineering Book",
+          "Kubeflow for ML Pipelines",
+          "MLflow Model Management",
+          "Building ML Powered Applications"
+        ],
+        "learning_path": [
+          "1. ML pipeline orchestration",
+          "2. Model versioning and registry",
+          "3. Continuous integration for ML",
+          "4. Model monitoring and drift detection",
+          "5. A/B testing for ML models",
+          "6. Production infrastructure scaling"
+        ],
+        "practical_projects": [
+          "Deploy ML model with monitoring",
+          "Implement automated retraining pipeline",
+          "Build model performance dashboard"
+        ]
+      }
+    ],
+    "strengths": [
+      "Exceptional ML fundamentals",
+      "Strong programming and math skills",
+      "Good understanding of algorithms",
+      "Experience with ML frameworks"
+    ],
+    "development_plan": {
+      "immediate_focus": "Production ML deployment",
+      "short_term": "Advanced MLOps practices",
+      "long_term": "ML engineering leadership and research",
+      "mentorship_needed": false,
+      "estimated_readiness_timeline": "1-2 months"
+    }
+  },
+  {
+    "candidate_id": "bd6d624e-ea0e-4f45-a3f7-161d7a97faec",
+    "candidate_name": "John Doe",
+    "job_id": "job_011",
+    "job_title": "Senior Business Analyst",
+    "assessment_date": "2024-12-03T14:15:00Z",
+    "overall_readiness_score": 76,
+    "skill_gaps": [
+      {
+        "skill": "Advanced Data Analytics",
+        "current_level": "Beginner",
+        "required_level": "Intermediate",
+        "priority": "High",
+        "gap_severity": "Medium"
+      },
+      {
+        "skill": "Agile Methodologies",
+        "current_level": "Beginner",
+        "required_level": "Intermediate",
+        "priority": "Medium",
+        "gap_severity": "Medium"
+      }
+    ],
+    "training_recommendations": [
+      {
+        "skill": "Advanced Data Analytics",
+        "priority": "High",
+        "estimated_duration": "6-7 weeks",
+        "difficulty": "Intermediate",
+        "suggested_resources": [
+          "Advanced Excel and Power BI Course",
+          "SQL for Business Analysts",
+          "Python for Data Analysis",
+          "Tableau Desktop Specialist",
+          "Google Analytics Certification"
+        ],
+        "learning_path": [
+          "1. Advanced Excel functions and pivot tables",
+          "2. SQL querying and database analysis",
+          "3. Data visualization best practices",
+          "4. Statistical analysis fundamentals",
+          "5. Business intelligence tools",
+          "6. Predictive analytics basics"
+        ],
+        "practical_projects": [
+          "Create comprehensive business dashboard",
+          "Perform customer segmentation analysis",
+          "Build automated reporting system"
+        ]
+      }
+    ],
+    "strengths": [
+      "Strong business analysis fundamentals",
+      "Good stakeholder management skills",
+      "Understanding of business processes",
+      "Effective communication abilities"
+    ],
+    "development_plan": {
+      "immediate_focus": "Advanced data analytics and visualization",
+      "short_term": "Agile business analysis practices",
+      "long_term": "Strategic business analysis leadership",
+      "mentorship_needed": true,
+      "estimated_readiness_timeline": "3-4 months"
+    }
+  }
+]

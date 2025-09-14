@@ -1063,6 +1063,47 @@ async def get_analytics():
 async def get_candidate_assessments(candidate_id: str):
     """Get all assessments for a specific candidate"""
     try:
+        # First try to get from JSON file
+        try:
+            with open('data/assessments/assessment_history.json', 'r') as f:
+                json_assessments = json.load(f)
+            
+            # Filter assessments for this candidate
+            candidate_assessments = [a for a in json_assessments if a.get('candidate_id') == candidate_id]
+            
+            if candidate_assessments:
+                # Format assessments for UI
+                formatted_assessments = []
+                for assessment in candidate_assessments:
+                    # Get job details
+                    job_details = next((job for job in talent_matcher.jobs_data if job['job_id'] == assessment.get('job_id')), None)
+                    
+                    # Calculate pass/fail status
+                    passed = assessment.get('candidate_score', 0) >= assessment.get('cutoff_score', 0)
+                    score_percentage = round((assessment.get('candidate_score', 0) / assessment.get('max_score', 100)) * 100, 1)
+                    
+                    formatted_assessments.append({
+                        "assessment_id": assessment.get('assessment_id'),
+                        "job_id": assessment.get('job_id'),
+                        "job_title": job_details['title'] if job_details else assessment.get('job_title', 'Unknown Job'),
+                        "job_department": job_details['department'] if job_details else "Unknown Department",
+                        "assessment_type": assessment.get('assessment_type'),
+                        "candidate_score": assessment.get('candidate_score'),
+                        "cutoff_score": assessment.get('cutoff_score'),
+                        "max_score": assessment.get('max_score'),
+                        "status": assessment.get('status'),
+                        "assessment_date": assessment.get('assessment_date'),
+                        "responses": assessment.get('responses', []),
+                        "duration_minutes": assessment.get('duration_minutes'),
+                        "passed": passed,
+                        "score_percentage": score_percentage
+                    })
+                
+                return {"assessments": formatted_assessments}
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+        
+        # Fallback to database
         conn = sqlite3.connect('talent_platform.db')
         cursor = conn.cursor()
         
@@ -1118,6 +1159,54 @@ async def get_candidate_assessments(candidate_id: str):
 async def get_assessment_responses(assessment_id: str):
     """Get detailed responses for a specific assessment"""
     try:
+        # First try to get from JSON file
+        try:
+            with open('data/assessments/assessment_history.json', 'r') as f:
+                json_assessments = json.load(f)
+            
+            # Find the assessment by ID
+            assessment = next((a for a in json_assessments if a.get('assessment_id') == assessment_id), None)
+            
+            if assessment:
+                # Get job details
+                job_details = next((job for job in talent_matcher.jobs_data if job['job_id'] == assessment.get('job_id')), None)
+                
+                # Get candidate info from database
+                conn = sqlite3.connect('talent_platform.db')
+                cursor = conn.cursor()
+                cursor.execute('SELECT name, email FROM candidates WHERE candidate_id = ?', (assessment.get('candidate_id'),))
+                candidate_row = cursor.fetchone()
+                conn.close()
+                
+                # Calculate pass/fail status
+                passed = assessment.get('candidate_score', 0) >= assessment.get('cutoff_score', 0)
+                
+                return {
+                    "assessment_id": assessment_id,
+                    "candidate": {
+                        "candidate_id": assessment.get('candidate_id'),
+                        "name": candidate_row[0] if candidate_row else assessment.get('candidate_name', 'Unknown'),
+                        "email": candidate_row[1] if candidate_row else "Unknown"
+                    },
+                    "job": {
+                        "job_id": assessment.get('job_id'),
+                        "title": job_details['title'] if job_details else assessment.get('job_title', 'Unknown Job'),
+                        "department": job_details['department'] if job_details else "Unknown Department"
+                    },
+                    "assessment_type": assessment.get('assessment_type'),
+                    "candidate_score": assessment.get('candidate_score'),
+                    "cutoff_score": assessment.get('cutoff_score'),
+                    "max_score": assessment.get('max_score'),
+                    "status": assessment.get('status'),
+                    "assessment_date": assessment.get('assessment_date'),
+                    "responses": assessment.get('responses', []),
+                    "duration_minutes": assessment.get('duration_minutes'),
+                    "passed": passed
+                }
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+        
+        # Fallback to database
         conn = sqlite3.connect('talent_platform.db')
         cursor = conn.cursor()
         
@@ -1172,6 +1261,30 @@ async def get_assessment_responses(assessment_id: str):
         
     except Exception as e:
         logger.error(f"Error fetching assessment responses: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/candidate/{candidate_id}/training-recommendations")
+async def get_candidate_training_recommendations(candidate_id: str):
+    """Get training recommendations for a specific candidate"""
+    try:
+        # Try to get from JSON file
+        try:
+            with open('data/training/training_recommendations.json', 'r') as f:
+                json_recommendations = json.load(f)
+            
+            # Filter recommendations for this candidate
+            candidate_recommendations = [r for r in json_recommendations if r.get('candidate_id') == candidate_id]
+            
+            if candidate_recommendations:
+                return {"training_recommendations": candidate_recommendations}
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+        
+        # If no data found, return empty array
+        return {"training_recommendations": []}
+        
+    except Exception as e:
+        logger.error(f"Error fetching candidate training recommendations: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/candidate/{candidate_id}", response_class=HTMLResponse)
