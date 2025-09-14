@@ -1,593 +1,266 @@
 [
   {
     "job_id": "job_001",
-    "title": "Senior Software Engineer",
-    "department": "Platform Engineering",
-    "location": "Bengaluru",
+    "title": "Apple Personalized Internet Assessor",
+    "department": "Apple Quality Programs",
+    "location": "Cupertino, CA",
     "requirements": [
-      "Python",
-      "AWS",
-      "Microservices",
-      "Docker",
-      "Kubernetes"
+      "Internet Research",
+      "Content Evaluation",
+      "Quality Assessment",
+      "Data Analysis",
+      "English Proficiency"
     ],
     "nice_to_have": [
-      "React",
-      "Machine Learning",
-      "DevOps"
+      "Apple Ecosystem Knowledge",
+      "User Experience",
+      "Mobile Technology",
+      "Search Algorithms"
     ],
-    "summary": "We are looking for a Senior Software Engineer to join our Platform Engineering team. You will be responsible for building scalable microservices, working with cloud infrastructure, and mentoring junior developers. Strong experience with Python, AWS, and containerization technologies is required.",
-    "experience_years": "5-8",
-    "employment_type": "Full-time"
+    "summary": "Join Apple's quality assessment team as a Personalized Internet Assessor. You will evaluate and improve the quality of internet content and search results to enhance user experience across Apple's ecosystem. Strong analytical skills and attention to detail required.",
+    "experience_years": "2-5",
+    "employment_type": "Contract"
   },
   {
     "job_id": "job_002",
-    "title": "Cloud Data Engineer",
-    "department": "Data Platform",
-    "location": "Bengaluru",
+    "title": "Google Personalized Internet Ads Assessor",
+    "department": "Google Ads Quality",
+    "location": "Mountain View, CA",
     "requirements": [
-      "Python",
-      "SQL",
-      "GCP",
-      "BigQuery",
-      "Apache Spark"
+      "Ad Quality Assessment",
+      "Content Evaluation",
+      "Search Analysis",
+      "Data Quality",
+      "Digital Marketing Knowledge"
     ],
     "nice_to_have": [
-      "Kafka",
-      "Airflow",
-      "Terraform",
+      "Google Ads Experience",
+      "SEO Knowledge",
+      "Analytics",
       "Machine Learning"
     ],
-    "summary": "Join our Data Platform team as a Cloud Data Engineer. You will design and build data pipelines, work with large-scale data processing systems, and ensure data quality and reliability. Experience with GCP, BigQuery, and distributed computing frameworks is essential.",
-    "experience_years": "4-7",
-    "employment_type": "Full-time"
+    "summary": "Evaluate and improve the quality of personalized internet advertisements for Google's advertising platform. You will assess ad relevance, quality, and user experience to enhance Google's advertising ecosystem.",
+    "experience_years": "1-4",
+    "employment_type": "Contract"
   },
   {
     "job_id": "job_003",
-    "title": "DevOps Specialist",
-    "department": "Infrastructure",
-    "location": "Bengaluru",
+    "title": "Apple Media Search Analyst",
+    "department": "Apple Media Services",
+    "location": "Austin, TX",
     "requirements": [
-      "AWS",
-      "Kubernetes",
-      "Terraform",
-      "CI/CD",
-      "Docker"
+      "Media Analysis",
+      "Search Quality",
+      "Content Evaluation",
+      "Data Analysis",
+      "Apple Services Knowledge"
     ],
     "nice_to_have": [
-      "Python",
-      "Monitoring",
-      "Security",
-      "Ansible"
+      "iTunes Experience",
+      "Apple Music",
+      "Content Curation",
+      "Media Technology"
     ],
-    "summary": "We need a DevOps Specialist to manage our cloud infrastructure and deployment pipelines. You will work on automating deployments, managing Kubernetes clusters, and ensuring system reliability. Strong knowledge of AWS, Kubernetes, and Infrastructure as Code is required.",
-    "experience_years": "3-6",
+    "summary": "Analyze and improve media search functionality across Apple's services including Apple Music, iTunes, and Apple TV+. You will evaluate search results quality and help enhance user discovery experience.",
+    "experience_years": "2-6",
     "employment_type": "Full-time"
   },
   {
     "job_id": "job_004",
-    "title": "Machine Learning Engineer",
-    "department": "AI/ML",
-    "location": "Bengaluru",
+    "title": "Google Bluebell - FI Participant Sourcing Request",
+    "department": "Google Research",
+    "location": "Seattle, WA",
     "requirements": [
-      "Python",
-      "TensorFlow",
-      "PyTorch",
-      "MLOps",
-      "Statistics"
+      "Research Coordination",
+      "Participant Recruitment",
+      "Data Collection",
+      "Project Management",
+      "Communication Skills"
     ],
     "nice_to_have": [
-      "AWS",
-      "Kubernetes",
-      "Spark",
-      "NLP"
+      "Research Experience",
+      "Statistical Analysis",
+      "Survey Design",
+      "User Research"
     ],
-    "summary": "Join our AI/ML team to build and deploy machine learning models at scale. You will work on model development, MLOps pipelines, and productionizing ML systems. Strong background in machine learning frameworks and statistical modeling is essential.",
-    "experience_years": "3-5",
-    "employment_type": "Full-time"
+    "summary": "Support Google's Bluebell research initiative by coordinating participant sourcing and recruitment for financial intelligence studies. You will manage research logistics and ensure quality data collection.",
+    "experience_years": "1-3",
+    "employment_type": "Contract"
   },
   {
     "job_id": "job_005",
-    "title": "Frontend Developer",
-    "department": "Product Engineering",
-    "location": "Bengaluru",
+    "title": "Apple Global Quality Rating Program",
+    "department": "Apple Quality Assurance",
+    "location": "Cork, Ireland",
     "requirements": [
-      "React",
-      "JavaScript",
-      "TypeScript",
-      "CSS",
-      "HTML"
+      "Quality Assessment",
+      "Global Standards",
+      "Content Evaluation",
+      "Cross-cultural Analysis",
+      "Multilingual Skills"
     ],
     "nice_to_have": [
-      "Node.js",
-      "GraphQL",
-      "Testing",
-      "Design Systems"
+      "International Experience",
+      "Cultural Awareness",
+      "Apple Products Knowledge",
+      "Quality Management"
     ],
-    "summary": "We are seeking a Frontend Developer to create exceptional user experiences. You will work closely with designers and backend engineers to build responsive, accessible web applications. Expertise in React, TypeScript, and modern frontend development practices is required.",
-    "experience_years": "2-5",
+    "summary": "Lead quality rating initiatives across Apple's global markets. You will establish and maintain quality standards for Apple's services and products across different regions and cultures.",
+    "experience_years": "3-7",
     "employment_type": "Full-time"
   },
   {
     "job_id": "job_006",
-    "title": "Product Manager",
-    "department": "Product",
-    "location": "Bengaluru",
+    "title": "Google Global Ads Domain Quality Rating Program",
+    "department": "Google Ads Global",
+    "location": "Dublin, Ireland",
     "requirements": [
-      "Product Strategy",
-      "Analytics",
-      "Stakeholder Management",
-      "Agile",
-      "User Research"
+      "Ad Quality Assessment",
+      "Domain Analysis",
+      "Global Standards",
+      "Quality Rating",
+      "Policy Compliance"
     ],
     "nice_to_have": [
-      "Technical Background",
-      "B2B SaaS",
-      "Data Analysis",
-      "Design Thinking"
+      "Google Ads Certification",
+      "International Markets",
+      "Policy Knowledge",
+      "Data Analysis"
     ],
-    "summary": "Lead product development as a Product Manager in our growing product team. You will define product strategy, work with cross-functional teams, and drive product roadmaps. Strong analytical skills and experience in product management methodologies are essential.",
-    "experience_years": "4-7",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_007",
-    "title": "Full Stack Developer",
-    "department": "Product Engineering",
-    "location": "Toronto",
-    "requirements": [
-      "JavaScript",
-      "React",
-      "Node.js",
-      "MongoDB",
-      "Express"
-    ],
-    "nice_to_have": [
-      "TypeScript",
-      "GraphQL",
-      "AWS",
-      "Docker",
-      "Testing"
-    ],
-    "summary": "Join our product engineering team as a Full Stack Developer. Build end-to-end web applications using modern JavaScript technologies. Work with React frontend, Node.js backend, and MongoDB database.",
-    "experience_years": "3-6",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_008",
-    "title": "Data Scientist",
-    "department": "Analytics",
-    "location": "Vancouver",
-    "requirements": [
-      "Python",
-      "R",
-      "Statistics",
-      "Machine Learning",
-      "SQL"
-    ],
-    "nice_to_have": [
-      "TensorFlow",
-      "PyTorch",
-      "Tableau",
-      "AWS",
-      "Spark"
-    ],
-    "summary": "Drive data-driven insights as a Data Scientist. Analyze large datasets, build predictive models, and communicate findings to stakeholders. Strong statistical background required.",
-    "experience_years": "2-5",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_009",
-    "title": "Security Engineer",
-    "department": "Cybersecurity",
-    "location": "Montreal",
-    "requirements": [
-      "Security",
-      "Penetration Testing",
-      "CISSP",
-      "Network Security",
-      "Incident Response"
-    ],
-    "nice_to_have": [
-      "Python",
-      "AWS Security",
-      "SIEM",
-      "Compliance",
-      "Risk Assessment"
-    ],
-    "summary": "Protect our infrastructure as a Security Engineer. Conduct security assessments, implement security controls, and respond to incidents. Security certifications preferred.",
-    "experience_years": "4-8",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_010",
-    "title": "Mobile Developer",
-    "department": "Mobile Engineering",
-    "location": "Calgary",
-    "requirements": [
-      "React Native",
-      "iOS",
-      "Android",
-      "JavaScript",
-      "Mobile UI/UX"
-    ],
-    "nice_to_have": [
-      "Swift",
-      "Kotlin",
-      "Flutter",
-      "Firebase",
-      "App Store"
-    ],
-    "summary": "Build mobile applications for iOS and Android platforms. Work with React Native and native technologies to create engaging mobile experiences.",
-    "experience_years": "2-6",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_011",
-    "title": "QA Engineer",
-    "department": "Quality Assurance",
-    "location": "Ottawa",
-    "requirements": [
-      "Test Automation",
-      "Selenium",
-      "API Testing",
-      "Quality Assurance",
-      "Bug Tracking"
-    ],
-    "nice_to_have": [
-      "Python",
-      "Java",
-      "CI/CD",
-      "Performance Testing",
-      "Security Testing"
-    ],
-    "summary": "Ensure product quality as a QA Engineer. Design and execute test plans, automate testing processes, and work closely with development teams.",
-    "experience_years": "2-5",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_012",
-    "title": "UX Designer",
-    "department": "Design",
-    "location": "Toronto",
-    "requirements": [
-      "UX Design",
-      "User Research",
-      "Prototyping",
-      "Figma",
-      "Design Thinking"
-    ],
-    "nice_to_have": [
-      "UI Design",
-      "Usability Testing",
-      "Analytics",
-      "Frontend Knowledge",
-      "Accessibility"
-    ],
-    "summary": "Create exceptional user experiences as a UX Designer. Conduct user research, design wireframes and prototypes, and collaborate with product teams.",
-    "experience_years": "3-7",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_013",
-    "title": "Backend Developer",
-    "department": "Platform Engineering",
-    "location": "Bengaluru",
-    "requirements": [
-      "Java",
-      "Spring Boot",
-      "Microservices",
-      "PostgreSQL",
-      "REST APIs"
-    ],
-    "nice_to_have": [
-      "Kafka",
-      "Redis",
-      "Docker",
-      "Kubernetes",
-      "AWS"
-    ],
-    "summary": "Build robust backend systems as a Backend Developer. Design APIs, implement business logic, and ensure system scalability and performance.",
-    "experience_years": "3-7",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_014",
-    "title": "Site Reliability Engineer",
-    "department": "Infrastructure",
-    "location": "Vancouver",
-    "requirements": [
-      "SRE",
-      "Monitoring",
-      "Incident Management",
-      "Automation",
-      "Linux"
-    ],
-    "nice_to_have": [
-      "Python",
-      "Go",
-      "Kubernetes",
-      "Prometheus",
-      "Grafana"
-    ],
-    "summary": "Ensure system reliability as an SRE. Monitor production systems, automate operations, and improve system performance and availability.",
-    "experience_years": "4-8",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_015",
-    "title": "Business Analyst",
-    "department": "Business Operations",
-    "location": "Toronto",
-    "requirements": [
-      "Business Analysis",
-      "Requirements Gathering",
-      "Process Improvement",
-      "Stakeholder Management",
-      "Documentation"
-    ],
-    "nice_to_have": [
-      "SQL",
-      "Analytics",
-      "Project Management",
-      "Agile",
-      "Domain Knowledge"
-    ],
-    "summary": "Drive business improvements as a Business Analyst. Gather requirements, analyze processes, and work with stakeholders to implement solutions.",
-    "experience_years": "2-6",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_016",
-    "title": "Technical Writer",
-    "department": "Documentation",
-    "location": "Remote",
-    "requirements": [
-      "Technical Writing",
-      "Documentation",
-      "API Documentation",
-      "Content Strategy",
-      "Communication"
-    ],
-    "nice_to_have": [
-      "Markdown",
-      "Git",
-      "Developer Tools",
-      "UX Writing",
-      "Video Creation"
-    ],
-    "summary": "Create clear technical documentation as a Technical Writer. Document APIs, write user guides, and help developers and users understand our products.",
+    "summary": "Manage global quality rating programs for Google Ads domains. You will assess ad quality across different markets and ensure compliance with global advertising standards and policies.",
     "experience_years": "2-5",
     "employment_type": "Full-time"
   },
   {
     "job_id": "job_007",
-    "title": "Full Stack Developer",
-    "department": "Product Engineering",
-    "location": "Toronto",
+    "title": "Apple Geo Data Evaluator",
+    "department": "Apple Maps",
+    "location": "Hyderabad, India",
     "requirements": [
-      "JavaScript",
-      "React",
-      "Node.js",
-      "MongoDB",
-      "Express"
+      "Geographic Data Analysis",
+      "Map Quality Assessment",
+      "Location Services",
+      "Data Validation",
+      "Spatial Analysis"
     ],
     "nice_to_have": [
-      "TypeScript",
-      "GraphQL",
-      "AWS",
-      "Docker",
-      "Testing"
+      "GIS Experience",
+      "Apple Maps Knowledge",
+      "Cartography",
+      "GPS Technology"
     ],
-    "summary": "Join our product engineering team as a Full Stack Developer. Build end-to-end web applications using modern JavaScript technologies. Work with React frontend, Node.js backend, and MongoDB database.",
-    "experience_years": "3-6",
+    "summary": "Evaluate and improve geographic data quality for Apple Maps. You will assess location accuracy, validate map data, and enhance the overall mapping experience for Apple users worldwide.",
+    "experience_years": "2-5",
     "employment_type": "Full-time"
   },
   {
     "job_id": "job_008",
-    "title": "Data Scientist",
-    "department": "Analytics",
-    "location": "Vancouver",
+    "title": "Google Internet Safety Evaluator",
+    "department": "Google Trust & Safety",
+    "location": "Singapore",
     "requirements": [
-      "Python",
-      "R",
-      "Statistics",
-      "Machine Learning",
-      "SQL"
+      "Content Safety Assessment",
+      "Policy Enforcement",
+      "Risk Analysis",
+      "Safety Protocols",
+      "Content Moderation"
     ],
     "nice_to_have": [
-      "TensorFlow",
-      "PyTorch",
-      "Tableau",
-      "AWS",
-      "Spark"
+      "Cybersecurity Knowledge",
+      "Google Policies",
+      "Risk Management",
+      "Machine Learning"
     ],
-    "summary": "Drive data-driven insights as a Data Scientist. Analyze large datasets, build predictive models, and communicate findings to stakeholders. Strong statistical background required.",
-    "experience_years": "2-5",
-    "employment_type": "Full-time"
+    "summary": "Ensure internet safety across Google's platforms by evaluating content, assessing risks, and enforcing safety policies. You will help protect users and maintain a safe online environment.",
+    "experience_years": "1-4",
+    "employment_type": "Contract"
   },
   {
     "job_id": "job_009",
-    "title": "Security Engineer",
-    "department": "Cybersecurity",
-    "location": "Montreal",
+    "title": "Apple Media Search Analyst - Advanced",
+    "department": "Apple Advanced Analytics",
+    "location": "Tel Aviv, Israel",
     "requirements": [
-      "Security",
-      "Penetration Testing",
-      "CISSP",
-      "Network Security",
-      "Incident Response"
+      "Advanced Analytics",
+      "Media Search Optimization",
+      "Machine Learning",
+      "Data Science",
+      "Apple Ecosystem"
     ],
     "nice_to_have": [
-      "Python",
-      "AWS Security",
-      "SIEM",
-      "Compliance",
-      "Risk Assessment"
+      "PhD in Data Science",
+      "Apple Research",
+      "AI/ML Expertise",
+      "Media Technology"
     ],
-    "summary": "Protect our infrastructure as a Security Engineer. Conduct security assessments, implement security controls, and respond to incidents. Security certifications preferred.",
-    "experience_years": "4-8",
+    "summary": "Lead advanced analytics for Apple's media search capabilities. You will develop sophisticated algorithms and models to enhance search functionality across Apple's media services.",
+    "experience_years": "5-10",
     "employment_type": "Full-time"
   },
   {
     "job_id": "job_010",
-    "title": "Mobile Developer",
-    "department": "Mobile Engineering",
-    "location": "Calgary",
+    "title": "Google Apple Online Data Analyst",
+    "department": "Google-Apple Partnership",
+    "location": "San Francisco, CA",
     "requirements": [
-      "React Native",
-      "iOS",
-      "Android",
-      "JavaScript",
-      "Mobile UI/UX"
+      "Cross-platform Analysis",
+      "Data Integration",
+      "Partnership Analytics",
+      "Apple-Google Ecosystem",
+      "Strategic Analysis"
     ],
     "nice_to_have": [
-      "Swift",
-      "Kotlin",
-      "Flutter",
-      "Firebase",
-      "App Store"
+      "Partnership Experience",
+      "Both Ecosystems Knowledge",
+      "Strategic Planning",
+      "Business Intelligence"
     ],
-    "summary": "Build mobile applications for iOS and Android platforms. Work with React Native and native technologies to create engaging mobile experiences.",
-    "experience_years": "2-6",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_011",
-    "title": "QA Engineer",
-    "department": "Quality Assurance",
-    "location": "Ottawa",
-    "requirements": [
-      "Test Automation",
-      "Selenium",
-      "API Testing",
-      "Quality Assurance",
-      "Bug Tracking"
-    ],
-    "nice_to_have": [
-      "Python",
-      "Java",
-      "CI/CD",
-      "Performance Testing",
-      "Security Testing"
-    ],
-    "summary": "Ensure product quality as a QA Engineer. Design and execute test plans, automate testing processes, and work closely with development teams.",
-    "experience_years": "2-5",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_012",
-    "title": "UX Designer",
-    "department": "Design",
-    "location": "Toronto",
-    "requirements": [
-      "UX Design",
-      "User Research",
-      "Prototyping",
-      "Figma",
-      "Design Thinking"
-    ],
-    "nice_to_have": [
-      "UI Design",
-      "Usability Testing",
-      "Analytics",
-      "Frontend Knowledge",
-      "Accessibility"
-    ],
-    "summary": "Create exceptional user experiences as a UX Designer. Conduct user research, design wireframes and prototypes, and collaborate with product teams.",
-    "experience_years": "3-7",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_013",
-    "title": "Backend Developer",
-    "department": "Platform Engineering",
-    "location": "Bengaluru",
-    "requirements": [
-      "Java",
-      "Spring Boot",
-      "Microservices",
-      "PostgreSQL",
-      "REST APIs"
-    ],
-    "nice_to_have": [
-      "Kafka",
-      "Redis",
-      "Docker",
-      "Kubernetes",
-      "AWS"
-    ],
-    "summary": "Build robust backend systems as a Backend Developer. Design APIs, implement business logic, and ensure system scalability and performance.",
-    "experience_years": "3-7",
-    "employment_type": "Full-time"
-  },
-  {
-    "job_id": "job_014",
-    "title": "Site Reliability Engineer",
-    "department": "Infrastructure",
-    "location": "Vancouver",
-    "requirements": [
-      "SRE",
-      "Monitoring",
-      "Incident Management",
-      "Automation",
-      "Linux"
-    ],
-    "nice_to_have": [
-      "Python",
-      "Go",
-      "Kubernetes",
-      "Prometheus",
-      "Grafana"
-    ],
-    "summary": "Ensure system reliability as an SRE. Monitor production systems, automate operations, and improve system performance and availability.",
+    "summary": "Analyze data flows and integration between Google and Apple platforms. You will support strategic partnerships and ensure seamless data exchange between the two ecosystems.",
     "experience_years": "4-8",
     "employment_type": "Full-time"
   },
   {
-    "job_id": "job_015",
-    "title": "Business Analyst",
-    "department": "Business Operations",
-    "location": "Toronto",
+    "job_id": "job_011",
+    "title": "Apple Online Rater e-Commerce Analyst",
+    "department": "Apple Retail Online",
+    "location": "Austin, TX",
     "requirements": [
-      "Business Analysis",
-      "Requirements Gathering",
-      "Process Improvement",
-      "Stakeholder Management",
-      "Documentation"
+      "E-commerce Analysis",
+      "Online Retail Metrics",
+      "User Experience Rating",
+      "Apple Store Online",
+      "Conversion Optimization"
     ],
     "nice_to_have": [
-      "SQL",
-      "Analytics",
-      "Project Management",
-      "Agile",
-      "Domain Knowledge"
+      "Retail Experience",
+      "Apple Products",
+      "E-commerce Platforms",
+      "Customer Analytics"
     ],
-    "summary": "Drive business improvements as a Business Analyst. Gather requirements, analyze processes, and work with stakeholders to implement solutions.",
+    "summary": "Rate and analyze Apple's online e-commerce experience. You will evaluate the Apple Store online, assess user journeys, and provide insights to improve the digital retail experience.",
     "experience_years": "2-6",
-    "employment_type": "Full-time"
+    "employment_type": "Contract"
   },
   {
-    "job_id": "job_016",
-    "title": "Technical Writer",
-    "department": "Documentation",
-    "location": "Remote",
+    "job_id": "job_012",
+    "title": "Google US Rater - English (US)",
+    "department": "Google Search Quality",
+    "location": "Remote - US",
     "requirements": [
-      "Technical Writing",
-      "Documentation",
-      "API Documentation",
-      "Content Strategy",
-      "Communication"
+      "English Language Expertise",
+      "Search Quality Rating",
+      "US Market Knowledge",
+      "Content Evaluation",
+      "Cultural Understanding"
     ],
     "nice_to_have": [
-      "Markdown",
-      "Git",
-      "Developer Tools",
-      "UX Writing",
-      "Video Creation"
+      "Linguistics Background",
+      "Google Search Experience",
+      "Regional Expertise",
+      "Quality Assurance"
     ],
-    "summary": "Create clear technical documentation as a Technical Writer. Document APIs, write user guides, and help developers and users understand our products.",
-    "experience_years": "2-5",
-    "employment_type": "Full-time"
+    "summary": "Rate and evaluate Google Search results for the US English market. You will assess search quality, relevance, and cultural appropriateness to improve Google's search experience for US users.",
+    "experience_years": "1-4",
+    "employment_type": "Contract"
   }
 ]
