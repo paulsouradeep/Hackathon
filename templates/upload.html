@@ -175,12 +175,6 @@
                             <select id="applied_for" name="applied_for" required
                                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200">
                                 <option value="">Select your target role</option>
-                                <option value="job_001">Senior Software Engineer</option>
-                                <option value="job_002">Cloud Data Engineer</option>
-                                <option value="job_003">DevOps Specialist</option>
-                                <option value="job_004">Machine Learning Engineer</option>
-                                <option value="job_005">Frontend Developer</option>
-                                <option value="job_006">Product Manager</option>
                                 <option value="general">Open to All Opportunities</option>
                             </select>
                         </div>
@@ -202,7 +196,7 @@
                                     <p class="text-gray-500">or click to browse files</p>
                                 </div>
                                 <div class="flex justify-center">
-                                    <button type="button" onclick="document.getElementById('resume_file').click()"
+                                    <button type="button" id="browseBtn"
                                             class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 transition-colors duration-200">
                                         <i class="fas fa-folder-open"></i>
                                         <span>Browse Files</span>
@@ -501,7 +495,16 @@
             }
         });
 
-        uploadArea.addEventListener('click', () => {
+        uploadArea.addEventListener('click', (e) => {
+            // Only trigger file input if the click is not on the browse button
+            if (!e.target.closest('#browseBtn')) {
+                fileInput.click();
+            }
+        });
+
+        // Add click handler for browse button
+        document.getElementById('browseBtn').addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event bubbling to uploadArea
             fileInput.click();
         });
 
@@ -732,6 +735,41 @@
             document.getElementById('results').classList.add('hidden');
             removeFile();
         }
+
+        // Load available jobs when page loads
+        async function loadJobs() {
+            try {
+                const response = await fetch('/api/jobs');
+                const data = await response.json();
+                
+                const select = document.getElementById('applied_for');
+                
+                // Clear existing options except the first two
+                while (select.children.length > 2) {
+                    select.removeChild(select.lastChild);
+                }
+                
+                // Add job options
+                if (data.jobs && Array.isArray(data.jobs)) {
+                    data.jobs.forEach(job => {
+                        const option = document.createElement('option');
+                        option.value = job.job_id;
+                        option.textContent = job.title;
+                        select.appendChild(option);
+                    });
+                } else {
+                    console.error('Jobs data not found or invalid format:', data);
+                }
+                
+            } catch (error) {
+                console.error('Error loading jobs:', error);
+            }
+        }
+
+        // Load jobs when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadJobs();
+        });
     </script>
 </body>
 </html>

@@ -497,16 +497,27 @@
                 `Showing ${count} of ${total} candidates`;
         }
 
+        // Global job titles cache
+        let jobTitlesCache = {};
+
+        async function loadJobTitles() {
+            try {
+                const response = await fetch('/api/jobs');
+                const data = await response.json();
+                
+                if (data.jobs && Array.isArray(data.jobs)) {
+                    jobTitlesCache = {};
+                    data.jobs.forEach(job => {
+                        jobTitlesCache[job.job_id] = job.title;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading job titles:', error);
+            }
+        }
+
         function getJobTitle(jobId) {
-            const jobTitles = {
-                'job_001': 'Senior Software Engineer',
-                'job_002': 'Cloud Data Engineer',
-                'job_003': 'DevOps Specialist',
-                'job_004': 'Machine Learning Engineer',
-                'job_005': 'Frontend Developer',
-                'job_006': 'Product Manager'
-            };
-            return jobTitles[jobId] || jobId;
+            return jobTitlesCache[jobId] || jobId;
         }
 
         // Load accepted candidates data
@@ -615,6 +626,7 @@
 
         // Load data on page load
         document.addEventListener('DOMContentLoaded', function() {
+            loadJobTitles();
             loadAnalytics();
             loadCandidates();
             
